@@ -13,6 +13,7 @@
 
 .heroContent {
   text-align: center;
+  width: 80vw;
 }
 
 .heroContent h2 {
@@ -27,4 +28,39 @@
   font-weight: bold;
   text-transform: uppercase;
   opacity: 0.6;
+}
+
+.allWords {
+  margin: auto;
+  margin-top: 2em;
+  max-width: 80vw;
+}
+
+.allWords ul {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  height: 250vh;
+  gap: 0.5em;
+  list-style-type: none;
+}
+
+.allWords li {
+  text-align: center;
+  padding: 0.5em 0.5em;
+  font-style: italic;
+  border-radius: 0.2em;
+  border: 1px solid rgb(36, 36, 36);
+}
+
+@media only screen and (max-width: 1200px) {
+  .allWords ul {
+    height: 500vh;
+  }
+}
+
+@media only screen and (max-width: 680px) {
+  .allWords ul {
+    height: auto;
+  }
 }
