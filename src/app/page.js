@@ -52,13 +52,13 @@ export default function Home() {
                       <p>
                         {res.esWord && (
                           <>
-                            <b>ES</b> {res.esWord}
+                            <b>ES</b> <span>{res.esWord}</span>
                           </>
                         )}
                         {res.esWord && res.enWord && " | "}
                         {res.enWord && (
                           <>
-                            <b>EN</b> {res.enWord}
+                            <b>EN</b> <span>{res.enWord}</span>
                           </>
                         )}
                       </p>

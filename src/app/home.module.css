@@ -74,8 +74,16 @@
 
 .suggestion p {
   font-weight: normal;
-  text-transform: capitalize;
+  text-transform: none;
   font-size: 0.9rem;
+}
+
+.suggestion span {
+  display: inline-block;
+}
+
+.suggestion span::first-letter {
+  text-transform: uppercase;
 }
 
 .heroSearch {
