@@ -1,15 +1,18 @@
+"use client";
 import { I18n } from "i18n-js";
 import translations from "../../public/translations.json";
 
 const i18n = new I18n(translations);
 
-const localLang = window.localStorage.getItem("locale");
-if (!localLang) {
-  window.localStorage.setItem("locale", "en");
-} else if (localLang == "en") {
-  i18n.locale = "en";
-} else if (localLang == "es") {
-  i18n.locale = "es";
+if (typeof window !== "undefined") {
+  const localLang = window.localStorage.getItem("locale");
+  if (!localLang) {
+    window.localStorage.setItem("locale", "en");
+  } else if (localLang == "en") {
+    i18n.locale = "en";
+  } else if (localLang == "es") {
+    i18n.locale = "es";
+  }
 }
 
 const swapLang = () => {

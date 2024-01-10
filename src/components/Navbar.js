@@ -1,7 +1,7 @@
+"use client";
 import local, { swapLang } from "@/app/i18n";
 import { Globe } from "react-feather";
 import style from "./Navbar.module.css";
-import classNames from "classnames";
 import { useEffect, useState } from "react";
 export default function Navbar() {
   const [backgroundColor, setBackgroundColor] = useState("transparent");
