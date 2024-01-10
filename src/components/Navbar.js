@@ -35,10 +35,10 @@ export default function Navbar() {
       </a>
       <div className={style.flexSpacer}></div>
       <a href="#" className={style.link}>
-        Resources
+        {local.t("resources")}
       </a>
       <a href="#" className={style.link}>
-        About
+        {local.t("about")}
       </a>
     </nav>
   );

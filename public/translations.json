@@ -4,13 +4,17 @@
     "langSwitch": "EN",
     "switchLanguages": "switch languages",
     "moreThan": "Over",
-    "translatedWords": "translated words"
+    "translatedWords": "translated words",
+    "resources": "Resources",
+    "about": "About"
   },
   "es": {
     "heroSubtitle": "Tz'utujil Base de Datos",
     "langSwitch": "ES",
     "switchLanguages": "cambiar idiomas",
     "moreThan": "Más de",
-    "translatedWords": "palabras traducidas"
+    "translatedWords": "palabras traducidas",
+    "resources": "Recursos",
+    "about": "Información"
   }
 }
