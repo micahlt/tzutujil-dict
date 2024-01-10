@@ -13,3 +13,5 @@ export async function GET() {
     .query("select count (*) from words");
   return Response.json(results[0][0]["count(*)"]);
 }
+
+//
