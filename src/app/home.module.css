@@ -1,0 +1,30 @@
+.hero {
+  background-image: linear-gradient(
+      rgba(3, 0, 48, 0.685),
+      rgba(0, 0, 27, 0.733)
+    ),
+    url("/lake.jpg");
+  min-height: 500px;
+  background-size: cover;
+  background-position: 75% center;
+  display: grid;
+  place-items: center;
+}
+
+.heroContent {
+  text-align: center;
+}
+
+.heroContent h2 {
+  font-size: clamp(2em, 5em, 5vw);
+}
+
+.heroContent h2 span {
+  color: rgb(0, 240, 160);
+}
+
+.heroContent p {
+  font-weight: bold;
+  text-transform: uppercase;
+  opacity: 0.6;
+}

@@ -1,0 +1,48 @@
+.main {
+  display: grid;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.buttons a {
+  background-color: white;
+  color: black;
+  padding: 0.5em 1em;
+  border-radius: 0.2em;
+}
+
+.buttons {
+  margin-top: 1em;
+  display: flex;
+  gap: 1em;
+}
+
+.exgrid {
+  display: grid;
+  grid-template-areas:
+    "a b"
+    "a b"
+    "c b"
+    "d b";
+  height: 100vh;
+  gap: 1em;
+  padding: 1em;
+}
+
+.input {
+  grid-area: a;
+  height: 100%;
+}
+
+.extractor {
+  grid-area: c;
+}
+
+.uploader {
+  grid-area: d;
+}
+
+.output {
+  grid-area: b;
+}
