@@ -1,0 +1,16 @@
+{
+  "en": {
+    "heroSubtitle": "Tz'utujil Database",
+    "langSwitch": "EN",
+    "switchLanguages": "switch languages",
+    "moreThan": "Over",
+    "translatedWords": "translated words"
+  },
+  "es": {
+    "heroSubtitle": "Tz'utujil Base de Datos",
+    "langSwitch": "ES",
+    "switchLanguages": "cambiar idiomas",
+    "moreThan": "Más de",
+    "translatedWords": "palabras traducidas"
+  }
+}

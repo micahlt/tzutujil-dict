@@ -1,6 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
-import styles from "./home.module.css";
+import styles from "@/app/home.module.css";
+import local from "@/app/i18n";
+import Navbar from "@/components/Navbar";
 
 export default function Home() {
   const [count, setCount] = useState(1);
@@ -14,22 +16,26 @@ export default function Home() {
       .then((json) => setWords(json));
   }, []);
   return (
-    <main>
-      <div className={styles.hero}>
-        <div className={styles.heroContent}>
-          <p>Tz'utujil DB</p>
-          <h2>
-            Over <span>{count - 1}</span> translated words
-          </h2>
+    <>
+      <Navbar />
+      <main>
+        <div className={styles.hero}>
+          <div className={styles.heroContent}>
+            <p>{local.t("heroSubtitle")}</p>
+            <h2>
+              {local.t("moreThan")} <span>{count - 1}</span>{" "}
+              {local.t("translatedWords")}
+            </h2>
+          </div>
         </div>
-      </div>
-      <div className={styles.allWords}>
-        <ul>
-          {words.map((word) => (
-            <li key={word.id}>{word.tzWord}</li>
-          ))}
-        </ul>
-      </div>
-    </main>
+        <div className={styles.allWords}>
+          <ul>
+            {words.map((word) => (
+              <li key={word.id}>{word.tzWord}</li>
+            ))}
+          </ul>
+        </div>
+      </main>
+    </>
   );
 }
