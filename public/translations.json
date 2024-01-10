@@ -1,6 +1,6 @@
 {
   "en": {
-    "heroSubtitle": "Tz'utujil Database",
+    "heroSubtitle": "Tz'utujil Language Database",
     "langSwitch": "EN",
     "switchLanguages": "switch languages",
     "moreThan": "Over",
@@ -9,7 +9,7 @@
     "about": "About"
   },
   "es": {
-    "heroSubtitle": "Tz'utujil Base de Datos",
+    "heroSubtitle": "Base de Datos Del Idioma Tz'utujil",
     "langSwitch": "ES",
     "switchLanguages": "cambiar idiomas",
     "moreThan": "Más de",
