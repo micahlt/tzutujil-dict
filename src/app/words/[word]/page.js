@@ -139,20 +139,6 @@ export default function Word({ params: { word: wordId } }) {
                 }}
                 value={wordInfo.esWord || ""}
               ></TextareaAutosize>
-            </div>
-            <div>
-              <p className={styles.smallTitle}>ENGLISH TRANSLATION</p>
-              <TextareaAutosize
-                rows={1}
-                placeholder="not provided"
-                disabled={!editMode}
-                onChange={(e) => {
-                  setWordInfo({ ...wordInfo, enWord: e.target.value });
-                }}
-                value={wordInfo.enWord || ""}
-              ></TextareaAutosize>
-            </div>
-            <div>
               <p className={styles.smallTitle}>TZ'UTUJIL EXAMPLE</p>
               <TextareaAutosize
                 placeholder="not provided"
@@ -165,22 +151,6 @@ export default function Word({ params: { word: wordId } }) {
                 }}
                 value={wordInfo.tzExampleSentence || ""}
               ></TextareaAutosize>
-            </div>
-            <div>
-              <p className={styles.smallTitle}>SPANISH EXAMPLE</p>
-              <TextareaAutosize
-                placeholder="not provided"
-                disabled={!editMode}
-                onChange={(e) => {
-                  setWordInfo({
-                    ...wordInfo,
-                    esExampleSentence: e.target.value,
-                  });
-                }}
-                value={wordInfo.esExampleSentence || ""}
-              ></TextareaAutosize>
-            </div>
-            <div>
               <p className={styles.smallTitle}>ENGLISH EXAMPLE</p>
               <TextareaAutosize
                 placeholder="not provided"
@@ -192,6 +162,30 @@ export default function Word({ params: { word: wordId } }) {
                   });
                 }}
                 value={wordInfo.enExampleSentence || ""}
+              ></TextareaAutosize>
+            </div>
+            <div>
+              <p className={styles.smallTitle}>ENGLISH TRANSLATION</p>
+              <TextareaAutosize
+                rows={1}
+                placeholder="not provided"
+                disabled={!editMode}
+                onChange={(e) => {
+                  setWordInfo({ ...wordInfo, enWord: e.target.value });
+                }}
+                value={wordInfo.enWord || ""}
+              ></TextareaAutosize>
+              <p className={styles.smallTitle}>SPANISH EXAMPLE</p>
+              <TextareaAutosize
+                placeholder="not provided"
+                disabled={!editMode}
+                onChange={(e) => {
+                  setWordInfo({
+                    ...wordInfo,
+                    esExampleSentence: e.target.value,
+                  });
+                }}
+                value={wordInfo.esExampleSentence || ""}
               ></TextareaAutosize>
             </div>
           </div>
