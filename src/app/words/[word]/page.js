@@ -179,6 +179,20 @@ export default function Word({ params: { word: wordId } }) {
                 value={wordInfo.esExampleSentence || ""}
               ></textarea>
             </div>
+            <div>
+              <p className={styles.smallTitle}>SPANISH EXAMPLE</p>
+              <textarea
+                placeholder="not provided"
+                disabled={!editMode}
+                onChange={(e) => {
+                  setWordInfo({
+                    ...wordInfo,
+                    enExampleSentence: e.target.value,
+                  });
+                }}
+                value={wordInfo.enExampleSentence || ""}
+              ></textarea>
+            </div>
           </div>
           <div className={styles.buttons}>
             {!wordInfo.enWord && wordInfo.esWord && (

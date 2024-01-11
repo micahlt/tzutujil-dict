@@ -38,7 +38,7 @@ export async function PATCH(req) {
       );
     } else {
       connection.execute(
-        `UPDATE words SET tzWord=?, esPronounce=?, enWord=?, esWord=?, tzExampleSentence=?, esExampleSentence=? WHERE id=?`,
+        `UPDATE words SET tzWord=?, esPronounce=?, enWord=?, esWord=?, tzExampleSentence=?, esExampleSentence=?, enExampleSentence=? WHERE id=?`,
         [
           json.tzWord,
           json.esPronounce || null,
@@ -46,6 +46,7 @@ export async function PATCH(req) {
           json.esWord || null,
           json.tzExampleSentence || null,
           json.esExampleSentence || null,
+          json.enExampleSentence || null,
           json.id,
         ],
         (err, res, fields) => {
