@@ -105,3 +105,28 @@ a {
     color-scheme: dark;
   }
 }
+
+.loader {
+  height: 15px;
+  width: 15px;
+  background-color: #00f0a0;
+  border-radius: 50%;
+  animation: pulse 2s infinite ease-out;
+  margin: auto;
+  margin-bottom: 1em;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.6);
+  }
+  100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+}

@@ -23,7 +23,7 @@ export default function Home() {
   }, []);
   const searchChange = (e) => {
     setQuery(e.target.value);
-    fetch(`/api/search?q=${e.target.value}&ac=true`)
+    fetch(`/api/autocomplete?q=${e.target.value}&ac=true`)
       .then((res) => res.json())
       .then((json) => {
         setResults(json);
@@ -45,21 +45,20 @@ export default function Home() {
                 type="search"
                 className={styles.heroSearch}
                 placeholder={local.t("searchPlaceholder")}
-                onBlur={() => {
-                  setTimeout(() => setSearchFocused(false), 150);
-                }}
+                onBlur={() => setSearchFocused(false)}
                 onFocus={() => setSearchFocused(true)}
                 onChange={searchChange}
+                onKeyUp={(e) => {
+                  if (e.key == "Enter") nav.push(`/search?q=${e.target.value}`);
+                }}
               ></input>
               {searchFocused && (
                 <div className={styles.searchSuggestions}>
                   {results.map((res) => (
-                    <div
+                    <Link
+                      href={`/words/${res.id}`}
                       key={res.id}
                       className={styles.suggestion}
-                      onClick={() => {
-                        nav.push(`/words/${res.id}`);
-                      }}
                     >
                       <h3>{res.tzWord}</h3>
                       <p>
@@ -75,8 +74,14 @@ export default function Home() {
                           </>
                         )}
                       </p>
-                    </div>
+                    </Link>
                   ))}
+                  <div
+                    className={styles.suggestion}
+                    style={{ textAlign: "center" }}
+                  >
+                    Hit enter for more results
+                  </div>
                 </div>
               )}
             </div>

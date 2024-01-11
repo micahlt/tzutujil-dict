@@ -15,7 +15,7 @@ export default function Word({ params: { word: wordId } }) {
   return (
     <>
       <Navbar />
-      {wordInfo && (
+      {wordInfo ? (
         <main className={styles.main}>
           <Link href="/" className={styles.goHome}>
             <ArrowLeft size={24}></ArrowLeft> Go Home
@@ -42,6 +42,8 @@ export default function Word({ params: { word: wordId } }) {
             </div>
           </div>
         </main>
+      ) : (
+        <div className="loader" style={{ marginTop: "7rem" }}></div>
       )}
     </>
   );

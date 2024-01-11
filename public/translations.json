@@ -15,7 +15,8 @@
     "aboutProject": "Anna Robbins saw a need for a more comprehensive resource for Spanish and English speakers desiring to learn the Tz'utujil language of Guatemala, so she compiled the largest known collection of resources concerning the language. Beginning in January 2024, Micah Lindley began assisting through the creation of various resource parsers and this website.",
     "freeUse": "All information contained in this project is in the public domain and can be used and modified without restriction.",
     "grammar": "GRAMMAR",
-    "vocabulary": "VOCABULARY"
+    "vocabulary": "VOCABULARY",
+    "search": "Search"
   },
   "es": {
     "heroSubtitle": "Base de Datos Del Idioma Tz'utujil",
@@ -33,6 +34,7 @@
     "aboutProject": "NEED TRANSLATION!!!",
     "freeUse": "NEED TRANSLATION!!!",
     "grammar": "GRAMÁTICA",
-    "vocabulary": "VOCABULARIO"
+    "vocabulary": "VOCABULARIO",
+    "search": "Buscar"
   }
 }

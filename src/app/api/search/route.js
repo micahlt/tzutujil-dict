@@ -7,17 +7,13 @@ export async function GET(req) {
   // Create the connection to the database
   const connection = mysql.createConnection(process.env.PLANET_URL);
   const searchParams = req.nextUrl.searchParams;
-  const query = `%${searchParams.get("q")}%`.replace("'", "’");
-  const autoComplete = searchParams.get("ac");
+  const query = `${searchParams.get("q")}`.replace("'", "’");
 
-  // simple query
   const results = await connection
     .promise()
     .execute(
-      `SELECT * FROM words WHERE tzWord LIKE ? OR esWord LIKE ? OR enWord LIKE ? ORDER BY tzWord ${
-        autoComplete ? "LIMIT 5" : ""
-      };`,
-      [query, query, query]
+      `SELECT * FROM words WHERE MATCH(tzWord, esWord, enWord) AGAINST (? IN NATURAL LANGUAGE MODE WITH QUERY EXPANSION) LIMIT 50`,
+      [query]
     );
   return Response.json(results[0]);
 }

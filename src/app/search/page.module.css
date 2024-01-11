@@ -1,0 +1,99 @@
+.main {
+  margin: auto;
+  margin-top: 4em;
+  width: 100%;
+  max-width: 750px;
+  background-color: #1a1a1a;
+  padding: 2em;
+  border-radius: 0.3em;
+  margin-bottom: 2em;
+}
+
+.smallTitle {
+  font-size: 0.8em;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.main h1 {
+  color: #00f0a0;
+}
+
+.divider {
+  border-top: 1px solid white;
+  opacity: 0.3;
+  margin-top: 0.5em;
+  margin-bottom: 1em;
+}
+
+.goHome {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  margin-bottom: 1em;
+  cursor: pointer;
+}
+
+.citation {
+  padding-left: 2em;
+  text-indent: -2em;
+  padding-top: 0.5em;
+  margin-bottom: 0.75em;
+  opacity: 0.7;
+}
+
+.about {
+  line-height: 1.5em;
+  margin-bottom: 0.75em;
+}
+
+.searchResults {
+  z-index: 1;
+  margin-top: -0.5em;
+  padding-top: 0.7em;
+  padding-left: 1em;
+  padding-right: 1em;
+  padding-bottom: 0.2em;
+  width: 100%;
+  border-radius: 0 0 0.5em 0.5em;
+}
+
+.result {
+  text-align: left;
+  padding-bottom: 1em;
+  padding-top: 1em;
+  cursor: pointer;
+  border-top: 1px solid rgb(255, 255, 255, 0.4);
+  display: block;
+}
+
+.result:first-of-type {
+  border-top: none;
+}
+
+.result:hover h3 {
+  color: #00f0a0;
+}
+
+.result h3 {
+  font-size: 1rem;
+  font-weight: bold;
+  transition: color 0.2s;
+  padding-bottom: 0.5em;
+}
+
+.result p {
+  font-weight: normal;
+  text-transform: none;
+  font-size: 0.9rem;
+}
+
+.result span {
+  display: inline-block;
+  opacity: 0.8;
+}
+
+.result span::first-letter {
+  text-transform: uppercase;
+}
