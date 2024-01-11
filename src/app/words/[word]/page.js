@@ -41,19 +41,30 @@ export default function Word({ params: { word: wordId } }) {
               <h2>{wordInfo.esExampleSentence || ""}</h2>
             </div>
           </div>
-          {!wordInfo.enWord && wordInfo.esWord && (
-            <div className={styles.buttons}>
+          <div className={styles.buttons}>
+            {!wordInfo.enWord && wordInfo.esWord && (
               <a
                 className={styles.button}
                 href={`https://translate.google.com/?sl=es&tl=en&text=${encodeURIComponent(
                   wordInfo.esWord
                 )}&op=translate`}
                 target="_blank"
+                style={{ backgroundColor: "#007add" }}
               >
                 Translate to English
               </a>
-            </div>
-          )}
+            )}
+            <a
+              className={styles.button}
+              href={`https://www.linguee.com/english-spanish/search?query=${encodeURIComponent(
+                wordInfo.esWord
+              )}`}
+              target="_blank"
+              style={{ backgroundColor: "#5500dd" }}
+            >
+              Open on Linguee
+            </a>
+          </div>
         </main>
       ) : (
         <div className="loader" style={{ marginTop: "7rem" }}></div>

@@ -49,10 +49,12 @@
 
 .buttons {
   margin-top: 1.5em;
+  display: flex;
+  gap: 1em;
 }
 
 .button {
-  background-color: #007add;
+  background-color: #000;
   color: white;
   padding: 0.5em 1em;
   border-radius: 0.2em;
