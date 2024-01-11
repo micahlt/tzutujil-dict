@@ -180,7 +180,7 @@ export default function Word({ params: { word: wordId } }) {
               ></textarea>
             </div>
             <div>
-              <p className={styles.smallTitle}>SPANISH EXAMPLE</p>
+              <p className={styles.smallTitle}>ENGLISH EXAMPLE</p>
               <textarea
                 placeholder="not provided"
                 disabled={!editMode}
