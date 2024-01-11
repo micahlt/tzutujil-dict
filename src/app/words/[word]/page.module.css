@@ -34,6 +34,15 @@
   gap: 1em;
 }
 
+.definitionGrid input {
+  border: none;
+  font-size: 1.5rem;
+  font-weight: bold;
+  font-family: inherit;
+  background: transparent;
+  outline: none;
+}
+
 .goHome {
   display: flex;
   align-items: center;
@@ -59,8 +68,50 @@
   padding: 0.5em 1em;
   border-radius: 0.2em;
   transition: 0.2s all;
+  font-family: inherit;
+  height: max-content;
+  display: flex;
+  align-items: center;
+}
+
+.button svg {
+  margin-right: 0.5em;
 }
 
 .button:hover {
   filter: brightness(0.8);
+}
+
+.main input:disabled {
+  color: white;
+}
+
+.main input:enabled {
+  border-bottom: 2px solid gray;
+}
+
+.headerFlex {
+  display: flex;
+  gap: 0.5em;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.headerFlex .button {
+  font-size: 0.9em;
+}
+
+.rotate {
+  animation: rotate 2s infinite;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
