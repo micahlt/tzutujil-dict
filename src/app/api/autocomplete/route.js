@@ -7,18 +7,19 @@ export async function GET(req) {
   // Create the connection to the database
   const connection = mysql.createConnection(process.env.PLANET_URL);
   const searchParams = req.nextUrl.searchParams;
-  const query = `${searchParams.get("q")}`.replace("'", "’");
+  const query = searchParams.get("q").replace("'", "’");
 
   if (!query) {
     return Response.json([]);
   } else {
+    console.log(query, "<-- QUERY");
     const results = await connection
       .promise()
       .execute(
-        `SELECT  *, MATCH (tzWord, esWord, enWord) AGAINST ('*${
-          query || ""
-        }*' IN BOOLEAN MODE) AS SCORE FROM words WHERE MATCH (tzWord, esWord, enWord) AGAINST ('*${query}*' IN BOOLEAN MODE) ORDER BY SCORE LIMIT 5`
+        `SELECT  *, MATCH (tzWord, esWord, enWord) AGAINST (? IN BOOLEAN MODE) AS score FROM words WHERE MATCH (tzWord, esWord, enWord) AGAINST (? IN BOOLEAN MODE) ORDER BY SCORE DESC, tzWord = ? DESC, enWord = ? DESC, esWord = ? DESC LIMIT 5`,
+        [`${query}*`, `${query}*`, query, query, query]
       );
+    console.log(results);
     return Response.json(results[0]);
   }
 }
