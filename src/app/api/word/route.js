@@ -68,3 +68,47 @@ export async function PATCH(req) {
     );
   }
 }
+
+export async function DELETE(req) {
+  const headersList = headers();
+  const password = headersList.get("x-pwd");
+  // Create the connection to the database
+  if (password == process.env.ADMIN_PASSWORD) {
+    const connection = mysql.createConnection(process.env.PLANET_URL);
+
+    const json = await req.json();
+
+    if (!json || !json.id) {
+      return new Response(
+        JSON.stringify({ success: false, reason: "Missing ID" }),
+        {
+          status: 400,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    } else {
+      connection.execute(
+        `DELETE FROM words WHERE id=?`,
+        [json.id],
+        (err, res, fields) => {
+          console.log(res);
+        }
+      );
+
+      connection.end();
+      return Response.json({ success: true });
+    }
+  } else {
+    return new Response(
+      JSON.stringify({ success: false, reason: "Unauthorized" }),
+      {
+        status: 401,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+  }
+}

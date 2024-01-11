@@ -16,8 +16,14 @@
   opacity: 0.7;
 }
 
-.main h1 {
+.main .tzWord {
+  font-size: 2rem;
   color: rgb(0, 240, 160);
+  border: none;
+  font-weight: bold;
+  font-family: inherit;
+  background-color: transparent;
+  outline: none;
 }
 
 .divider {
@@ -53,11 +59,6 @@
   cursor: pointer;
 }
 
-.definitionGrid div textarea:empty::after {
-  content: "";
-  opacity: 0.4;
-}
-
 .buttons {
   margin-top: 1.5em;
   display: flex;
@@ -89,6 +90,10 @@
 }
 
 .main textarea:enabled {
+  border-bottom: 2px solid gray;
+}
+
+.main .tzWord:enabled {
   border-bottom: 2px solid gray;
 }
 

@@ -3,13 +3,15 @@ import styles from "./page.module.css";
 import Navbar from "@/components/Navbar";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Edit2, Loader, Save, X } from "react-feather";
+import { ArrowLeft, Edit2, Loader, Save, Trash, X } from "react-feather";
+import { useRouter } from "next/navigation";
 
 export default function Word({ params: { word: wordId } }) {
   const [wordInfo, setWordInfo] = useState();
   const [password, setPassword] = useState();
   const [editMode, setEditMode] = useState(false);
   const [loading, setLoading] = useState(false);
+  const nav = useRouter();
   useEffect(() => {
     setPassword(localStorage.getItem("pwd"));
     fetch(`/api/word?id=${wordId}`)
@@ -35,6 +37,25 @@ export default function Word({ params: { word: wordId } }) {
       });
     }
   };
+  const deleteItem = () => {
+    if (
+      window.confirm(
+        "Are you sure you want to delete this word from the database?"
+      )
+    ) {
+      fetch(`/api/word`, {
+        method: "DELETE",
+        body: JSON.stringify({ id: wordId }),
+        headers: {
+          "x-pwd": password,
+        },
+      }).then((res) => {
+        if (res.ok) {
+          nav.push("/");
+        }
+      });
+    }
+  };
   return (
     <>
       <Navbar />
@@ -53,7 +74,18 @@ export default function Word({ params: { word: wordId } }) {
                 onClick={() => setEditMode(true)}
               >
                 <Edit2 size={16} />
-                Edit word
+                Edit
+              </a>
+            )}
+            {password && !editMode && (
+              <a
+                className={styles.button}
+                href="#"
+                style={{ backgroundColor: "#c10e0e" }}
+                onClick={deleteItem}
+              >
+                <Trash size={16} />
+                Delete
               </a>
             )}
             {password && editMode && (
@@ -84,7 +116,15 @@ export default function Word({ params: { word: wordId } }) {
             )}
           </div>
           <p className={styles.smallTitle}>WORD</p>
-          <h1>{wordInfo.tzWord}</h1>
+          <input
+            className={styles.tzWord}
+            placeholder="not provided"
+            disabled={!editMode}
+            onChange={(e) => {
+              setWordInfo({ ...wordInfo, tzWord: e.target.value });
+            }}
+            value={wordInfo.tzWord || ""}
+          ></input>
           <div className={styles.divider}></div>
           <div className={styles.definitionGrid}>
             <div>
