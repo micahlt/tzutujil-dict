@@ -45,7 +45,7 @@ export default function Home() {
                 type="search"
                 className={styles.heroSearch}
                 placeholder={local.t("searchPlaceholder")}
-                onBlur={() => setSearchFocused(false)}
+                onBlur={() => setTimeout(() => setSearchFocused(false), 150)}
                 onFocus={() => setSearchFocused(true)}
                 onChange={searchChange}
                 onKeyUp={(e) => {
