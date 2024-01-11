@@ -34,13 +34,15 @@
   gap: 1em;
 }
 
-.definitionGrid input {
+.definitionGrid textarea {
   border: none;
   font-size: 1.5rem;
   font-weight: bold;
   font-family: inherit;
   background: transparent;
   outline: none;
+  resize: none;
+  form-sizing: fit-content;
 }
 
 .goHome {
@@ -51,8 +53,8 @@
   cursor: pointer;
 }
 
-.definitionGrid div h2:empty::after {
-  content: "not provided";
+.definitionGrid div textarea:empty::after {
+  content: "";
   opacity: 0.4;
 }
 
@@ -82,11 +84,11 @@
   filter: brightness(0.8);
 }
 
-.main input:disabled {
+.main textarea:disabled {
   color: white;
 }
 
-.main input:enabled {
+.main textarea:enabled {
   border-bottom: 2px solid gray;
 }
 

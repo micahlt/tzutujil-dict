@@ -3,7 +3,7 @@ import styles from "./page.module.css";
 import Navbar from "@/components/Navbar";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Edit2, Loader, Save } from "react-feather";
+import { ArrowLeft, Edit2, Loader, Save, X } from "react-feather";
 
 export default function Word({ params: { word: wordId } }) {
   const [wordInfo, setWordInfo] = useState();
@@ -45,7 +45,7 @@ export default function Word({ params: { word: wordId } }) {
               <ArrowLeft size={24}></ArrowLeft> Go Home
             </Link>
             <div className={styles.spacer}></div>
-            {password && (
+            {password && !editMode && (
               <a
                 className={styles.button}
                 href="#"
@@ -57,19 +57,30 @@ export default function Word({ params: { word: wordId } }) {
               </a>
             )}
             {password && editMode && (
-              <a
-                className={styles.button}
-                href="#"
-                style={{ backgroundColor: "#009262" }}
-                onClick={saveWord}
-              >
-                {loading ? (
-                  <Loader size={16} className={styles.rotate} />
-                ) : (
-                  <Save size={16} />
-                )}
-                Save changes
-              </a>
+              <>
+                <a
+                  className={styles.button}
+                  href="#"
+                  style={{ backgroundColor: "#c10e0e" }}
+                  onClick={() => setEditMode(false)}
+                >
+                  <X size={16} />
+                  Cancel
+                </a>
+                <a
+                  className={styles.button}
+                  href="#"
+                  style={{ backgroundColor: "#009262" }}
+                  onClick={saveWord}
+                >
+                  {loading ? (
+                    <Loader size={16} className={styles.rotate} />
+                  ) : (
+                    <Save size={16} />
+                  )}
+                  Save changes
+                </a>
+              </>
             )}
           </div>
           <p className={styles.smallTitle}>WORD</p>
@@ -78,27 +89,32 @@ export default function Word({ params: { word: wordId } }) {
           <div className={styles.definitionGrid}>
             <div>
               <p className={styles.smallTitle}>SPANISH TRANSLATION</p>
-              <input
+              <textarea
+                rows={1}
+                placeholder="not provided"
                 disabled={!editMode}
                 onChange={(e) => {
                   setWordInfo({ ...wordInfo, esWord: e.target.value });
                 }}
                 value={wordInfo.esWord || ""}
-              ></input>
+              ></textarea>
             </div>
             <div>
               <p className={styles.smallTitle}>ENGLISH TRANSLATION</p>
-              <input
+              <textarea
+                rows={1}
+                placeholder="not provided"
                 disabled={!editMode}
                 onChange={(e) => {
                   setWordInfo({ ...wordInfo, enWord: e.target.value });
                 }}
                 value={wordInfo.enWord || ""}
-              ></input>
+              ></textarea>
             </div>
             <div>
               <p className={styles.smallTitle}>TZ'UTUJIL EXAMPLE</p>
-              <input
+              <textarea
+                placeholder="not provided"
                 disabled={!editMode}
                 onChange={(e) => {
                   setWordInfo({
@@ -107,11 +123,12 @@ export default function Word({ params: { word: wordId } }) {
                   });
                 }}
                 value={wordInfo.tzExampleSentence || ""}
-              ></input>
+              ></textarea>
             </div>
             <div>
               <p className={styles.smallTitle}>SPANISH EXAMPLE</p>
-              <input
+              <textarea
+                placeholder="not provided"
                 disabled={!editMode}
                 onChange={(e) => {
                   setWordInfo({
@@ -120,7 +137,7 @@ export default function Word({ params: { word: wordId } }) {
                   });
                 }}
                 value={wordInfo.esExampleSentence || ""}
-              ></input>
+              ></textarea>
             </div>
           </div>
           <div className={styles.buttons}>
