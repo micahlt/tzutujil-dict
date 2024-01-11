@@ -12,13 +12,13 @@
 }
 
 .heroContent {
-  padding-top: 8%;
+  padding-top: 3%;
   text-align: center;
   width: 80vw;
 }
 
 .heroContent h2 {
-  font-size: clamp(2em, 5em, 5vw);
+  font-size: clamp(2em, 5em, 4.3vw);
 }
 
 .heroContent h2 span {
@@ -33,7 +33,7 @@
 
 .heroSearchWrapper {
   position: relative;
-  width: 80%;
+  width: 100%;
   margin: auto;
   max-width: 600px;
 }
@@ -100,6 +100,10 @@
   z-index: 2;
   position: relative;
   outline: none;
+}
+
+.heroSearch::placeholder {
+  font-family: "Inter", sans-serif;
 }
 
 .allWords {

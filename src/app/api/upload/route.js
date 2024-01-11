@@ -15,12 +15,14 @@ export async function POST(req) {
   // });
 
   connection.execute(
-    `insert into words (tzWord, esPronounce, enWord, esWord) values (?, ?, ?, ?)`,
+    `insert into words (tzWord, esPronounce, enWord, esWord, tzExampleSentence, esExampleSentence) values (?, ?, ?, ?, ?, ?)`,
     [
       json.tzWord,
       json.esPronounce || null,
       json.enWord || null,
       json.esWord || null,
+      json.tzExampleSentence || null,
+      json.esExampleSentence || null,
     ],
     (err, res, fields) => {
       console.log(res);

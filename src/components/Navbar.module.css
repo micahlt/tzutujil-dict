@@ -35,5 +35,11 @@
 
 .link {
   text-transform: uppercase;
-  font-family: 0.9em;
+  font-size: 0.8em;
+}
+
+@media screen and (max-width: 550px) {
+  .langSwitch span {
+    display: none;
+  }
 }

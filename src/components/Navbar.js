@@ -3,6 +3,7 @@ import local, { swapLang } from "@/app/i18n";
 import { Globe } from "react-feather";
 import style from "./Navbar.module.css";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 export default function Navbar() {
   const [backgroundColor, setBackgroundColor] = useState("transparent");
   const [backdropFilter, setBackdropFilter] = useState("none");
@@ -31,15 +32,18 @@ export default function Navbar() {
         onClick={swapLang}
         title={local.t("switchLanguages")}
       >
-        <Globe size={24} /> {local.t("langSwitch")}
+        <Globe size={24} /> <span>{local.t("langSwitch")}</span>
       </a>
       <div className={style.flexSpacer}></div>
       <a href="#" className={style.link}>
+        {local.t("basicWords")}
+      </a>
+      <Link href="/resources" className={style.link}>
         {local.t("resources")}
-      </a>
-      <a href="#" className={style.link}>
+      </Link>
+      <Link href="/about" className={style.link}>
         {local.t("about")}
-      </a>
+      </Link>
     </nav>
   );
 }
