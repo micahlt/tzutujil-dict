@@ -17,7 +17,7 @@ export default function Home() {
     fetch("/api/getCount")
       .then((res) => res.text())
       .then((text) => setCount(text));
-    fetch("/api/getAll?limit=30")
+    fetch("/api/getAll?limit=15")
       .then((res) => res.json())
       .then((json) => setWords(json));
   }, []);
@@ -83,6 +83,16 @@ export default function Home() {
           </div>
         </div>
         <div className={styles.allWords}>
+          <p
+            style={{
+              width: "100%",
+              textAlign: "center",
+              marginBottom: "2em",
+              fontWeight: "bold",
+            }}
+          >
+            Preview a dictionary entry below!
+          </p>
           <ul>
             {words.map((word) => (
               <li key={word.id}>

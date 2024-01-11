@@ -123,6 +123,31 @@ export default function Resources() {
                 Palabras Básicas en Tz'utujil by Sonia Lorainos
               </a>
             </li>
+            <li>
+              <a
+                href="https://chefsitoernesto.blogspot.com/2019/06/glosario-de-tzutujil.html"
+                target="_blank"
+              >
+                Publicaciones de Ernesto Ramirez: Glosario de Tz'utujil
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://www.almg.org.gt/wp-content/uploads/2020/10/NEOLOGISMO-TZ_UTUJIL.pdf"
+                target="_blank"
+              >
+                Tz’utujil Neologism by Gaspar
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://drive.google.com/file/d/1U-xEf1mdon3IE9cE8lAv2XpFjYn0gCUe/view"
+                target="_blank"
+              >
+                Tz’utujil/Spanish/English Vocabulary and Basic Phrases by John
+                J. McGraw
+              </a>
+            </li>
           </ul>
         </div>
       </main>

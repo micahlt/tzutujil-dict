@@ -51,6 +51,8 @@
 
 .resourceList li {
   list-style-position: inside;
+  padding-left: 22px;
+  text-indent: -22px;
 }
 
 .resourceList li a {
