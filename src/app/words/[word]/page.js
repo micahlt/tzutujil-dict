@@ -203,6 +203,16 @@ export default function Word({ params: { word: wordId } }) {
             >
               Open on Linguee
             </a>
+            <a
+              className={styles.button}
+              href={`https://www.spanishdict.com/translate/${encodeURIComponent(
+                wordInfo.esWord
+              )}`}
+              target="_blank"
+              style={{ backgroundColor: "#c9710e" }}
+            >
+              Open on SpanishDict
+            </a>
           </div>
         </main>
       ) : (

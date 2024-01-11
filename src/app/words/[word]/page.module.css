@@ -62,7 +62,7 @@
 .buttons {
   margin-top: 1.5em;
   display: flex;
-  gap: 1em;
+  gap: 0.5em;
 }
 
 .button {
