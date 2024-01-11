@@ -85,16 +85,24 @@
   filter: brightness(0.8);
 }
 
+.main textarea {
+  overflow: hidden;
+}
+
 .main textarea:disabled {
   color: white;
+  resize: none;
 }
 
-.main textarea:enabled {
-  border-bottom: 2px solid gray;
-}
-
+.main textarea:enabled,
 .main .tzWord:enabled {
-  border-bottom: 2px solid gray;
+  border-bottom: 2px solid #303030;
+  transition: 0.2s border;
+}
+
+.main textarea:focus,
+.main .tzWord:focus {
+  border-bottom: 2px solid #ffffff;
 }
 
 .headerFlex {
@@ -108,6 +116,20 @@
 
 .headerFlex .button {
   font-size: 0.9em;
+}
+
+.notes {
+  font-size: 1rem;
+  margin-top: 0.5rem;
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: inherit;
+}
+
+.notes:enabled {
+  resize: vertical !important;
 }
 
 .rotate {

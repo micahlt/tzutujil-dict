@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, Edit2, Loader, Save, Trash, X } from "react-feather";
 import { useRouter } from "next/navigation";
+import TextareaAutosize from "react-textarea-autosize";
 
 export default function Word({ params: { word: wordId } }) {
   const [wordInfo, setWordInfo] = useState();
@@ -129,7 +130,7 @@ export default function Word({ params: { word: wordId } }) {
           <div className={styles.definitionGrid}>
             <div>
               <p className={styles.smallTitle}>SPANISH TRANSLATION</p>
-              <textarea
+              <TextareaAutosize
                 rows={1}
                 placeholder="not provided"
                 disabled={!editMode}
@@ -137,11 +138,11 @@ export default function Word({ params: { word: wordId } }) {
                   setWordInfo({ ...wordInfo, esWord: e.target.value });
                 }}
                 value={wordInfo.esWord || ""}
-              ></textarea>
+              ></TextareaAutosize>
             </div>
             <div>
               <p className={styles.smallTitle}>ENGLISH TRANSLATION</p>
-              <textarea
+              <TextareaAutosize
                 rows={1}
                 placeholder="not provided"
                 disabled={!editMode}
@@ -149,11 +150,11 @@ export default function Word({ params: { word: wordId } }) {
                   setWordInfo({ ...wordInfo, enWord: e.target.value });
                 }}
                 value={wordInfo.enWord || ""}
-              ></textarea>
+              ></TextareaAutosize>
             </div>
             <div>
               <p className={styles.smallTitle}>TZ'UTUJIL EXAMPLE</p>
-              <textarea
+              <TextareaAutosize
                 placeholder="not provided"
                 disabled={!editMode}
                 onChange={(e) => {
@@ -163,11 +164,11 @@ export default function Word({ params: { word: wordId } }) {
                   });
                 }}
                 value={wordInfo.tzExampleSentence || ""}
-              ></textarea>
+              ></TextareaAutosize>
             </div>
             <div>
               <p className={styles.smallTitle}>SPANISH EXAMPLE</p>
-              <textarea
+              <TextareaAutosize
                 placeholder="not provided"
                 disabled={!editMode}
                 onChange={(e) => {
@@ -177,11 +178,11 @@ export default function Word({ params: { word: wordId } }) {
                   });
                 }}
                 value={wordInfo.esExampleSentence || ""}
-              ></textarea>
+              ></TextareaAutosize>
             </div>
             <div>
               <p className={styles.smallTitle}>ENGLISH EXAMPLE</p>
-              <textarea
+              <TextareaAutosize
                 placeholder="not provided"
                 disabled={!editMode}
                 onChange={(e) => {
@@ -191,8 +192,24 @@ export default function Word({ params: { word: wordId } }) {
                   });
                 }}
                 value={wordInfo.enExampleSentence || ""}
-              ></textarea>
+              ></TextareaAutosize>
             </div>
+          </div>
+          <div className={styles.divider}></div>
+          <div>
+            <p className={styles.smallTitle}>NOTES</p>
+            <TextareaAutosize
+              placeholder="no notes yet..."
+              className={styles.notes}
+              disabled={!editMode}
+              onChange={(e) => {
+                setWordInfo({
+                  ...wordInfo,
+                  notes: e.target.value,
+                });
+              }}
+              value={wordInfo.notes || ""}
+            ></TextareaAutosize>
           </div>
           <div className={styles.buttons}>
             {!wordInfo.enWord && wordInfo.esWord && (
