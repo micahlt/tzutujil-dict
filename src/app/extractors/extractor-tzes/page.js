@@ -35,6 +35,9 @@ export default function ExtractorTzEs() {
       fetch("/api/upload", {
         method: "POST",
         body: JSON.stringify(word),
+        headers: {
+          "x-pwd": window.localStorage.getItem("pwd"),
+        },
       });
     });
   };

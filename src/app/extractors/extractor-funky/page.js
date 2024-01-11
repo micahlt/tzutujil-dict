@@ -32,6 +32,9 @@ export default function ExtractorFunky() {
       fetch("/api/upload", {
         method: "POST",
         body: JSON.stringify(info),
+        headers: {
+          "x-pwd": window.localStorage.getItem("pwd"),
+        },
       });
       data.push(info);
       let lineText = `| TZ WORD: ${info.tzWord}\n| ES PRONOUNCE: ${info.esPronounce}\n| ES WORD: ${info.esWord}\n| EN WORD: ${info.enWord}\n---------------------------`;

@@ -16,7 +16,9 @@
     "freeUse": "All information contained in this project is in the public domain and can be used and modified without restriction.",
     "grammar": "GRAMMAR",
     "vocabulary": "VOCABULARY",
-    "search": "Search"
+    "search": "Search",
+    "logIn": "Log In",
+    "password": "Password"
   },
   "es": {
     "heroSubtitle": "Base de Datos Del Idioma Tz'utujil",
@@ -35,6 +37,8 @@
     "freeUse": "NEED TRANSLATION!!!",
     "grammar": "GRAMÁTICA",
     "vocabulary": "VOCABULARIO",
-    "search": "Buscar"
+    "search": "Buscar",
+    "logIn": "Iniciar Sesión",
+    "password": "Contraseña"
   }
 }
