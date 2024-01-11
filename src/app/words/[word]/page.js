@@ -41,6 +41,19 @@ export default function Word({ params: { word: wordId } }) {
               <h2>{wordInfo.esExampleSentence || ""}</h2>
             </div>
           </div>
+          {!wordInfo.enWord && wordInfo.esWord && (
+            <div className={styles.buttons}>
+              <a
+                className={styles.button}
+                href={`https://translate.google.com/?sl=es&tl=en&text=${encodeURIComponent(
+                  wordInfo.esWord
+                )}&op=translate`}
+                target="_blank"
+              >
+                Translate to English
+              </a>
+            </div>
+          )}
         </main>
       ) : (
         <div className="loader" style={{ marginTop: "7rem" }}></div>

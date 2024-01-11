@@ -46,3 +46,19 @@
   content: "not provided";
   opacity: 0.4;
 }
+
+.buttons {
+  margin-top: 1.5em;
+}
+
+.button {
+  background-color: #007add;
+  color: white;
+  padding: 0.5em 1em;
+  border-radius: 0.2em;
+  transition: 0.2s all;
+}
+
+.button:hover {
+  filter: brightness(0.8);
+}
