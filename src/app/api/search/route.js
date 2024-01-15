@@ -10,11 +10,32 @@ export async function GET(req) {
   const searchParams = req.nextUrl.searchParams;
   const query = searchParams.get("q").replace("'", "’");
   const wildcardQuery = `${query}*`;
-  const results = await connection
-    .promise()
-    .execute(
-      `(SELECT  *, MATCH (tzWord, esWord, enWord) AGAINST (:wildcardQuery IN BOOLEAN MODE) AS score FROM words WHERE MATCH (tzWord, esWord, enWord) AGAINST (:wildcardQuery IN BOOLEAN MODE) ORDER BY SCORE DESC, tzWord = :query DESC, enWord = :query DESC, esWord = :query DESC) UNION (SELECT  *, MATCH (tzWord, esWord, enWord) AGAINST (:query IN NATURAL LANGUAGE MODE WITH QUERY EXPANSION) AS score FROM words WHERE MATCH (tzWord, esWord, enWord) AGAINST (:query IN NATURAL LANGUAGE MODE WITH QUERY EXPANSION) ORDER BY SCORE DESC, tzWord = :query DESC, enWord = :query DESC, esWord = :query DESC) LIMIT 50`,
-      { wildcardQuery: wildcardQuery, query: query }
-    );
+  const results = await connection.promise().execute(
+    `(
+        SELECT tzword, enword, esword, id
+        FROM (
+        SELECT *,
+        MATCH (tzword, esword, enword) against ("metal*" IN boolean mode) AS score
+        FROM words
+        WHERE MATCH (tzword, esword, enword) against ("metal*" IN boolean mode)
+        ORDER BY score DESC,
+        tzword = "metal" DESC,
+        enword = "metal" DESC,
+        esword = "metal" DESC) AS alias1)
+       UNION
+        (
+        SELECT tzword, enword, esword, id
+        FROM (
+        SELECT *,
+        MATCH (tzword, esword, enword) against ("metal" IN NATURAL language mode WITH query expansion) AS score
+        FROM words
+        WHERE MATCH (tzword, esword, enword) against ("metal" IN NATURAL language mode WITH query expansion)
+        ORDER BY score DESC,
+        tzword = "metal" DESC,
+        enword = "metal" DESC,
+        esword = "metal" DESC) AS alias2)
+       LIMIT 50;`,
+    { wildcardQuery: wildcardQuery, query: query }
+  );
   return Response.json(results[0]);
 }
