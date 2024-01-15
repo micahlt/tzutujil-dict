@@ -19,7 +19,23 @@
     "search": "Search Results",
     "logIn": "Log In",
     "password": "Password",
-    "newWord": "New Word"
+    "newWord": "New Word",
+    "cancel": "Cancel",
+    "saveWord": "Save word",
+    "saveChanges": "Save changes",
+    "word": "Word",
+    "notes": "Notes",
+    "example": "Example",
+    "edit": "Edit",
+    "delete": "Delete",
+    "errorRecieved": "Got an error while updating this word",
+    "spanishTranslation": "Spanish Translation",
+    "englishTranslation": "English Translation",
+    "notProvided": "not provided",
+    "tzExample": "Tz'utujil Example",
+    "esExample": "Spanish Example",
+    "enExample": "English Example",
+    "openOn": "Open on"
   },
   "es": {
     "heroSubtitle": "Base de Datos Del Idioma Tz'utujil",
@@ -36,6 +52,7 @@
     "vocabulary": "VOCABULARIO",
     "search": "Resultado de Búsqueda",
     "logIn": "Iniciar Sesión",
-    "password": "Contraseña"
+    "password": "Contraseña",
+    "cancel": "Cancelar"
   }
 }

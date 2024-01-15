@@ -14,6 +14,7 @@ import {
 } from "react-feather";
 import { useRouter } from "next/navigation";
 import TextareaAutosize from "react-textarea-autosize";
+import local from "@/app/i18n";
 
 export default function Word({ params: { word: wordId } }) {
   const [wordInfo, setWordInfo] = useState();
@@ -99,7 +100,7 @@ export default function Word({ params: { word: wordId } }) {
         <main className={styles.main}>
           <div className={styles.headerFlex}>
             <Link href="/" className={styles.goHome}>
-              <ArrowLeft size={24}></ArrowLeft> Go Home
+              <ArrowLeft size={24}></ArrowLeft> {local.t("goHome")}
             </Link>
             <div className={styles.spacer}></div>
             {password && !editMode && (
@@ -110,7 +111,7 @@ export default function Word({ params: { word: wordId } }) {
                 onClick={() => setEditMode(true)}
               >
                 <Edit2 size={16} />
-                Edit
+                {local.t("edit")}
               </a>
             )}
             {password && !editMode && wordId != "new" && (
@@ -125,7 +126,7 @@ export default function Word({ params: { word: wordId } }) {
                 ) : (
                   <Trash size={16} />
                 )}
-                Delete
+                {local.t("delete")}
               </a>
             )}
             {password && editMode && (
@@ -138,7 +139,7 @@ export default function Word({ params: { word: wordId } }) {
                     onClick={() => setEditMode(false)}
                   >
                     <X size={16} />
-                    Cancel
+                    {local.t("cancel")}
                   </a>
                 )}
                 <a
@@ -152,7 +153,9 @@ export default function Word({ params: { word: wordId } }) {
                   ) : (
                     <Save size={16} />
                   )}
-                  Save {wordId == "new" ? "word" : "changes"}
+                  {wordId == "new"
+                    ? local.t("saveWord")
+                    : local.t("saveChanges")}
                 </a>
               </>
             )}
@@ -161,14 +164,14 @@ export default function Word({ params: { word: wordId } }) {
             <div className={styles.error}>
               <AlertTriangle size={24} />
               <p>
-                Got an error while updating this word: <pre>{error.code}</pre>
+                {local.t("errorRecieved")}: <pre>{error.code}</pre>
               </p>
             </div>
           )}
-          <p className={styles.smallTitle}>WORD</p>
+          <p className={styles.smallTitle}>{local.t("word")}</p>
           <input
             className={styles.tzWord}
-            placeholder="not provided"
+            placeholder={local.t("notProvided")}
             disabled={!editMode}
             onChange={(e) => {
               setWordInfo({ ...wordInfo, tzWord: e.target.value });
@@ -178,19 +181,21 @@ export default function Word({ params: { word: wordId } }) {
           <div className={styles.divider}></div>
           <div className={styles.definitionGrid}>
             <div>
-              <p className={styles.smallTitle}>SPANISH TRANSLATION</p>
+              <p className={styles.smallTitle}>
+                {local.t("spanishTranslation")}
+              </p>
               <TextareaAutosize
                 rows={1}
-                placeholder="not provided"
+                placeholder={local.t("notProvided")}
                 disabled={!editMode}
                 onChange={(e) => {
                   setWordInfo({ ...wordInfo, esWord: e.target.value });
                 }}
                 value={wordInfo.esWord || ""}
               ></TextareaAutosize>
-              <p className={styles.smallTitle}>TZ'UTUJIL EXAMPLE</p>
+              <p className={styles.smallTitle}>{local.t("tzExample")}</p>
               <TextareaAutosize
-                placeholder="not provided"
+                placeholder={local.t("notProvided")}
                 disabled={!editMode}
                 onChange={(e) => {
                   setWordInfo({
@@ -200,9 +205,9 @@ export default function Word({ params: { word: wordId } }) {
                 }}
                 value={wordInfo.tzExampleSentence || ""}
               ></TextareaAutosize>
-              <p className={styles.smallTitle}>ENGLISH EXAMPLE</p>
+              <p className={styles.smallTitle}>{local.t("enExample")}</p>
               <TextareaAutosize
-                placeholder="not provided"
+                placeholder={local.t("notProvided")}
                 disabled={!editMode}
                 onChange={(e) => {
                   setWordInfo({
@@ -214,19 +219,21 @@ export default function Word({ params: { word: wordId } }) {
               ></TextareaAutosize>
             </div>
             <div>
-              <p className={styles.smallTitle}>ENGLISH TRANSLATION</p>
+              <p className={styles.smallTitle}>
+                {local.t("englishTranslation")}
+              </p>
               <TextareaAutosize
                 rows={1}
-                placeholder="not provided"
+                placeholder={local.t("notProvided")}
                 disabled={!editMode}
                 onChange={(e) => {
                   setWordInfo({ ...wordInfo, enWord: e.target.value });
                 }}
                 value={wordInfo.enWord || ""}
               ></TextareaAutosize>
-              <p className={styles.smallTitle}>SPANISH EXAMPLE</p>
+              <p className={styles.smallTitle}>{local.t("esExample")}</p>
               <TextareaAutosize
-                placeholder="not provided"
+                placeholder={local.t("notProvided")}
                 disabled={!editMode}
                 onChange={(e) => {
                   setWordInfo({
@@ -276,7 +283,7 @@ export default function Word({ params: { word: wordId } }) {
                 target="_blank"
                 style={{ backgroundColor: "#5500dd" }}
               >
-                Open on Linguee
+                {local.t("openOn")} Linguee
               </a>
               <a
                 className={styles.button}
@@ -286,7 +293,7 @@ export default function Word({ params: { word: wordId } }) {
                 target="_blank"
                 style={{ backgroundColor: "#c9710e" }}
               >
-                Open on SpanishDict
+                {local.t("openOn")} SpanishDict
               </a>
             </div>
           )}
