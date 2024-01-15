@@ -3,7 +3,15 @@ import styles from "./page.module.css";
 import Navbar from "@/components/Navbar";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Edit2, Loader, Save, Trash, X } from "react-feather";
+import {
+  AlertTriangle,
+  ArrowLeft,
+  Edit2,
+  Loader,
+  Save,
+  Trash,
+  X,
+} from "react-feather";
 import { useRouter } from "next/navigation";
 import TextareaAutosize from "react-textarea-autosize";
 
@@ -12,6 +20,7 @@ export default function Word({ params: { word: wordId } }) {
   const [password, setPassword] = useState();
   const [editMode, setEditMode] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const nav = useRouter();
   useEffect(() => {
     setPassword(localStorage.getItem("pwd"));
@@ -30,12 +39,16 @@ export default function Word({ params: { word: wordId } }) {
         headers: {
           "x-pwd": password,
         },
-      }).then((res) => {
-        if (res.ok) {
-          setEditMode(false);
-        }
-        setLoading(false);
-      });
+      })
+        .then((res) => res.json())
+        .then((json) => {
+          if (json.success) {
+            setEditMode(false);
+          } else {
+            setError({ code: json.code });
+          }
+          setLoading(false);
+        });
     }
   };
   const deleteItem = () => {
@@ -116,6 +129,14 @@ export default function Word({ params: { word: wordId } }) {
               </>
             )}
           </div>
+          {error && error.code && (
+            <div className={styles.error}>
+              <AlertTriangle size={24} />
+              <p>
+                Got an error while updating this word: <pre>{error.code}</pre>
+              </p>
+            </div>
+          )}
           <p className={styles.smallTitle}>WORD</p>
           <input
             className={styles.tzWord}
