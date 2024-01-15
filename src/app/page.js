@@ -53,7 +53,7 @@ export default function Home() {
                   if (e.key == "Enter") nav.push(`/search?q=${e.target.value}`);
                 }}
               ></input>
-              {true && (
+              {searchFocused && (
                 <div className={styles.searchSuggestions}>
                   {results.map((res) => (
                     <Link
