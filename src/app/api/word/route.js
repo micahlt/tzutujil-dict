@@ -52,6 +52,17 @@ export async function PATCH(req) {
             json.id,
           ]
         );
+        connection.end();
+        if (err) {
+          return new Response(JSON.stringify({ success: false, reason: err }), {
+            status: 400,
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+        } else {
+          return Response.json({ success: true });
+        }
       } catch (err) {
         return new Response(
           JSON.stringify({
@@ -65,18 +76,6 @@ export async function PATCH(req) {
             },
           }
         );
-      }
-
-      // connection.end();
-      if (err) {
-        return new Response(JSON.stringify({ success: false, reason: err }), {
-          status: 400,
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-      } else {
-        return Response.json({ success: true });
       }
     }
   } else {

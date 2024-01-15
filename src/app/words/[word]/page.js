@@ -52,6 +52,7 @@ export default function Word({ params: { word: wordId } }) {
     }
   };
   const deleteItem = () => {
+    setLoading(true);
     if (
       window.confirm(
         "Are you sure you want to delete this word from the database?"
@@ -64,6 +65,7 @@ export default function Word({ params: { word: wordId } }) {
           "x-pwd": password,
         },
       }).then((res) => {
+        setLoading(false);
         if (res.ok) {
           nav.push("/");
         }
@@ -98,7 +100,11 @@ export default function Word({ params: { word: wordId } }) {
                 style={{ backgroundColor: "#c10e0e" }}
                 onClick={deleteItem}
               >
-                <Trash size={16} />
+                {loading ? (
+                  <Loader size={16} className={styles.rotate} />
+                ) : (
+                  <Trash size={16} />
+                )}
                 Delete
               </a>
             )}
