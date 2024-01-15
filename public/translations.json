@@ -16,7 +16,7 @@
     "freeUse": "All information contained in this project is in the public domain and can be used and modified without restriction.",
     "grammar": "GRAMMAR",
     "vocabulary": "VOCABULARY",
-    "search": "Search",
+    "search": "Search Results",
     "logIn": "Log In",
     "password": "Password"
   },
@@ -37,7 +37,7 @@
     "freeUse": "NEED TRANSLATION!!!",
     "grammar": "GRAMÁTICA",
     "vocabulary": "VOCABULARIO",
-    "search": "Buscar",
+    "search": "Resultado de Búsqueda",
     "logIn": "Iniciar Sesión",
     "password": "Contraseña"
   }

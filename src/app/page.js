@@ -5,6 +5,7 @@ import local from "@/app/i18n";
 import Navbar from "@/components/Navbar";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { CornerDownLeft } from "react-feather";
 
 export default function Home() {
   const nav = useRouter();
@@ -52,7 +53,7 @@ export default function Home() {
                   if (e.key == "Enter") nav.push(`/search?q=${e.target.value}`);
                 }}
               ></input>
-              {searchFocused && (
+              {true && (
                 <div className={styles.searchSuggestions}>
                   {results.map((res) => (
                     <Link
@@ -80,7 +81,8 @@ export default function Home() {
                     className={styles.suggestion}
                     style={{ textAlign: "center" }}
                   >
-                    Hit enter for more results
+                    press enter for more results{" "}
+                    <CornerDownLeft size={20} color="white" />
                   </div>
                 </div>
               )}

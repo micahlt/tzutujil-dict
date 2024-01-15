@@ -11,10 +11,12 @@ export default function Search() {
   const searchParams = useSearchParams();
   const [loadState, setLoadState] = useState("loading");
   const [results, setResults] = useState([]);
+  const [query, setQuery] = useState("");
   useEffect(() => {
-    const query = searchParams.get("q");
+    const localQuery = searchParams.get("q");
+    setQuery(query);
     if (query) {
-      fetch(`/api/search?q=${query}`)
+      fetch(`/api/search?q=${localQuery}`)
         .then((res) => res.json())
         .then((json) => {
           setResults(json);
@@ -31,6 +33,9 @@ export default function Search() {
         </Link>
         <div>
           <h1 style={{ marginBottom: 10 }}>{local.t("search")}</h1>
+          <p>
+            Query: <b>{query || ""}</b>
+          </p>
           <div className={styles.divider} style={{ marginTop: 20 }}></div>
           <div className={styles.searchResults}>
             {results.map((res) => (

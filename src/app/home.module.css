@@ -87,6 +87,15 @@
   text-transform: uppercase;
 }
 
+.suggestion svg {
+  transform: translateY(0.3em);
+  margin-left: 0.4em;
+  background-color: #8b8b8b;
+  padding: 0.25em;
+  border-radius: 0.2em;
+  border-bottom: 3px solid #4c4c4c;
+}
+
 .heroSearch {
   color: black;
   background-color: white;
