@@ -71,7 +71,7 @@ html {
   width: 15px;
   background-color: #00f0a0;
   border-radius: 50%;
-  animation: pulse 2s infinite ease-out;
+  animation: pulse 1s infinite ease-out;
   margin: auto;
   margin-bottom: 1em;
 }

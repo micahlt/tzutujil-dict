@@ -17,6 +17,82 @@ export async function GET(req) {
   return Response.json(results[0][0]);
 }
 
+export async function PUT(req) {
+  const headersList = headers();
+  const password = headersList.get("x-pwd");
+  // Create the connection to the database
+  if (password == process.env.ADMIN_PASSWORD) {
+    const connection = await mysql.createConnection(process.env.PLANET_URL);
+
+    const json = await req.json();
+
+    if (!json) {
+      return new Response(
+        JSON.stringify({ success: false, reason: "Missing content" }),
+        {
+          status: 400,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    } else {
+      try {
+        const [res] = await connection.execute(
+          `INSERT INTO words (tzWord, esPronounce, enWord, esWord, tzExampleSentence, esExampleSentence, enExampleSentence, notes) VALUES (?,?,?,?,?,?,?,?)`,
+          [
+            json.tzWord,
+            json.esPronounce || null,
+            json.enWord || null,
+            json.esWord || null,
+            json.tzExampleSentence || null,
+            json.esExampleSentence || null,
+            json.enExampleSentence || null,
+            json.notes || null,
+          ]
+        );
+        connection.end();
+        if (res.err) {
+          return new Response(
+            JSON.stringify({ success: false, code: res.err }),
+            {
+              status: 400,
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+        } else {
+          return Response.json({ success: true, id: res.insertId });
+        }
+      } catch (err) {
+        return new Response(
+          JSON.stringify({
+            success: false,
+            code: err.code == "ER_DUP_ENTRY" ? "ALREADY_EXISTS" : err.code,
+          }),
+          {
+            status: 500,
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+      }
+    }
+  } else {
+    return new Response(
+      JSON.stringify({ success: false, reason: "Unauthorized" }),
+      {
+        status: 401,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+  }
+}
+
 export async function PATCH(req) {
   const headersList = headers();
   const password = headersList.get("x-pwd");

@@ -18,13 +18,13 @@
     "vocabulary": "VOCABULARY",
     "search": "Search Results",
     "logIn": "Log In",
-    "password": "Password"
+    "password": "Password",
+    "newWord": "New Word"
   },
   "es": {
     "heroSubtitle": "Base de Datos Del Idioma Tz'utujil",
     "langSwitch": "ES",
     "switchLanguages": "cambiar idiomas",
-    "searchPlaceholder": "NEED TRANSLATION!!!",
     "moreThan": "Más de",
     "translatedWords": "palabras traducidas",
     "resources": "Recursos",
@@ -32,9 +32,6 @@
     "basicWords": "Palabras Básicas",
     "goHome": "Vete a Casa",
     "citations": "Citaciones",
-    "aboutHeader": "NEED TRANSLATION!!!",
-    "aboutProject": "NEED TRANSLATION!!!",
-    "freeUse": "NEED TRANSLATION!!!",
     "grammar": "GRAMÁTICA",
     "vocabulary": "VOCABULARIO",
     "search": "Resultado de Búsqueda",

@@ -81,8 +81,14 @@ export default function Home() {
                     className={styles.suggestion}
                     style={{ textAlign: "center" }}
                   >
-                    press enter for more results{" "}
-                    <CornerDownLeft size={20} color="white" />
+                    {query.length > 0 ? (
+                      <>
+                        press enter for more results
+                        <CornerDownLeft size={20} color="white" />
+                      </>
+                    ) : (
+                      <>start typing for suggestions</>
+                    )}
                   </div>
                 </div>
               )}

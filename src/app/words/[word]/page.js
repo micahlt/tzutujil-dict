@@ -24,14 +24,34 @@ export default function Word({ params: { word: wordId } }) {
   const nav = useRouter();
   useEffect(() => {
     setPassword(localStorage.getItem("pwd"));
-    fetch(`/api/word?id=${wordId}`)
-      .then((res) => res.json())
-      .then((json) => setWordInfo(json));
+    if (wordId == "new") {
+      setEditMode(true);
+      setWordInfo({});
+    } else {
+      fetch(`/api/word?id=${wordId}`)
+        .then((res) => res.json())
+        .then((json) => setWordInfo(json));
+    }
   }, []);
   const saveWord = () => {
     setLoading(true);
     if (wordId == "new") {
-      return;
+      fetch(`/api/word`, {
+        method: "PUT",
+        body: JSON.stringify(wordInfo),
+        headers: {
+          "x-pwd": password,
+        },
+      })
+        .then((res) => res.json())
+        .then((json) => {
+          if (json.success) {
+            setEditMode(false);
+            nav.push(`/words/${json.id}`);
+          } else {
+            setError({ code: json.code || json.reason });
+          }
+        });
     } else {
       fetch(`/api/word`, {
         method: "PATCH",
@@ -60,7 +80,7 @@ export default function Word({ params: { word: wordId } }) {
     ) {
       fetch(`/api/word`, {
         method: "DELETE",
-        body: JSON.stringify({ id: wordId }),
+        body: JSON.stringify({ id: wordId != "new" ? wordId : false }),
         headers: {
           "x-pwd": password,
         },
@@ -93,7 +113,7 @@ export default function Word({ params: { word: wordId } }) {
                 Edit
               </a>
             )}
-            {password && !editMode && (
+            {password && !editMode && wordId != "new" && (
               <a
                 className={styles.button}
                 href="#"
@@ -110,15 +130,17 @@ export default function Word({ params: { word: wordId } }) {
             )}
             {password && editMode && (
               <>
-                <a
-                  className={styles.button}
-                  href="#"
-                  style={{ backgroundColor: "#c10e0e" }}
-                  onClick={() => setEditMode(false)}
-                >
-                  <X size={16} />
-                  Cancel
-                </a>
+                {wordId != "new" && (
+                  <a
+                    className={styles.button}
+                    href="#"
+                    style={{ backgroundColor: "#c10e0e" }}
+                    onClick={() => setEditMode(false)}
+                  >
+                    <X size={16} />
+                    Cancel
+                  </a>
+                )}
                 <a
                   className={styles.button}
                   href="#"
@@ -130,7 +152,7 @@ export default function Word({ params: { word: wordId } }) {
                   ) : (
                     <Save size={16} />
                   )}
-                  Save changes
+                  Save {wordId == "new" ? "word" : "changes"}
                 </a>
               </>
             )}
@@ -232,40 +254,42 @@ export default function Word({ params: { word: wordId } }) {
               value={wordInfo.notes || ""}
             ></TextareaAutosize>
           </div>
-          <div className={styles.buttons}>
-            {!wordInfo.enWord && wordInfo.esWord && (
+          {wordInfo.esWord && (
+            <div className={styles.buttons}>
+              {!wordInfo.enWord && (
+                <a
+                  className={styles.button}
+                  href={`https://translate.google.com/?sl=es&tl=en&text=${encodeURIComponent(
+                    wordInfo.esWord
+                  )}&op=translate`}
+                  target="_blank"
+                  style={{ backgroundColor: "#007add" }}
+                >
+                  Translate to English
+                </a>
+              )}
               <a
                 className={styles.button}
-                href={`https://translate.google.com/?sl=es&tl=en&text=${encodeURIComponent(
+                href={`https://www.linguee.com/english-spanish/search?query=${encodeURIComponent(
                   wordInfo.esWord
-                )}&op=translate`}
+                )}`}
                 target="_blank"
-                style={{ backgroundColor: "#007add" }}
+                style={{ backgroundColor: "#5500dd" }}
               >
-                Translate to English
+                Open on Linguee
               </a>
-            )}
-            <a
-              className={styles.button}
-              href={`https://www.linguee.com/english-spanish/search?query=${encodeURIComponent(
-                wordInfo.esWord
-              )}`}
-              target="_blank"
-              style={{ backgroundColor: "#5500dd" }}
-            >
-              Open on Linguee
-            </a>
-            <a
-              className={styles.button}
-              href={`https://www.spanishdict.com/translate/${encodeURIComponent(
-                wordInfo.esWord
-              )}`}
-              target="_blank"
-              style={{ backgroundColor: "#c9710e" }}
-            >
-              Open on SpanishDict
-            </a>
-          </div>
+              <a
+                className={styles.button}
+                href={`https://www.spanishdict.com/translate/${encodeURIComponent(
+                  wordInfo.esWord
+                )}`}
+                target="_blank"
+                style={{ backgroundColor: "#c9710e" }}
+              >
+                Open on SpanishDict
+              </a>
+            </div>
+          )}
         </main>
       ) : (
         <div className="loader" style={{ marginTop: "7rem" }}></div>

@@ -32,7 +32,7 @@ export default function Navbar() {
         onClick={swapLang}
         title={local.t("switchLanguages")}
       >
-        <Globe size={24} /> <span>{local.t("langSwitch")}</span>
+        <Globe size={16} /> <span>{local.t("langSwitch")}</span>
       </a>
       <div className={style.flexSpacer}></div>
       <a href="#" className={style.link}>
@@ -44,6 +44,11 @@ export default function Navbar() {
       <Link href="/about" className={style.link}>
         {local.t("about")}
       </Link>
+      {localStorage.getItem("pwd") && (
+        <Link href="/words/new" className={style.link}>
+          {local.t("newWord")}
+        </Link>
+      )}
     </nav>
   );
 }

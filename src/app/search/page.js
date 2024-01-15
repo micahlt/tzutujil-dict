@@ -14,8 +14,8 @@ export default function Search() {
   const [query, setQuery] = useState("");
   useEffect(() => {
     const localQuery = searchParams.get("q");
-    setQuery(query);
-    if (query) {
+    if (localQuery) {
+      setQuery(localQuery);
       fetch(`/api/search?q=${localQuery}`)
         .then((res) => res.json())
         .then((json) => {
@@ -32,11 +32,16 @@ export default function Search() {
           <ArrowLeft size={24}></ArrowLeft> {local.t("goHome")}
         </Link>
         <div>
-          <h1 style={{ marginBottom: 10 }}>{local.t("search")}</h1>
-          <p>
-            Query: <b>{query || ""}</b>
-          </p>
-          <div className={styles.divider} style={{ marginTop: 20 }}></div>
+          <h1>{local.t("search")}</h1>
+          {query && (
+            <p style={{ opacity: 0.8 }}>
+              for <b>{query}</b>
+            </p>
+          )}
+          <div
+            className={styles.divider}
+            style={{ marginTop: 20, marginBottom: 0 }}
+          ></div>
           <div className={styles.searchResults}>
             {results.map((res) => (
               <Link
