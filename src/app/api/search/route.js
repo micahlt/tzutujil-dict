@@ -8,7 +8,7 @@ export async function GET(req) {
   const connection = mysql.createConnection(process.env.PLANET_URL);
   connection.config.namedPlaceholders = true;
   const searchParams = req.nextUrl.searchParams;
-  const query = searchParams.get("q").replace("'", "’");
+  const query = searchParams.get("q");
   const wildcardQuery = `${query}*`;
   const results = await connection.promise().execute(
     `(
