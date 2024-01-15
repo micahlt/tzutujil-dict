@@ -7,7 +7,7 @@ export async function GET(req) {
   // Create the connection to the database
   const connection = mysql.createConnection(process.env.PLANET_URL);
   const searchParams = req.nextUrl.searchParams;
-  const query = searchParams.get("q").replace("'", "’");
+  const query = searchParams.get("q");
 
   if (!query) {
     return Response.json([]);
