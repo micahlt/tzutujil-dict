@@ -24,7 +24,7 @@ export default function Word({ params: { word: wordId } }) {
   const [error, setError] = useState(null);
   const nav = useRouter();
   useEffect(() => {
-    setPassword(localStorage.getItem("pwd"));
+    setPassword(window.localStorage.getItem("pwd"));
     if (wordId == "new") {
       setEditMode(true);
       setWordInfo({});

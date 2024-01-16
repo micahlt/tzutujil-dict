@@ -7,7 +7,9 @@ import Link from "next/link";
 export default function Navbar() {
   const [backgroundColor, setBackgroundColor] = useState("transparent");
   const [backdropFilter, setBackdropFilter] = useState("none");
+  const [loggedIn, setLoggedIn] = useState();
   useEffect(() => {
+    setLoggedIn(window.localStorage.getItem("pwd"));
     window.addEventListener("scroll", () => {
       if (window.scrollY > 90) {
         setBackgroundColor("rgba(0,0,0,0.5)");
@@ -44,7 +46,7 @@ export default function Navbar() {
       <Link href="/about" className={style.link}>
         {local.t("about")}
       </Link>
-      {localStorage.getItem("pwd") && (
+      {loggedIn && (
         <Link href="/words/new" className={style.link}>
           {local.t("newWord")}
         </Link>
