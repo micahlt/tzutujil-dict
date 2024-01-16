@@ -83,11 +83,11 @@ export default function Home() {
                   >
                     {query.length > 0 ? (
                       <>
-                        press enter for more results
+                        {local.t("pressEnter")}
                         <CornerDownLeft size={20} color="white" />
                       </>
                     ) : (
-                      <>start typing for suggestions</>
+                      <>{local.t("startTyping")}</>
                     )}
                   </div>
                 </div>
@@ -104,7 +104,7 @@ export default function Home() {
               fontWeight: "bold",
             }}
           >
-            Preview a dictionary entry below!
+            {local.t("previewEntryBelow")}
           </p>
           <ul>
             {words.map((word) => (

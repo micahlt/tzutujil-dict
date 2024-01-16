@@ -74,11 +74,7 @@ export default function Word({ params: { word: wordId } }) {
   };
   const deleteItem = () => {
     setLoading(true);
-    if (
-      window.confirm(
-        "Are you sure you want to delete this word from the database?"
-      )
-    ) {
+    if (window.confirm(local.t("confirmDelete"))) {
       fetch(`/api/word`, {
         method: "DELETE",
         body: JSON.stringify({ id: wordId != "new" ? wordId : false }),

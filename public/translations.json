@@ -16,7 +16,7 @@
     "freeUse": "All information contained in this project is in the public domain and can be used and modified without restriction.",
     "grammar": "GRAMMAR",
     "vocabulary": "VOCABULARY",
-    "search": "Search Results",
+    "searchResults": "Search Results",
     "logIn": "Log In",
     "password": "Password",
     "newWord": "New Word",
@@ -35,7 +35,12 @@
     "tzExample": "Tz'utujil Example",
     "esExample": "Spanish Example",
     "enExample": "English Example",
-    "openOn": "Open on"
+    "openOn": "Open on",
+    "confirmDelete": "Are you sure you want to delete this word from the database?",
+    "for": "for",
+    "previewEntryBelow": "Preview a dictionary entry below!",
+    "startTyping": "start typing for suggestions",
+    "pressEnter": "press enter for more results"
   },
   "es": {
     "heroSubtitle": "Base de Datos Del Idioma Tz'utujil",

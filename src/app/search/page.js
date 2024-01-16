@@ -32,10 +32,10 @@ export default function Search() {
           <ArrowLeft size={24}></ArrowLeft> {local.t("goHome")}
         </Link>
         <div>
-          <h1>{local.t("search")}</h1>
+          <h1>{local.t("searchResults")}</h1>
           {query && (
             <p style={{ opacity: 0.8 }}>
-              for <b>{query}</b>
+              {local.t("for")} <b>{query}</b>
             </p>
           )}
           <div
