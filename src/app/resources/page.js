@@ -149,6 +149,82 @@ export default function Resources() {
               </a>
             </li>
           </ul>
+          <div className={styles.divider}></div>
+          <p className={styles.smallTitle}>{local.t("videos")}</p>
+          <ul className={styles.resourceList}>
+            <li>
+              <a
+                href="https://www.youtube.com/playlist?list=PLZLlaR9qGuxq0DC5f3ecQhzmXh0ywvJCy"
+                target="_blank"
+              >
+                Tz’utujil Youtube Playlist by Anna Robbins
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://www.youtube.com/c/PuebloapuebloOrg"
+                target="_blank"
+              >
+                Pueblo a Pueblo - YouTube
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://method.fluent-forever.com/base-vocabulary-list/"
+                target="_blank"
+              >
+                The Most Awesome Word List You Have Ever Seen by Gabriel Wyner
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://www.youtube.com/watch?v=D4WjsoS9RXo"
+                target="_blank"
+              >
+                Learning Mayan Tz'utujil in San Pedro la Laguna
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://www.youtube.com/c/IsraelQuic/videos"
+                target="_blank"
+              >
+                i Quic - YouTube
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://www.youtube.com/watch?v=WlNt9WhlHGU"
+                target="_blank"
+              >
+                Ajpub' Pablo García: los nahuales y la engendración
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://www.youtube.com/c/Canal5TvMayaALMG/featured"
+                target="_blank"
+              >
+                Canal 5 Tv Maya - YouTube
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://youtu.be/x9tuinCxAmA"
+                target="_blank"
+              >
+                La película Jesús - Tz'utujil / Tzutujil Oriental Idioma The Jesus Film
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://www.jesusfilm.org/watch/jesus.html/tzutujil-eastern.html"
+                target="_blank"
+              >
+                The Jesus Film -  Tz'utujil Eastern
+              </a>
+            </li>
+          </ul>
         </div>
       </main>
     </>
