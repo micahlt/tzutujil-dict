@@ -68,7 +68,7 @@ export default function Resources() {
                 href="https://www.thriftbooks.com/w/tzutujiil-maya-grammar-3rd-edition/20786105"
                 target="_blank"
               >
-                Tz’utujil Maya Grammar- Mateo Russo and Sandra Chigüela
+                Tz'utujil Maya Grammar- Mateo Russo and Sandra Chigüela
               </a>
             </li>
             <li>
@@ -136,7 +136,7 @@ export default function Resources() {
                 href="https://www.almg.org.gt/wp-content/uploads/2020/10/NEOLOGISMO-TZ_UTUJIL.pdf"
                 target="_blank"
               >
-                Tz’utujil Neologism by Gaspar
+                Tz'utujil Neologism by Gaspar
               </a>
             </li>
             <li>
@@ -144,7 +144,7 @@ export default function Resources() {
                 href="https://drive.google.com/file/d/1U-xEf1mdon3IE9cE8lAv2XpFjYn0gCUe/view"
                 target="_blank"
               >
-                Tz’utujil/Spanish/English Vocabulary and Basic Phrases by John
+                Tz'utujil/Spanish/English Vocabulary and Basic Phrases by John
                 J. McGraw
               </a>
             </li>
@@ -157,7 +157,7 @@ export default function Resources() {
                 href="https://www.youtube.com/playlist?list=PLZLlaR9qGuxq0DC5f3ecQhzmXh0ywvJCy"
                 target="_blank"
               >
-                Tz’utujil Youtube Playlist by Anna Robbins
+                Tz'utujil Youtube Playlist by Anna Robbins
               </a>
             </li>
             <li>
@@ -209,11 +209,9 @@ export default function Resources() {
               </a>
             </li>
             <li>
-              <a
-                href="https://youtu.be/x9tuinCxAmA"
-                target="_blank"
-              >
-                La película Jesús - Tz'utujil / Tzutujil Oriental Idioma The Jesus Film
+              <a href="https://youtu.be/x9tuinCxAmA" target="_blank">
+                La película Jesús - Tz'utujil / Tz'utujil Oriental Idioma The
+                Jesus Film
               </a>
             </li>
             <li>
@@ -221,7 +219,139 @@ export default function Resources() {
                 href="https://www.jesusfilm.org/watch/jesus.html/tzutujil-eastern.html"
                 target="_blank"
               >
-                The Jesus Film -  Tz'utujil Eastern
+                The Jesus Film - Tz'utujil Eastern
+              </a>
+            </li>
+          </ul>
+          <div className={styles.divider}></div>
+          <p className={styles.smallTitle}>{local.t("read")}</p>
+          <ul className={styles.resourceList}>
+            <li>
+              <a
+                href="https://www.bible.com/bible/687/MAT.1.TZJW"
+                target="_blank"
+              >
+                Mateo 1 | tzjW Bible | YouVersion
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://www.palabrasatitlan.org/docs/Vida%20de%20Ancianos%20de%20Atitlan.pdf"
+                target="_blank"
+              >
+                Vida de los Ancianos del Lago Atitlán
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://www.palabrasatitlan.org/docs/Vida%20de%20las%20Mujeres%20de%20Atitlan.pdf"
+                target="_blank"
+              >
+                Vida de las Mujeres del Lago Atitlán
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://www.palabrasatitlan.org/docs/Vida%20de%20los%20Hombres%20de%20Atitlan.pdf"
+                target="_blank"
+              >
+                Vida de los Hombres del Lago Atitlán
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://www.palabrasatitlan.org/docs/Pueblos%20y%20Santos%20del%20Lago%20Atitlan.pdf"
+                target="_blank"
+              >
+                Pueblos y Santos del Lago Atitlán
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://www.palabrasatitlan.org/docs/Literatura%20Oral%20de%20Atitlan.pdf"
+                target="_blank"
+              >
+                Literatura Oral de los Pueblos del Lago Atitlán
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://www.palabrasatitlan.org/docs/Geografia%20de%20Atitlan.pdf"
+                target="_blank"
+              >
+                Nuestra Geografía del Lago Atitlán
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://www.palabrasatitlan.org/docs/Nuestro%20Maiz%20de%20Atitlan.pdf"
+                target="_blank"
+              >
+                Nuestro Maíz del Lago Atitlán
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://www.palabrasatitlan.org/docs/Tecnicas%20I.pdf"
+                target="_blank"
+              >
+                Técnicas del Lago Atitlán
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://www.palabrasatitlan.org/docs/Tecnicas%20II.pdf"
+                target="_blank"
+              >
+                Técnicas en los pueblos del Lago Atitlán
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://www.palabrasatitlan.org/docs/Historias%20de%20La%20Noche.pdf"
+                target="_blank"
+              >
+                Historias de la Noche en el Lago Atitlán
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://www.palabrasatitlan.org/docs/La%20Abuela%20Luna.pdf"
+                target="_blank"
+              >
+                La Abuela Luna y Otras Historias del Cielo
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://www.palabrasatitlan.org/docs/Historias%20Historia%20de%20Atitlan.pdf"
+                target="_blank"
+              >
+                Historias, Historia del Lago Atitlán
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://www.palabrasatitlan.org/docs/Pintores%20del%20Lago%20Atitlan.pdf"
+                target="_blank"
+              >
+                La Pintura del Lago Atitlán
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://www.palabrasatitlan.org/docs/Pintores%20del%20Lago%20Atitlan.pdf"
+                target="_blank"
+              >
+                Guía Pedagógica
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://www.sil.org/system/files/reapdata/69/30/94/69309481678907613311725397186735092714/26938_withUPcover.pdf"
+                target="_blank"
+              >
+                Texto sobre la historia
               </a>
             </li>
           </ul>
