@@ -165,7 +165,7 @@ export default function Word({ params: { word: wordId } }) {
             </div>
           )}
           <p className={styles.smallTitle}>{local.t("word")}</p>
-          <input
+          <TextareaAutosize
             className={styles.tzWord}
             placeholder={local.t("notProvided")}
             disabled={!editMode}
@@ -173,7 +173,7 @@ export default function Word({ params: { word: wordId } }) {
               setWordInfo({ ...wordInfo, tzWord: e.target.value });
             }}
             value={wordInfo.tzWord || ""}
-          ></input>
+          ></TextareaAutosize>
           <div className={styles.divider}></div>
           <div className={styles.definitionGrid}>
             <div>

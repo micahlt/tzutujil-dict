@@ -24,6 +24,7 @@
   font-family: inherit;
   background-color: transparent;
   outline: none;
+  resize: none;
 }
 
 .divider {
