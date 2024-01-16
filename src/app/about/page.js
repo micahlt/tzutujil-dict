@@ -17,7 +17,10 @@ export default function About() {
           <h1 style={{ marginBottom: 10 }}>{local.t("about")}</h1>
           <h2>{local.t("aboutHeader")}</h2>
           <div className={styles.divider} style={{ marginTop: 20 }}></div>
-          <p className={styles.about}>{local.t("aboutProject")}</p>
+          <p
+            className={styles.about}
+            dangerouslySetInnerHTML={{ __html: local.t("aboutProject") }}
+          ></p>
           <p className={styles.about}>{local.t("freeUse")}</p>
           <div className={styles.divider} style={{ marginTop: 20 }}></div>
           <p className={styles.smallTitle} style={{ opacity: 1 }}>

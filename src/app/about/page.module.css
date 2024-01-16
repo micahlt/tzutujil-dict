@@ -47,3 +47,7 @@
   line-height: 1.5em;
   margin-bottom: 0.75em;
 }
+
+.about a {
+  text-decoration: underline;
+}
