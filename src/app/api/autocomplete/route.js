@@ -9,7 +9,7 @@ export async function GET(req) {
   connection.config.namedPlaceholders = true;
   const searchParams = req.nextUrl.searchParams;
   const query = searchParams.get("q");
-  const wildcardQuery = `${query}*`;
+  const wildcardQuery = `${query.replaceAll("’", "'")}*`;
 
   if (!query) {
     return Response.json([]);
@@ -56,7 +56,7 @@ export async function GET(req) {
           5
       ) AS derivedTable)
       `,
-      { wildcardQuery: wildcardQuery, query: query }
+      { wildcardQuery: wildcardQuery, query: query.replaceAll("’", "'") }
     );
     return Response.json(results[0]);
   }

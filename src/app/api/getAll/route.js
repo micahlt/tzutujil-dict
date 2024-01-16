@@ -8,10 +8,15 @@ export async function GET(req) {
   const connection = mysql.createConnection(process.env.PLANET_URL);
   const searchParams = req.nextUrl.searchParams;
   const limit = searchParams.get("limit");
+  const offset = searchParams.get("offset");
 
   // simple query
   const results = await connection
     .promise()
-    .query(`SELECT * FROM words${limit ? " LIMIT " + limit : ""}`);
+    .query(
+      `SELECT * FROM words${limit ? " LIMIT " + limit : ""}${
+        offset ? " OFFSET " + offset : ""
+      }`
+    );
   return Response.json(results[0]);
 }

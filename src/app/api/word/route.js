@@ -37,6 +37,9 @@ export async function PUT(req) {
         }
       );
     } else {
+      Object.keys(json).forEach(key => {
+        json[key] = json[key].replaceAll("’", "'");
+      })
       try {
         const [res] = await connection.execute(
           `INSERT INTO words (tzWord, esPronounce, enWord, esWord, tzExampleSentence, esExampleSentence, enExampleSentence, notes) VALUES (?,?,?,?,?,?,?,?)`,

@@ -9,8 +9,7 @@ export async function GET(req) {
   connection.config.namedPlaceholders = true;
   const searchParams = req.nextUrl.searchParams;
   const query = searchParams.get("q");
-  console.log(query);
-  const wildcardQuery = `${query}*`;
+  const wildcardQuery = `${query.replaceAll("’", "'")}*`;
   const results = await connection.promise().execute(
     `
     (
@@ -41,7 +40,7 @@ export async function GET(req) {
       enWord = :query DESC,
       esWord = :query DESC) AS alias2)
      LIMIT 50;`,
-    { wildcardQuery: wildcardQuery, query: query }
+    { wildcardQuery: wildcardQuery, query: query.replaceAll("’", "'") }
   );
   return Response.json(results[0]);
 }

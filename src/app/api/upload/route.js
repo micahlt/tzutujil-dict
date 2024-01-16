@@ -12,9 +12,11 @@ export async function POST(req) {
     const connection = mysql.createConnection(process.env.PLANET_URL);
 
     const json = await req.json();
-
+    Object.keys(json).forEach((key) => {
+      json[key] = json[key].replaceAll("’", "'");
+    });
     connection.execute(
-      `insert into words (tzWord, esPronounce, enWord, esWord, tzExampleSentence, esExampleSentence) values (?, ?, ?, ?, ?, ?)`,
+      `insert into words (tzWord, esPronounce, enWord, esWord, tzExampleSentence, esExampleSentence, enExampleSentence) values (?, ?, ?, ?, ?, ?, ?)`,
       [
         json.tzWord,
         json.esPronounce || null,
@@ -22,6 +24,7 @@ export async function POST(req) {
         json.esWord || null,
         json.tzExampleSentence || null,
         json.esExampleSentence || null,
+        json.enExampleSentence || null,
       ],
       (err, res, fields) => {
         console.log(res);
@@ -29,7 +32,10 @@ export async function POST(req) {
     );
 
     connection.end();
-    return Response.json({ success: true });
+    return Response.json({
+      success: true,
+      warning: "This endpoint is depreciated.  Please switch to PUT /api/word",
+    });
   } else {
     return new Response(
       JSON.stringify({ success: false, reason: "Unauthorized" }),
