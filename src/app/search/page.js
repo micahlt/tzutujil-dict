@@ -28,8 +28,8 @@ export default function Search() {
     <>
       <Navbar />
       <main className={styles.main}>
-        <Link href="/" className={styles.goHome}>
-          <ArrowLeft size={24}></ArrowLeft> {local.t("goHome")}
+        <Link href="/" className={styles.goBack}>
+          <ArrowLeft size={24}></ArrowLeft> {local.t("goBack")}
         </Link>
         <div>
           <h1>{local.t("searchResults")}</h1>

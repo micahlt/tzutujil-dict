@@ -95,9 +95,9 @@ export default function Word({ params: { word: wordId } }) {
       {wordInfo ? (
         <main className={styles.main}>
           <div className={styles.headerFlex}>
-            <Link href="/" className={styles.goHome}>
-              <ArrowLeft size={24}></ArrowLeft> {local.t("goHome")}
-            </Link>
+            <a href="#" className={styles.goBack} onClick={() => nav.back()}>
+              <ArrowLeft size={24}></ArrowLeft> {local.t("goBack")}
+            </a>
             <div className={styles.spacer}></div>
             {password && !editMode && (
               <a
