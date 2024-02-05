@@ -1,0 +1,181 @@
+.main {
+  margin: auto;
+  margin-top: 4em;
+  width: 100%;
+  max-width: 750px;
+  background-color: #1a1a1a;
+  padding: 2em;
+  border-radius: 0.3em;
+  margin-bottom: 2em;
+}
+
+.smallTitle {
+  font-size: 0.8em;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.main .tzWord {
+  font-size: 2rem;
+  color: rgb(0, 240, 160);
+  border: none;
+  font-weight: bold;
+  font-family: inherit;
+  background-color: transparent;
+  outline: none;
+  resize: none;
+}
+
+.divider {
+  border-top: 1px solid white;
+  opacity: 0.3;
+  margin-top: 0.5em;
+  margin-bottom: 1em;
+}
+
+.definitionGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto;
+  gap: 1em;
+}
+
+.definitionGrid textarea {
+  border: none;
+  font-size: 1.5rem;
+  font-weight: bold;
+  font-family: inherit;
+  background: transparent;
+  outline: none;
+  resize: none;
+  form-sizing: fit-content;
+  margin-bottom: 1rem;
+}
+
+.definitionGrid textarea:last-of-type {
+  margin-bottom: 0;
+}
+
+.goBack {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  margin-bottom: 1em;
+  cursor: pointer;
+}
+
+.buttons {
+  margin-top: 1.5em;
+  display: flex;
+  gap: 0.5em;
+}
+
+.button {
+  background-color: #000;
+  color: white;
+  padding: 0.5em 1em;
+  border-radius: 0.2em;
+  transition: 0.2s all;
+  font-family: inherit;
+  height: max-content;
+  display: flex;
+  align-items: center;
+}
+
+.button svg {
+  margin-right: 0.5em;
+}
+
+.button:hover {
+  filter: brightness(0.8);
+}
+
+.main textarea {
+  overflow: hidden;
+}
+
+.main textarea:disabled {
+  color: white;
+  resize: none;
+}
+
+.main textarea:enabled,
+.main .tzWord:enabled {
+  border-bottom: 2px solid #303030;
+  transition: 0.2s border;
+}
+
+.main textarea:focus,
+.main .tzWord:focus {
+  border-bottom: 2px solid #ffffff;
+}
+
+.headerFlex {
+  display: flex;
+  gap: 0.5em;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.headerFlex .button {
+  font-size: 0.9em;
+}
+
+.notes {
+  font-size: 1rem;
+  margin-top: 0.5rem;
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: inherit;
+}
+
+.notes:enabled {
+  resize: vertical !important;
+}
+
+.rotate {
+  animation: rotate 2s infinite;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .definitionGrid {
+    grid-template-columns: auto;
+  }
+}
+
+.error {
+  background-color: rgba(255, 208, 0, 0.3);
+  padding: 1em;
+  margin-top: 0.5em;
+  margin-bottom: 1em;
+  border-radius: 0.2em;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+}
+
+.error svg {
+  margin-right: 1em;
+}
+
+.error p > pre {
+  margin-left: 0.2em;
+  display: inline-block;
+  background-color: #303030;
+  padding: 0.2em 0.5em;
+  border-radius: 0.2em;
+}
