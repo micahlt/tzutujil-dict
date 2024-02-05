@@ -4,6 +4,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
+  metadataBase: new URL("https://tzdb.micahlindley.com"),
   title: "TzDB | Tz'utujil Language Database",
   description:
     "The world's largest, most comprehensive Tz'utujil dictionary and translator.",
