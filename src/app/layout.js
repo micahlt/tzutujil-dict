@@ -11,8 +11,9 @@ export const metadata = {
   keywords:
     "Tzutujil dictionary,Tz'utujil dictionary,Tz'utujil diccionario,Tzutujil diccionario,Guatemala,translate Tzutujil,translate Tz'utujil,Tz'utujil translator,Tzutujil translator,learn Tzutujil,,Tzutujil language,Tzutujil database,Tz'utujil database",
   openGraph: {
-    image: [`https://tzdb.micahlindley.com/api/og`],
+    image: ["https://tzdb.micahlindley.com/api/og"],
   },
+  image: ["https://tzdb.micahlindley.com/api/og"],
   twitter: {
     card: "summary_large_image",
     title: "TzDB | Tz'utujil Language Database",
