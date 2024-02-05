@@ -56,9 +56,15 @@ export default function Words() {
                     <td>
                       <Link href={`/words/${word.id}`}>{word.tzWord}</Link>
                     </td>
-                    <td>{word.esWord}</td>
-                    <td>{word.enWord}</td>
-                    <td>{word.id}</td>
+                    <td>
+                      <Link href={`/words/${word.id}`}>{word.esWord}</Link>
+                    </td>
+                    <td>
+                      <Link href={`/words/${word.id}`}>{word.enWord}</Link>
+                    </td>
+                    <td>
+                      <Link href={`/words/${word.id}`}>{word.id}</Link>
+                    </td>
                   </tr>
                 ))}
               </tbody>
