@@ -19,7 +19,7 @@ export default function ExtractorTzEs() {
     let extractionPhase = 1;
     const splitData = lines
       .replace(/(Tz’utujil Tinaamitaal\n\d+)/g, "")
-      .split(/[\?.]/g);
+      .split(/[\?.\!]/g);
     let newLines = "";
     let data = [];
     let currentWord = {};
