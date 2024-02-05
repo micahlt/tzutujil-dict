@@ -1,120 +1,40 @@
-"use client";
-import { useEffect, useState } from "react";
-import styles from "@/app/home.module.css";
-import local from "@/app/i18n";
-import Navbar from "@/components/Navbar";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { CornerDownLeft } from "react-feather";
+"use server";
+import HomeClient from "./homeClient";
 
-export default function Home() {
-  const nav = useRouter();
-  const [count, setCount] = useState(1);
-  const [words, setWords] = useState([]);
-  const [searchFocused, setSearchFocused] = useState(false);
-  const [query, setQuery] = useState("");
-  const [results, setResults] = useState([]);
-  useEffect(() => {
-    fetch("/api/getCount")
-      .then((res) => res.text())
-      .then((text) => setCount(text));
-    fetch("/api/getAll?limit=15")
-      .then((res) => res.json())
-      .then((json) => setWords(json));
-  }, []);
-  const searchChange = (e) => {
-    setQuery(e.target.value);
-    fetch(`/api/autocomplete?q=${e.target.value}&ac=true`)
-      .then((res) => res.json())
-      .then((json) => {
-        setResults(json);
-      });
-  };
+async function getData(wordId) {
+  const countRes = await fetch(
+    `https://tzdb.micahlindley.com/api/getCount?id=${wordId}`
+  );
+
+  const wordsRes = await fetch(
+    `https://tzdb.micahlindley.com/api/getAll?limit=15`
+  );
+
+  if (!countRes.ok || !wordsRes.ok) {
+    throw new Error("Failed to fetch data");
+  }
+
+  const count = await countRes.json();
+  const words = await wordsRes.json();
+  return { count, words };
+}
+
+export default async function Home() {
+  const { count, words } = await getData();
+
   return (
     <>
-      <Navbar />
-      <main>
-        <div className={styles.hero}>
-          <div className={styles.heroContent}>
-            <p>{local.t("heroSubtitle")}</p>
-            <h2>
-              {local.t("moreThan")} <span>{(count - 1).toLocaleString()}</span>{" "}
-              {local.t("translatedWords")}
-            </h2>
-            <div className={styles.heroSearchWrapper}>
-              <input
-                type="search"
-                className={styles.heroSearch}
-                placeholder={local.t("searchPlaceholder")}
-                onBlur={() => setTimeout(() => setSearchFocused(false), 250)}
-                onFocus={() => setSearchFocused(true)}
-                onChange={searchChange}
-                onKeyUp={(e) => {
-                  if (e.key == "Enter") nav.push(`/search?q=${e.target.value}`);
-                }}
-              ></input>
-              {searchFocused && (
-                <div className={styles.searchSuggestions}>
-                  {results.map((res) => (
-                    <Link
-                      href={`/words/${res.id}`}
-                      key={res.id}
-                      className={styles.suggestion}
-                    >
-                      <h3>{res.tzWord}</h3>
-                      <p>
-                        {res.esWord && (
-                          <>
-                            <b>ES</b> <span>{res.esWord}</span>
-                          </>
-                        )}
-                        {res.esWord && res.enWord && " | "}
-                        {res.enWord && (
-                          <>
-                            <b>EN</b> <span>{res.enWord}</span>
-                          </>
-                        )}
-                      </p>
-                    </Link>
-                  ))}
-                  <div
-                    className={styles.suggestion}
-                    style={{ textAlign: "center" }}
-                  >
-                    {query.length > 0 ? (
-                      <>
-                        {local.t("pressEnter")}
-                        <CornerDownLeft size={20} color="white" />
-                      </>
-                    ) : (
-                      <>{local.t("startTyping")}</>
-                    )}
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-        <div className={styles.allWords}>
-          <p
-            style={{
-              width: "100%",
-              textAlign: "center",
-              marginBottom: "2em",
-              fontWeight: "bold",
-            }}
-          >
-            {local.t("previewEntryBelow")}
-          </p>
-          <ul>
-            {words.map((word) => (
-              <li key={word.id}>
-                <Link href={`/words/${word.id}`}>{word.tzWord}</Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </main>
+      <HomeClient count={count} words={words} />
     </>
   );
+}
+
+export async function generateMetadata() {
+  return {
+    title: `TzDB | Tz'utujil Language Database`,
+    description: `The world's largest, most comprehensive Tz'utujil dictionary and translator.`,
+    openGraph: {
+      images: [`https://tzdb.micahlindley.com/api/og`],
+    },
+  };
 }

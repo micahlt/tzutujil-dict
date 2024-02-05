@@ -37,9 +37,9 @@ export default function Navbar() {
         <Globe size={16} /> <span>{local.t("langSwitch")}</span>
       </a>
       <div className={style.flexSpacer}></div>
-      <a href="#" className={style.link}>
-        {local.t("basicWords")}
-      </a>
+      <Link href="/words" className={style.link}>
+        {local.t("allWords")}
+      </Link>
       <Link href="/resources" className={style.link}>
         {local.t("resources")}
       </Link>

@@ -3,7 +3,7 @@ import WordClient from "./wordClient";
 
 async function getData(wordId) {
   const res = await fetch(
-    `https://temp.micahlindley.com/api/word?id=${wordId}`
+    `https://tzdb.micahlindley.com/api/word?id=${wordId}`
   );
 
   if (!res.ok) {
