@@ -30,5 +30,8 @@ export async function generateMetadata({ params: { word: wordId } }) {
   return {
     title: `${wordData.tzWord} | TzDB`,
     description: `Definition of ${wordData.tzWord} on the world's largest, most comprehensive Tz'utujil dictionary and translator.`,
+    openGraph: {
+      images: [`https://tzdb.micahlindley.com/api/og?word=${wordData.tzWord}`],
+    },
   };
 }

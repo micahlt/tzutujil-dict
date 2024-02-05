@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@vercel/og": "^0.6.2",
     "classnames": "^2.5.1",
     "dotenv": "^16.4.1",
     "i18n-js": "^4.3.2",
