@@ -5,7 +5,7 @@ import Navbar from "@/components/Navbar";
 import Link from "next/link";
 import local from "@/app/i18n";
 
-export default function About() {
+export default function TextPageTemplate() {
   return (
     <>
       <Navbar />

@@ -43,9 +43,6 @@ export default function Navbar() {
       <Link href="/resources" className={style.link}>
         {local.t("resources")}
       </Link>
-      <Link href="/about" className={style.link}>
-        {local.t("about")}
-      </Link>
       {loggedIn && (
         <Link href="/words/new" className={style.link}>
           {local.t("newWord")}
