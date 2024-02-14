@@ -297,7 +297,6 @@ export default function WordClient({ wordId, wordData }) {
               </a>
             </div>
           )}
-          {wordId && <div className={styles.wordId}>{wordId}</div>}
         </main>
       ) : (
         <div className="loader" style={{ marginTop: "7rem" }}></div>

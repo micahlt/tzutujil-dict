@@ -97,7 +97,12 @@
 
 .main textarea:disabled {
   color: white;
+  opacity: 1;
   resize: none;
+}
+
+.main > textarea:disabled.tzWord {
+  color: rgb(0, 240, 160) !important;
 }
 
 .main textarea:enabled,
