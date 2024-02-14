@@ -237,6 +237,12 @@ export default function WordClient({ wordId, wordData }) {
                 }}
                 value={wordInfo.esExampleSentence || ""}
               ></TextareaAutosize>
+              <p className={styles.smallTitle}>{local.t("wordId")}</p>
+              <TextareaAutosize
+                placeholder={local.t("notProvided")}
+                disabled={true}
+                value={wordInfo.id}
+              ></TextareaAutosize>
             </div>
           </div>
           <div className={styles.divider}></div>
@@ -291,6 +297,7 @@ export default function WordClient({ wordId, wordData }) {
               </a>
             </div>
           )}
+          {wordId && <div className={styles.wordId}>{wordId}</div>}
         </main>
       ) : (
         <div className="loader" style={{ marginTop: "7rem" }}></div>

@@ -90,7 +90,7 @@
 .navButtons {
   display: flex;
   flex: 1;
-  justify-content: end;
+  justify-content: flex-end;
   gap: 0.5em;
   align-items: center;
 }
