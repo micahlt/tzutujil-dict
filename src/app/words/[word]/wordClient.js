@@ -15,7 +15,7 @@ import { useRouter } from "next/navigation";
 import TextareaAutosize from "react-textarea-autosize";
 import local from "@/app/i18n";
 
-export default function WordClient({ wordId, wordData }) {
+export default function WordClient({ wordId, wordData, source }) {
   const [wordInfo, setWordInfo] = useState(wordData);
   const [password, setPassword] = useState();
   const [editMode, setEditMode] = useState(false);
@@ -247,7 +247,7 @@ export default function WordClient({ wordId, wordData }) {
           </div>
           <div className={styles.divider}></div>
           <div>
-            <p className={styles.smallTitle}>NOTES</p>
+            <p className={styles.smallTitle}>{local.t("notes")}</p>
             <TextareaAutosize
               placeholder="no notes yet..."
               className={styles.notes}
@@ -260,6 +260,19 @@ export default function WordClient({ wordId, wordData }) {
               }}
               value={wordInfo.notes || ""}
             ></TextareaAutosize>
+            <p className={styles.smallTitle} style={{ marginTop: 10 }}>
+              {local.t("source")}
+            </p>
+            {editMode ? (
+              <></>
+            ) : (
+              <TextareaAutosize
+                placeholder="unknown source"
+                disabled={true}
+                className={styles.notes}
+                value={source || ""}
+              ></TextareaAutosize>
+            )}
           </div>
           {wordInfo.esWord && (
             <div className={styles.buttons}>

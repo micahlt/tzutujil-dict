@@ -13,12 +13,21 @@ async function getData(wordId) {
   return res.json();
 }
 
+async function getSource(sourceId) {
+  const res = await fetch(
+    `https://tzdb.micahlindley.com/api/source?id=${sourceId}`
+  );
+
+  return res.json();
+}
+
 export default async function Word({ params: { word: wordId } }) {
   const wordData = await getData(wordId);
+  const source = wordData.sourceId ? getSource(wordData.sourceId) : null;
 
   return (
     <>
-      <WordClient wordId={wordId} wordData={wordData} />
+      <WordClient wordId={wordId} wordData={wordData} source={source} />
     </>
   );
 }

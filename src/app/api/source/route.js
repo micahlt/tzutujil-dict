@@ -11,7 +11,7 @@ export async function GET(req) {
   const id = searchParams.get("id");
 
   // simple query
-  const results = await connection.execute(`SELECT * FROM words WHERE id=?`, [
+  const results = await connection.execute(`SELECT * FROM sources WHERE id=?`, [
     id,
   ]);
   return Response.json(results[0][0]);
@@ -42,18 +42,8 @@ export async function PUT(req) {
       });
       try {
         const [res] = await connection.execute(
-          `INSERT INTO words (tzWord, esPronounce, enWord, esWord, tzExampleSentence, esExampleSentence, enExampleSentence, notes, sourceId) VALUES (?,?,?,?,?,?,?,?,?)`,
-          [
-            json.tzWord,
-            json.esPronounce || null,
-            json.enWord || null,
-            json.esWord || null,
-            json.tzExampleSentence || null,
-            json.esExampleSentence || null,
-            json.enExampleSentence || null,
-            json.notes || null,
-            json.sourceId || null,
-          ]
+          `INSERT INTO sources (url, title) VALUES (?,?)`,
+          [json.url, json.title || null]
         );
         connection.end();
         if (res.err) {
@@ -119,19 +109,8 @@ export async function PATCH(req) {
     } else {
       try {
         const { err, res } = await connection.execute(
-          `UPDATE words SET tzWord=?, esPronounce=?, enWord=?, esWord=?, tzExampleSentence=?, esExampleSentence=?, enExampleSentence=?, notes=?, sourceId=? WHERE id=?`,
-          [
-            json.tzWord,
-            json.esPronounce || null,
-            json.enWord || null,
-            json.esWord || null,
-            json.tzExampleSentence || null,
-            json.esExampleSentence || null,
-            json.enExampleSentence || null,
-            json.notes || null,
-            json.sourceId || null,
-            json.id,
-          ]
+          `UPDATE sources SET url=?, title=? WHERE id=?`,
+          [json.url || null, json.title, json.id]
         );
         connection.end();
         if (err) {
@@ -192,7 +171,7 @@ export async function DELETE(req) {
         }
       );
     } else {
-      await connection.execute(`DELETE FROM words WHERE id=?`, [json.id]);
+      await connection.execute(`DELETE FROM sources WHERE id=?`, [json.id]);
       connection.end();
       return Response.json({ success: true });
     }
