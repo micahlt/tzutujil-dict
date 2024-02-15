@@ -10,7 +10,7 @@ async function getData(wordId) {
     throw new Error("Failed to fetch data");
   }
 
-  return res.json();
+  return await res.json();
 }
 
 async function getSource(sourceId) {
@@ -18,16 +18,17 @@ async function getSource(sourceId) {
     `https://tzdb.micahlindley.com/api/source?id=${sourceId}`
   );
 
-  return res.json();
+  return await res.json();
 }
 
 export default async function Word({ params: { word: wordId } }) {
   const wordData = await getData(wordId);
-  const source = wordData.sourceId ? getSource(wordData.sourceId) : null;
+  const source =
+    wordData.sourceId != null ? await getSource(wordData.sourceId) : null;
 
   return (
     <>
-      <WordClient wordId={wordId} wordData={wordData} source={source} />
+      <WordClient wordId={wordId} wordData={wordData} source={source || null} />
     </>
   );
 }

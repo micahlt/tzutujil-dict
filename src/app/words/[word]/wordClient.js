@@ -19,12 +19,25 @@ export default function WordClient({ wordId, wordData, source }) {
   const [wordInfo, setWordInfo] = useState(wordData);
   const [password, setPassword] = useState();
   const [editMode, setEditMode] = useState(false);
+  const [sources, setSources] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const nav = useRouter();
   useEffect(() => {
     setPassword(window.localStorage.getItem("pwd"));
   }, []);
+  useEffect(() => {
+    if (editMode && sources.length == 0) {
+      fetch(`/api/getAll?type=sources`)
+        .then((res) => res.json())
+        .then((json) => setSources(json))
+        .catch((err) => {
+          setError({
+            code: err.code || err.reason || "Failed to fetch sources",
+          });
+        });
+    }
+  }, [editMode]);
   const saveWord = (e) => {
     e.preventDefault();
     setLoading(true);
@@ -57,6 +70,7 @@ export default function WordClient({ wordId, wordData, source }) {
         .then((json) => {
           if (json.success) {
             setEditMode(false);
+            nav.refresh();
           } else {
             setError({ code: json.code });
           }
@@ -264,14 +278,32 @@ export default function WordClient({ wordId, wordData, source }) {
               {local.t("source")}
             </p>
             {editMode ? (
-              <></>
+              <select
+                className={styles.sourcePicker}
+                value={wordInfo.sourceId}
+                onChange={(e) => {
+                  setWordInfo({
+                    ...wordInfo,
+                    sourceId: e.target.value,
+                  });
+                }}
+              >
+                <option value="">Unknown source</option>
+                {sources.map((s) => (
+                  <option key={s.id} value={s.id}>
+                    {s.title}
+                  </option>
+                ))}
+              </select>
             ) : (
-              <TextareaAutosize
-                placeholder="unknown source"
-                disabled={true}
-                className={styles.notes}
-                value={source || ""}
-              ></TextareaAutosize>
+              <a
+                href={source?.url || null}
+                className={styles.source}
+                target="_blank"
+                title="Open this source in a new tab"
+              >
+                {source?.title || "unknown source"}
+              </a>
             )}
           </div>
           {wordInfo.esWord && (

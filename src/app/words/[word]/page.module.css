@@ -143,6 +143,28 @@
   resize: vertical !important;
 }
 
+.source {
+  margin-top: 0.5rem;
+  display: block;
+  width: max-content;
+}
+
+.source[href] {
+  text-decoration: underline;
+  transition: color 0.1s;
+}
+
+.source[href]:hover {
+  color: rgb(0, 240, 160);
+}
+
+.sourcePicker {
+  font-family: inherit !important;
+  font-size: 1.05em;
+  padding: 0.25em 0.5em;
+  margin-top: 0.5rem;
+}
+
 .rotate {
   animation: rotate 2s infinite;
 }

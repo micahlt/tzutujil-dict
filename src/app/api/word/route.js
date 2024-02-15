@@ -2,6 +2,7 @@ import "dotenv/config";
 require("dotenv").config();
 
 import mysql from "mysql2/promise";
+import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 
 export async function GET(req) {
@@ -142,6 +143,7 @@ export async function PATCH(req) {
             },
           });
         } else {
+          revalidatePath(`/words/${json.id}`);
           return Response.json({ success: true });
         }
       } catch (err) {
