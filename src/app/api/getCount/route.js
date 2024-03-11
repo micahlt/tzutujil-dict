@@ -11,7 +11,8 @@ export async function GET() {
   const results = await connection
     .promise()
     .query("select count (*) from words");
-  return Response.json(results[0][0]["count(*)"]);
+  console.log(results);
+  return new Response(results[0][0]["count (*)"]);
 }
 
 //
