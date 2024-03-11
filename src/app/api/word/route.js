@@ -10,11 +10,27 @@ export async function GET(req) {
   const connection = await mysql.createConnection(process.env.PLANET_URL);
   const searchParams = req.nextUrl.searchParams;
   const id = searchParams.get("id");
+  const tzWord = searchParams.get("tzWord");
 
-  // simple query
-  const results = await connection.execute(`SELECT * FROM words WHERE id=?`, [
-    id,
-  ]);
+  if (!id && !tzWord) {
+    return new Response(
+      JSON.stringify({
+        success: false,
+        reason: "Missing either id or tzWord params",
+      }),
+      {
+        status: 400,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+  }
+
+  const results = await connection.execute(
+    `SELECT * FROM words WHERE ${tzWord ? "tzWord=?" : "id=?"}`,
+    [tzWord ? tzWord : id]
+  );
   return Response.json(results[0][0]);
 }
 
@@ -27,7 +43,7 @@ export async function PUT(req) {
 
     const json = await req.json();
 
-    if (!json) {
+    if (!json || !json.tzWord) {
       return new Response(
         JSON.stringify({ success: false, reason: "Missing content" }),
         {
@@ -39,7 +55,9 @@ export async function PUT(req) {
       );
     } else {
       Object.keys(json).forEach((key) => {
-        json[key] = json[key].replaceAll("’", "'");
+        if (typeof json[key] == "string") {
+          json[key] = json[key].replaceAll("’", "'");
+        }
       });
       try {
         const [res] = await connection.execute(
@@ -100,14 +118,18 @@ export async function PUT(req) {
 
 export async function PATCH(req) {
   const headersList = headers();
+  const searchParams = req.nextUrl.searchParams;
   const password = headersList.get("x-pwd");
   // Create the connection to the database
   if (password == process.env.ADMIN_PASSWORD) {
     const connection = await mysql.createConnection(process.env.PLANET_URL);
 
+    const tzWord = searchParams.get("tzWord");
+    console.log(tzWord);
+
     const json = await req.json();
 
-    if (!json || !json.id) {
+    if (!json || (!json.id && !tzWord)) {
       return new Response(
         JSON.stringify({ success: false, reason: "Missing content or ID" }),
         {
@@ -120,9 +142,11 @@ export async function PATCH(req) {
     } else {
       try {
         const { err, res } = await connection.execute(
-          `UPDATE words SET tzWord=?, esPronounce=?, enWord=?, esWord=?, tzExampleSentence=?, esExampleSentence=?, enExampleSentence=?, notes=?, sourceId=? WHERE id=?`,
+          `UPDATE words SET tzWord=?, esPronounce=?, enWord=?, esWord=?, tzExampleSentence=?, esExampleSentence=?, enExampleSentence=?, notes=?, sourceId=? WHERE ${
+            tzWord ? "tzWord=?" : "id=?"
+          }`,
           [
-            json.tzWord,
+            json.tzWord || null,
             json.esPronounce || null,
             json.enWord || null,
             json.esWord || null,
@@ -131,7 +155,7 @@ export async function PATCH(req) {
             json.enExampleSentence || null,
             json.notes || null,
             json.sourceId || null,
-            json.id,
+            tzWord ? tzWord : json.id,
           ]
         );
         connection.end();
@@ -147,6 +171,7 @@ export async function PATCH(req) {
           return Response.json({ success: true });
         }
       } catch (err) {
+        console.log(err);
         return new Response(
           JSON.stringify({
             success: false,
