@@ -236,7 +236,7 @@ export default function Resources() {
             </li>
             <li>
               <a
-                href="https://www.palabrasatitlan.org/docs/Vida%20de%20Ancianos%20de%20Atitlan.pdf"
+                href="https://cdn.tzdb.micahlindley.com/interviews/Vida%20De%20Los%20Ancianos%20Del%20Lago%20Atitlán.pdf"
                 target="_blank"
               >
                 Vida de los Ancianos del Lago Atitlán
@@ -244,7 +244,7 @@ export default function Resources() {
             </li>
             <li>
               <a
-                href="https://www.palabrasatitlan.org/docs/Vida%20de%20las%20Mujeres%20de%20Atitlan.pdf"
+                href="https://cdn.tzdb.micahlindley.com/interviews/Vida%20De%20Las%20Mujeres%20Del%20Lago%20Atitlán.pdf"
                 target="_blank"
               >
                 Vida de las Mujeres del Lago Atitlán
@@ -252,7 +252,7 @@ export default function Resources() {
             </li>
             <li>
               <a
-                href="https://www.palabrasatitlan.org/docs/Vida%20de%20los%20Hombres%20de%20Atitlan.pdf"
+                href="https://cdn.tzdb.micahlindley.com/interviews/Vida%20De%20Los%20Hombres%20Del%20Lago%20Atitlán.pdf"
                 target="_blank"
               >
                 Vida de los Hombres del Lago Atitlán
@@ -260,7 +260,7 @@ export default function Resources() {
             </li>
             <li>
               <a
-                href="https://www.palabrasatitlan.org/docs/Pueblos%20y%20Santos%20del%20Lago%20Atitlan.pdf"
+                href="https://cdn.tzdb.micahlindley.com/interviews/Pueblos%20Y%20Santos%20Del%20Lago%20Atitlan.pdf"
                 target="_blank"
               >
                 Pueblos y Santos del Lago Atitlán
@@ -268,7 +268,7 @@ export default function Resources() {
             </li>
             <li>
               <a
-                href="https://www.palabrasatitlan.org/docs/Literatura%20Oral%20de%20Atitlan.pdf"
+                href="https://cdn.tzdb.micahlindley.com/interviews/Literatura%20Oral%20De%20Los%20Pueblos%20Del%20Lago.pdf"
                 target="_blank"
               >
                 Literatura Oral de los Pueblos del Lago Atitlán
@@ -276,7 +276,7 @@ export default function Resources() {
             </li>
             <li>
               <a
-                href="https://www.palabrasatitlan.org/docs/Geografia%20de%20Atitlan.pdf"
+                href="https://cdn.tzdb.micahlindley.com/textbooks/Nuestra%20Geografia%20Del%20Lago%20Atitlan.pdf"
                 target="_blank"
               >
                 Nuestra Geografía del Lago Atitlán
@@ -284,7 +284,7 @@ export default function Resources() {
             </li>
             <li>
               <a
-                href="https://www.palabrasatitlan.org/docs/Nuestro%20Maiz%20de%20Atitlan.pdf"
+                href="https://cdn.tzdb.micahlindley.com/interviews/Nuestro%20Maiz%20Del%20Lago%20Atitlan.pdf"
                 target="_blank"
               >
                 Nuestro Maíz del Lago Atitlán
@@ -292,7 +292,7 @@ export default function Resources() {
             </li>
             <li>
               <a
-                href="https://www.palabrasatitlan.org/docs/Tecnicas%20I.pdf"
+                href="https://cdn.tzdb.micahlindley.com/interviews/Tecnicas%20Del%20Lago%20Atitlan%20I.pdf"
                 target="_blank"
               >
                 Técnicas del Lago Atitlán
@@ -300,15 +300,15 @@ export default function Resources() {
             </li>
             <li>
               <a
-                href="https://www.palabrasatitlan.org/docs/Tecnicas%20II.pdf"
+                href="https://cdn.tzdb.micahlindley.com/interviews/Tecnicas%20En%20Los%20Pueblos%20Del%20Lago%20Atitlan.pdf"
                 target="_blank"
               >
-                Técnicas en los pueblos del Lago Atitlán
+                Tecnicas En Los Pueblos Del Lago Atitlan
               </a>
             </li>
             <li>
               <a
-                href="https://www.palabrasatitlan.org/docs/Historias%20de%20La%20Noche.pdf"
+                href="https://cdn.tzdb.micahlindley.com/interviews/Historias%20De%20La%20Noche.pdf"
                 target="_blank"
               >
                 Historias de la Noche en el Lago Atitlán
@@ -316,7 +316,7 @@ export default function Resources() {
             </li>
             <li>
               <a
-                href="https://www.palabrasatitlan.org/docs/La%20Abuela%20Luna.pdf"
+                href="https://cdn.tzdb.micahlindley.com/interviews/La%20Abuela%20Luna%20Y%20Otras%20Historias%20Del%20Cie.pdf"
                 target="_blank"
               >
                 La Abuela Luna y Otras Historias del Cielo
@@ -324,7 +324,7 @@ export default function Resources() {
             </li>
             <li>
               <a
-                href="https://www.palabrasatitlan.org/docs/Historias%20Historia%20de%20Atitlan.pdf"
+                href="https://cdn.tzdb.micahlindley.com/history/Historias%20Historia%20Del%20Lago%20Atitlan.pdf"
                 target="_blank"
               >
                 Historias, Historia del Lago Atitlán
@@ -332,7 +332,7 @@ export default function Resources() {
             </li>
             <li>
               <a
-                href="https://www.palabrasatitlan.org/docs/Pintores%20del%20Lago%20Atitlan.pdf"
+                href="https://cdn.tzdb.micahlindley.com/textbooks/Pintores%20Del%20Lago%20Atitlan.pdf"
                 target="_blank"
               >
                 La Pintura del Lago Atitlán
@@ -340,7 +340,7 @@ export default function Resources() {
             </li>
             <li>
               <a
-                href="https://www.palabrasatitlan.org/docs/Pintores%20del%20Lago%20Atitlan.pdf"
+                href="https://cdn.tzdb.micahlindley.com/textbooks/Guia%20Pedagogica.pdf"
                 target="_blank"
               >
                 Guía Pedagógica
