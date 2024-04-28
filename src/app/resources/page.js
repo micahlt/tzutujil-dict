@@ -236,7 +236,7 @@ export default function Resources() {
             </li>
             <li>
               <a
-                href="https://cdn.tzdb.micahlindley.com/interviews/Vida%20De%20Los%20Ancianos%20Del%20Lago%20Atitlán.pdf"
+                href="https://resources.tzutujil.org/interviews/Vida%20De%20Los%20Ancianos%20Del%20Lago%20Atitlán.pdf"
                 target="_blank"
               >
                 Vida de los Ancianos del Lago Atitlán
@@ -244,7 +244,7 @@ export default function Resources() {
             </li>
             <li>
               <a
-                href="https://cdn.tzdb.micahlindley.com/interviews/Vida%20De%20Las%20Mujeres%20Del%20Lago%20Atitlán.pdf"
+                href="https://resources.tzutujil.org/interviews/Vida%20De%20Las%20Mujeres%20Del%20Lago%20Atitlán.pdf"
                 target="_blank"
               >
                 Vida de las Mujeres del Lago Atitlán
@@ -252,7 +252,7 @@ export default function Resources() {
             </li>
             <li>
               <a
-                href="https://cdn.tzdb.micahlindley.com/interviews/Vida%20De%20Los%20Hombres%20Del%20Lago%20Atitlán.pdf"
+                href="https://resources.tzutujil.org/interviews/Vida%20De%20Los%20Hombres%20Del%20Lago%20Atitlán.pdf"
                 target="_blank"
               >
                 Vida de los Hombres del Lago Atitlán
@@ -260,7 +260,7 @@ export default function Resources() {
             </li>
             <li>
               <a
-                href="https://cdn.tzdb.micahlindley.com/interviews/Pueblos%20Y%20Santos%20Del%20Lago%20Atitlan.pdf"
+                href="https://resources.tzutujil.org/interviews/Pueblos%20Y%20Santos%20Del%20Lago%20Atitlan.pdf"
                 target="_blank"
               >
                 Pueblos y Santos del Lago Atitlán
@@ -268,7 +268,7 @@ export default function Resources() {
             </li>
             <li>
               <a
-                href="https://cdn.tzdb.micahlindley.com/interviews/Literatura%20Oral%20De%20Los%20Pueblos%20Del%20Lago.pdf"
+                href="https://resources.tzutujil.org/interviews/Literatura%20Oral%20De%20Los%20Pueblos%20Del%20Lago.pdf"
                 target="_blank"
               >
                 Literatura Oral de los Pueblos del Lago Atitlán
@@ -276,7 +276,7 @@ export default function Resources() {
             </li>
             <li>
               <a
-                href="https://cdn.tzdb.micahlindley.com/textbooks/Nuestra%20Geografia%20Del%20Lago%20Atitlan.pdf"
+                href="https://resources.tzutujil.org/textbooks/Nuestra%20Geografia%20Del%20Lago%20Atitlan.pdf"
                 target="_blank"
               >
                 Nuestra Geografía del Lago Atitlán
@@ -284,7 +284,7 @@ export default function Resources() {
             </li>
             <li>
               <a
-                href="https://cdn.tzdb.micahlindley.com/interviews/Nuestro%20Maiz%20Del%20Lago%20Atitlan.pdf"
+                href="https://resources.tzutujil.org/interviews/Nuestro%20Maiz%20Del%20Lago%20Atitlan.pdf"
                 target="_blank"
               >
                 Nuestro Maíz del Lago Atitlán
@@ -292,7 +292,7 @@ export default function Resources() {
             </li>
             <li>
               <a
-                href="https://cdn.tzdb.micahlindley.com/interviews/Tecnicas%20Del%20Lago%20Atitlan%20I.pdf"
+                href="https://resources.tzutujil.org/interviews/Tecnicas%20Del%20Lago%20Atitlan%20I.pdf"
                 target="_blank"
               >
                 Técnicas del Lago Atitlán
@@ -300,7 +300,7 @@ export default function Resources() {
             </li>
             <li>
               <a
-                href="https://cdn.tzdb.micahlindley.com/interviews/Tecnicas%20En%20Los%20Pueblos%20Del%20Lago%20Atitlan.pdf"
+                href="https://resources.tzutujil.org/interviews/Tecnicas%20En%20Los%20Pueblos%20Del%20Lago%20Atitlan.pdf"
                 target="_blank"
               >
                 Tecnicas En Los Pueblos Del Lago Atitlan
@@ -308,7 +308,7 @@ export default function Resources() {
             </li>
             <li>
               <a
-                href="https://cdn.tzdb.micahlindley.com/interviews/Historias%20De%20La%20Noche.pdf"
+                href="https://resources.tzutujil.org/interviews/Historias%20De%20La%20Noche.pdf"
                 target="_blank"
               >
                 Historias de la Noche en el Lago Atitlán
@@ -316,7 +316,7 @@ export default function Resources() {
             </li>
             <li>
               <a
-                href="https://cdn.tzdb.micahlindley.com/interviews/La%20Abuela%20Luna%20Y%20Otras%20Historias%20Del%20Cie.pdf"
+                href="https://resources.tzutujil.org/interviews/La%20Abuela%20Luna%20Y%20Otras%20Historias%20Del%20Cie.pdf"
                 target="_blank"
               >
                 La Abuela Luna y Otras Historias del Cielo
@@ -324,7 +324,7 @@ export default function Resources() {
             </li>
             <li>
               <a
-                href="https://cdn.tzdb.micahlindley.com/history/Historias%20Historia%20Del%20Lago%20Atitlan.pdf"
+                href="https://resources.tzutujil.org/history/Historias%20Historia%20Del%20Lago%20Atitlan.pdf"
                 target="_blank"
               >
                 Historias, Historia del Lago Atitlán
@@ -332,7 +332,7 @@ export default function Resources() {
             </li>
             <li>
               <a
-                href="https://cdn.tzdb.micahlindley.com/textbooks/Pintores%20Del%20Lago%20Atitlan.pdf"
+                href="https://resources.tzutujil.org/textbooks/Pintores%20Del%20Lago%20Atitlan.pdf"
                 target="_blank"
               >
                 La Pintura del Lago Atitlán
@@ -340,7 +340,7 @@ export default function Resources() {
             </li>
             <li>
               <a
-                href="https://cdn.tzdb.micahlindley.com/textbooks/Guia%20Pedagogica.pdf"
+                href="https://resources.tzutujil.org/textbooks/Guia%20Pedagogica.pdf"
                 target="_blank"
               >
                 Guía Pedagógica
