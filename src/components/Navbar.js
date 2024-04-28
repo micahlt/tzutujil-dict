@@ -44,9 +44,17 @@ export default function Navbar() {
         {local.t("resources")}
       </Link>
       {loggedIn && (
-        <Link href="/words/new" className={style.link}>
-          {local.t("newWord")}
-        </Link>
+        <div href="#" className={style.link}>
+          <p>{local.t("new")}</p>
+          <div className={style.dropdown}>
+            <Link href="/words/new" className={style.link}>
+              {local.t("newWord")}
+            </Link>
+            <Link href="/sources/new" className={style.link}>
+              {local.t("newSource")}
+            </Link>
+          </div>
+        </div>
       )}
     </nav>
   );

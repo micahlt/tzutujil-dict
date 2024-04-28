@@ -36,6 +36,36 @@
 .link {
   text-transform: uppercase;
   font-size: 0.8em;
+  cursor: pointer;
+  display: block;
+  position: relative;
+}
+
+.dropdown {
+  display: none;
+  position: absolute;
+  top: 0;
+  padding-top: 2em;
+  right: 0;
+  text-align: right;
+  width: max-content;
+  font-size: 1.2em;
+  overflow: hidden;
+  border-radius: 0.5em;
+}
+
+.dropdown > .link {
+  color: black;
+  background-color: white;
+  padding: 1em;
+}
+
+.link:hover > .dropdown {
+  display: block;
+}
+
+.dropdown > .link:hover {
+  background-color: #00f0a0;
 }
 
 @media screen and (max-width: 550px) {

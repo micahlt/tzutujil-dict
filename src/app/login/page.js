@@ -29,6 +29,7 @@ export default function Resources() {
             onKeyUp={(e) => {
               if (e.key == "Enter") logIn(e.target.value);
             }}
+            autoComplete="current-password"
           ></input>
         </div>
       </main>
