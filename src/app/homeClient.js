@@ -4,10 +4,13 @@ import local from "@/app/i18n";
 import Navbar from "@/components/Navbar";
 import Link from "next/link";
 import SearchBar from "@/components/SearchBar";
+import { useEffect, useState } from "react";
 
 export default function Home({ count, words }) {
-  const warning =
-    window.localStorage.getItem("underConstructionSummer24") || "yes";
+  const [warning, setWarning] = useState(null);
+  useEffect(() => {
+    setWarning(localStorage.getItem("underConstructionSummer24") || "yes");
+  }, []);
   return (
     <>
       <Navbar />
@@ -27,8 +30,8 @@ export default function Home({ count, words }) {
           </p>
           <button
             onClick={() => {
-              window.localStorage.setItem("underConstructionSummer24", "no");
-              window.location.reload();
+              localStorage.setItem("underConstructionSummer24", "no");
+              location.reload();
             }}
           >
             I understand
