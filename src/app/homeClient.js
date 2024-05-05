@@ -6,9 +6,35 @@ import Link from "next/link";
 import SearchBar from "@/components/SearchBar";
 
 export default function Home({ count, words }) {
+  const warning =
+    window.localStorage.getItem("underConstructionSummer24") || "yes";
   return (
     <>
       <Navbar />
+      {warning == "yes" && (
+        <div className={styles.warning}>
+          <h2>
+            ⚠️
+            <br />
+            Under construction
+          </h2>
+          <p>
+            This summer, TzDB will be rebranding as{" "}
+            <b>Tz'utujil.org Dictionary</b> and will also go through some major
+            structural changes regarding the word database itself. In the
+            meantime, data on the site may be inaccurate or misleading. Please
+            proceed with caution.
+          </p>
+          <button
+            onClick={() => {
+              window.localStorage.setItem("underConstructionSummer24", "no");
+              window.location.reload();
+            }}
+          >
+            I understand
+          </button>
+        </div>
+      )}
       <main>
         <div className={styles.hero}>
           <div className={styles.heroContent}>
