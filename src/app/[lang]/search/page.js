@@ -4,7 +4,7 @@ import styles from "./page.module.css";
 import Navbar from "@/components/Navbar";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import local from "@/app/i18n";
+import local from "@/app/[lang]/i18n";
 import { useEffect, useState } from "react";
 
 export default function Search() {

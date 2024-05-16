@@ -13,21 +13,30 @@ import {
 } from "react-feather";
 import { useRouter } from "next/navigation";
 import TextareaAutosize from "react-textarea-autosize";
-import local from "@/app/i18n";
 
-export default function NewClient() {
-  const [wordId, setWordId] = useState("new");
-  const [wordInfo, setWordInfo] = useState();
+export default function WordClient({ wordId, wordData, source, locale }) {
+  const [wordInfo, setWordInfo] = useState(wordData);
   const [password, setPassword] = useState();
   const [editMode, setEditMode] = useState(false);
+  const [sources, setSources] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const nav = useRouter();
   useEffect(() => {
     setPassword(window.localStorage.getItem("pwd"));
-    setEditMode(true);
-    setWordInfo({});
   }, []);
+  useEffect(() => {
+    if (editMode && sources.length == 0) {
+      fetch(`/api/getAll?type=sources`)
+        .then((res) => res.json())
+        .then((json) => setSources(json))
+        .catch((err) => {
+          setError({
+            code: err.code || err.reason || "Failed to fetch sources",
+          });
+        });
+    }
+  }, [editMode]);
   const saveWord = (e) => {
     e.preventDefault();
     setLoading(true);
@@ -60,6 +69,7 @@ export default function NewClient() {
         .then((json) => {
           if (json.success) {
             setEditMode(false);
+            nav.refresh();
           } else {
             setError({ code: json.code });
           }
@@ -67,14 +77,31 @@ export default function NewClient() {
         });
     }
   };
+  const deleteItem = () => {
+    setLoading(true);
+    if (window.confirm(locale.confirmDelete)) {
+      fetch(`/api/word`, {
+        method: "DELETE",
+        body: JSON.stringify({ id: wordId != "new" ? wordId : false }),
+        headers: {
+          "x-pwd": password,
+        },
+      }).then((res) => {
+        setLoading(false);
+        if (res.ok) {
+          nav.push("/");
+        }
+      });
+    }
+  };
   return (
     <>
-      <Navbar />
+      <Navbar locale={locale} />
       {wordInfo ? (
         <main className={styles.main}>
           <div className={styles.headerFlex}>
             <a href="#" className={styles.goBack} onClick={() => nav.back()}>
-              <ArrowLeft size={24}></ArrowLeft> {local.t("goBack")}
+              <ArrowLeft size={24}></ArrowLeft> {locale.goBack}
             </a>
             <div className={styles.spacer}></div>
             {password && !editMode && (
@@ -88,7 +115,22 @@ export default function NewClient() {
                 }}
               >
                 <Edit2 size={16} />
-                {local.t("edit")}
+                {locale.edit}
+              </a>
+            )}
+            {password && !editMode && wordId != "new" && (
+              <a
+                className={styles.button}
+                href="#"
+                style={{ backgroundColor: "#c10e0e" }}
+                onClick={deleteItem}
+              >
+                {loading ? (
+                  <Loader size={16} className={styles.rotate} />
+                ) : (
+                  <Trash size={16} />
+                )}
+                {locale.delete}
               </a>
             )}
             {password && editMode && (
@@ -104,7 +146,7 @@ export default function NewClient() {
                     }}
                   >
                     <X size={16} />
-                    {local.t("cancel")}
+                    {locale.cancel}
                   </a>
                 )}
                 <a
@@ -118,9 +160,7 @@ export default function NewClient() {
                   ) : (
                     <Save size={16} />
                   )}
-                  {wordId == "new"
-                    ? local.t("saveWord")
-                    : local.t("saveChanges")}
+                  {wordId == "new" ? locale.saveWord : locale.saveChanges}
                 </a>
               </>
             )}
@@ -129,14 +169,14 @@ export default function NewClient() {
             <div className={styles.error}>
               <AlertTriangle size={24} />
               <p>
-                {local.t("errorRecieved")}: <pre>{error.code}</pre>
+                {locale.errorRecieved}: <pre>{error.code}</pre>
               </p>
             </div>
           )}
-          <p className={styles.smallTitle}>{local.t("word")}</p>
+          <p className={styles.smallTitle}>{locale.word}</p>
           <TextareaAutosize
             className={styles.tzWord}
-            placeholder={local.t("notProvided")}
+            placeholder={locale.notProvided}
             disabled={!editMode}
             onChange={(e) => {
               setWordInfo({ ...wordInfo, tzWord: e.target.value });
@@ -146,21 +186,19 @@ export default function NewClient() {
           <div className={styles.divider}></div>
           <div className={styles.definitionGrid}>
             <div>
-              <p className={styles.smallTitle}>
-                {local.t("spanishTranslation")}
-              </p>
+              <p className={styles.smallTitle}>{locale.spanishTranslation}</p>
               <TextareaAutosize
                 rows={1}
-                placeholder={local.t("notProvided")}
+                placeholder={locale.notProvided}
                 disabled={!editMode}
                 onChange={(e) => {
                   setWordInfo({ ...wordInfo, esWord: e.target.value });
                 }}
                 value={wordInfo.esWord || ""}
               ></TextareaAutosize>
-              <p className={styles.smallTitle}>{local.t("tzExample")}</p>
+              <p className={styles.smallTitle}>{locale.tzExample}</p>
               <TextareaAutosize
-                placeholder={local.t("notProvided")}
+                placeholder={locale.notProvided}
                 disabled={!editMode}
                 onChange={(e) => {
                   setWordInfo({
@@ -170,9 +208,9 @@ export default function NewClient() {
                 }}
                 value={wordInfo.tzExampleSentence || ""}
               ></TextareaAutosize>
-              <p className={styles.smallTitle}>{local.t("enExample")}</p>
+              <p className={styles.smallTitle}>{locale.enExample}</p>
               <TextareaAutosize
-                placeholder={local.t("notProvided")}
+                placeholder={locale.notProvided}
                 disabled={!editMode}
                 onChange={(e) => {
                   setWordInfo({
@@ -184,21 +222,19 @@ export default function NewClient() {
               ></TextareaAutosize>
             </div>
             <div>
-              <p className={styles.smallTitle}>
-                {local.t("englishTranslation")}
-              </p>
+              <p className={styles.smallTitle}>{locale.englishTranslation}</p>
               <TextareaAutosize
                 rows={1}
-                placeholder={local.t("notProvided")}
+                placeholder={locale.notProvided}
                 disabled={!editMode}
                 onChange={(e) => {
                   setWordInfo({ ...wordInfo, enWord: e.target.value });
                 }}
                 value={wordInfo.enWord || ""}
               ></TextareaAutosize>
-              <p className={styles.smallTitle}>{local.t("esExample")}</p>
+              <p className={styles.smallTitle}>{locale.esExample}</p>
               <TextareaAutosize
-                placeholder={local.t("notProvided")}
+                placeholder={locale.notProvided}
                 disabled={!editMode}
                 onChange={(e) => {
                   setWordInfo({
@@ -208,11 +244,17 @@ export default function NewClient() {
                 }}
                 value={wordInfo.esExampleSentence || ""}
               ></TextareaAutosize>
+              <p className={styles.smallTitle}>{locale.wordId}</p>
+              <TextareaAutosize
+                placeholder={locale.notProvided}
+                disabled={true}
+                value={wordInfo.id}
+              ></TextareaAutosize>
             </div>
           </div>
           <div className={styles.divider}></div>
           <div>
-            <p className={styles.smallTitle}>NOTES</p>
+            <p className={styles.smallTitle}>{locale.notes}</p>
             <TextareaAutosize
               placeholder="no notes yet..."
               className={styles.notes}
@@ -225,6 +267,37 @@ export default function NewClient() {
               }}
               value={wordInfo.notes || ""}
             ></TextareaAutosize>
+            <p className={styles.smallTitle} style={{ marginTop: 10 }}>
+              {locale.source}
+            </p>
+            {editMode ? (
+              <select
+                className={styles.sourcePicker}
+                value={wordInfo.sourceId}
+                onChange={(e) => {
+                  setWordInfo({
+                    ...wordInfo,
+                    sourceId: e.target.value,
+                  });
+                }}
+              >
+                <option value="">Unknown source</option>
+                {sources.map((s) => (
+                  <option key={s.id} value={s.id}>
+                    {s.title}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <a
+                href={source?.url || null}
+                className={styles.source}
+                target="_blank"
+                title="Open this source in a new tab"
+              >
+                {source?.title || locale.unknownSource}
+              </a>
+            )}
           </div>
           {wordInfo.esWord && (
             <div className={styles.buttons}>
@@ -248,7 +321,7 @@ export default function NewClient() {
                 target="_blank"
                 style={{ backgroundColor: "#5500dd" }}
               >
-                {local.t("openOn")} Linguee
+                {locale.openOn} Linguee
               </a>
               <a
                 className={styles.button}
@@ -258,7 +331,7 @@ export default function NewClient() {
                 target="_blank"
                 style={{ backgroundColor: "#c9710e" }}
               >
-                {local.t("openOn")} SpanishDict
+                {locale.openOn} SpanishDict
               </a>
             </div>
           )}

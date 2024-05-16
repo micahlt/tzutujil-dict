@@ -1,12 +1,11 @@
 "use client";
 import { useState } from "react";
-import local from "@/app/i18n";
 import { CornerDownLeft } from "react-feather";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import styles from "./SearchBar.module.css";
 
-export default function SearchBar() {
+export default function SearchBar({ locale }) {
   const nav = useRouter();
   const [searchFocused, setSearchFocused] = useState(false);
   const [query, setQuery] = useState("");
@@ -24,7 +23,7 @@ export default function SearchBar() {
       <input
         type="search"
         className={styles.heroSearch}
-        placeholder={local.t("searchPlaceholder")}
+        placeholder={locale.searchPlaceholder}
         onBlur={() => setTimeout(() => setSearchFocused(false), 250)}
         onFocus={() => setSearchFocused(true)}
         onChange={searchChange}
@@ -59,11 +58,11 @@ export default function SearchBar() {
           <div className={styles.suggestion} style={{ textAlign: "center" }}>
             {query.length > 0 ? (
               <>
-                {local.t("pressEnter")}
+                {locale.pressEnter}
                 <CornerDownLeft size={20} color="white" />
               </>
             ) : (
-              <>{local.t("startTyping")}</>
+              <>{locale.startTyping}</>
             )}
           </div>
         </div>

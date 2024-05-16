@@ -3,10 +3,9 @@ import { ArrowLeft } from "react-feather";
 import styles from "./page.module.css";
 import Navbar from "@/components/Navbar";
 import Link from "next/link";
-import local from "@/app/i18n";
 import { useRouter } from "next/navigation";
 
-export default function Resources() {
+export default function Login({ locale }) {
   const nav = useRouter();
   const logIn = (pass) => {
     window.localStorage.setItem("pwd", pass);
@@ -14,17 +13,17 @@ export default function Resources() {
   };
   return (
     <>
-      <Navbar />
+      <Navbar locale={locale} />
       <main className={styles.main}>
         <Link href="/" className={styles.goBack}>
-          <ArrowLeft size={24}></ArrowLeft> {local.t("goBack")}
+          <ArrowLeft size={24}></ArrowLeft> {locale.goBack}
         </Link>
         <div>
-          <h1 style={{ marginBottom: 10 }}>{local.t("logIn")}</h1>
+          <h1 style={{ marginBottom: 10 }}>{locale.logIn}</h1>
           <div className={styles.divider}></div>
           <input
             type="password"
-            placeholder={local.t("password")}
+            placeholder={locale.password}
             className={styles.input}
             onKeyUp={(e) => {
               if (e.key == "Enter") logIn(e.target.value);

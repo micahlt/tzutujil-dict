@@ -1,12 +1,13 @@
-"use client";
 import Link from "next/link";
 import styles from "./page.module.css";
 import Navbar from "@/components/Navbar";
+import { getDict } from "../i18n";
 
-export default function Extractors() {
+export default async function Extractors({ params: { lang } }) {
+  const locale = await getDict(lang);
   return (
     <>
-      <Navbar />
+      <Navbar locale={locale} />
       <main className={styles.main}>
         <div>
           <h2>Extractors</h2>

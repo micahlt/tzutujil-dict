@@ -1,52 +1,43 @@
-"use client";
+"use server";
 import styles from "@/app/home.module.css";
-import local from "@/app/i18n";
 import Navbar from "@/components/Navbar";
 import Link from "next/link";
 import SearchBar from "@/components/SearchBar";
-import { useEffect, useState } from "react";
+import { getDict } from "./i18n";
 
-export default function Home({ count, words }) {
-  const [warning, setWarning] = useState(null);
-  useEffect(() => {
-    setWarning(localStorage.getItem("underConstructionSummer24") || "yes");
-  }, []);
+async function getData() {
+  const countRes = await fetch(`https://tzdb.micahlindley.com/api/getCount`);
+
+  const wordsRes = await fetch(
+    `https://tzdb.micahlindley.com/api/getAll?limit=15`
+  );
+
+  if (!countRes.ok || !wordsRes.ok) {
+    throw new Error("Failed to fetch data");
+  }
+
+  const count = await countRes.json();
+  const words = await wordsRes.json();
+  return { count, words };
+}
+
+export default async function Home({ params: { lang } }) {
+  const { count, words } = await getData();
+
+  const locale = await getDict(lang);
   return (
     <>
-      <Navbar />
-      {warning == "yes" && (
-        <div className={styles.warning}>
-          <h2>
-            ⚠️
-            <br />
-            Under construction
-          </h2>
-          <p>
-            This summer, TzDB will be rebranding as{" "}
-            <b>Tz'utujil.org Dictionary</b> and will also go through some major
-            structural changes regarding the word database itself. In the
-            meantime, data on the site may be inaccurate or misleading. Please
-            proceed with caution.
-          </p>
-          <button
-            onClick={() => {
-              localStorage.setItem("underConstructionSummer24", "no");
-              location.reload();
-            }}
-          >
-            I understand
-          </button>
-        </div>
-      )}
+      <Navbar locale={locale} lang={lang} />
+
       <main>
         <div className={styles.hero}>
           <div className={styles.heroContent}>
-            <p>{local.t("heroSubtitle")}</p>
+            <p>{locale.heroSubtitle}</p>
             <h2>
-              {local.t("moreThan")} <span>{(count - 1).toLocaleString()}</span>{" "}
-              {local.t("translatedWords")}
+              {locale.moreThan} <span>{(count - 1).toLocaleString()}</span>{" "}
+              {locale.translatedWords}
             </h2>
-            <SearchBar />
+            <SearchBar locale={locale} />
           </div>
         </div>
         <div className={styles.allWords}>
@@ -58,7 +49,7 @@ export default function Home({ count, words }) {
               fontWeight: "bold",
             }}
           >
-            {local.t("previewEntryBelow")}
+            {locale.previewEntryBelow}
           </p>
           <ul>
             {words.map((word) => (
@@ -72,17 +63,17 @@ export default function Home({ count, words }) {
         </div>
         <div className={styles.aboutWrapper}>
           <div>
-            <h1 style={{ marginBottom: 10 }}>{local.t("about")}</h1>
-            <h2>{local.t("aboutHeader")}</h2>
+            <h1 style={{ marginBottom: 10 }}>{locale.about}</h1>
+            <h2>{locale.aboutHeader}</h2>
             <div className={styles.divider} style={{ marginTop: 20 }}></div>
             <p
               className={styles.about}
-              dangerouslySetInnerHTML={{ __html: local.t("aboutProject") }}
+              dangerouslySetInnerHTML={{ __html: locale.aboutProject }}
             ></p>
-            <p className={styles.about}>{local.t("freeUse")}</p>
+            <p className={styles.about}>{locale.freeUse}</p>
             <div className={styles.divider} style={{ marginTop: 20 }}></div>
             <p className={styles.smallTitle} style={{ opacity: 1 }}>
-              {local.t("citations")}
+              {locale.citations}
             </p>
             <p className={styles.citation}>
               Cholb’al Tziij pa Tz’utujil. (2019). Academia de Lenguas Mayas de
@@ -119,4 +110,14 @@ export default function Home({ count, words }) {
       </main>
     </>
   );
+}
+
+export async function generateMetadata() {
+  return {
+    title: `TzDB | Tz'utujil Language Database`,
+    description: `The world's largest, most comprehensive Tz'utujil dictionary and translator.`,
+    openGraph: {
+      images: [`https://tzdb.micahlindley.com/api/og`],
+    },
+  };
 }

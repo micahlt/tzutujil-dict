@@ -3,7 +3,7 @@ import { ArrowLeft } from "react-feather";
 import styles from "./page.module.css";
 import Navbar from "@/components/Navbar";
 import Link from "next/link";
-import local from "@/app/i18n";
+import local from "@/app/[lang]/i18n";
 
 export default function Resources() {
   return (

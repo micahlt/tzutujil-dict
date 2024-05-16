@@ -1,4 +1,5 @@
 "use server";
+import { getDict } from "../../i18n";
 import WordClient from "./wordClient";
 
 async function getData(wordId) {
@@ -21,14 +22,20 @@ async function getSource(sourceId) {
   return await res.json();
 }
 
-export default async function Word({ params: { word: wordId } }) {
+export default async function Word({ params: { word: wordId, lang } }) {
+  const locale = await getDict(lang);
   const wordData = await getData(wordId);
   const source =
     wordData.sourceId != null ? await getSource(wordData.sourceId) : null;
 
   return (
     <>
-      <WordClient wordId={wordId} wordData={wordData} source={source || null} />
+      <WordClient
+        wordId={wordId}
+        wordData={wordData}
+        source={source || null}
+        locale={locale}
+      />
     </>
   );
 }
@@ -38,7 +45,7 @@ export async function generateMetadata({ params: { word: wordId } }) {
   const wordData = await getData(wordId);
 
   return {
-    title: `${wordData.tzWord} | TzDB`,
+    title: `${wordData.tzWord} | Tz'utujil.org Dictionary`,
     description: `Definition of ${wordData.tzWord} on the world's largest, most comprehensive Tz'utujil dictionary and translator.`,
     openGraph: {
       images: [`https://tzdb.micahlindley.com/api/og?word=${wordData.tzWord}`],

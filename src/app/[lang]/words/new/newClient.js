@@ -13,31 +13,21 @@ import {
 } from "react-feather";
 import { useRouter } from "next/navigation";
 import TextareaAutosize from "react-textarea-autosize";
-import local from "@/app/i18n";
+import local from "@/app/[lang]/i18n";
 
-export default function WordClient({ wordId, wordData, source }) {
-  const [wordInfo, setWordInfo] = useState(wordData);
+export default function NewClient() {
+  const [wordId, setWordId] = useState("new");
+  const [wordInfo, setWordInfo] = useState();
   const [password, setPassword] = useState();
   const [editMode, setEditMode] = useState(false);
-  const [sources, setSources] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const nav = useRouter();
   useEffect(() => {
     setPassword(window.localStorage.getItem("pwd"));
+    setEditMode(true);
+    setWordInfo({});
   }, []);
-  useEffect(() => {
-    if (editMode && sources.length == 0) {
-      fetch(`/api/getAll?type=sources`)
-        .then((res) => res.json())
-        .then((json) => setSources(json))
-        .catch((err) => {
-          setError({
-            code: err.code || err.reason || "Failed to fetch sources",
-          });
-        });
-    }
-  }, [editMode]);
   const saveWord = (e) => {
     e.preventDefault();
     setLoading(true);
@@ -70,29 +60,11 @@ export default function WordClient({ wordId, wordData, source }) {
         .then((json) => {
           if (json.success) {
             setEditMode(false);
-            nav.refresh();
           } else {
             setError({ code: json.code });
           }
           setLoading(false);
         });
-    }
-  };
-  const deleteItem = () => {
-    setLoading(true);
-    if (window.confirm(local.t("confirmDelete"))) {
-      fetch(`/api/word`, {
-        method: "DELETE",
-        body: JSON.stringify({ id: wordId != "new" ? wordId : false }),
-        headers: {
-          "x-pwd": password,
-        },
-      }).then((res) => {
-        setLoading(false);
-        if (res.ok) {
-          nav.push("/");
-        }
-      });
     }
   };
   return (
@@ -117,21 +89,6 @@ export default function WordClient({ wordId, wordData, source }) {
               >
                 <Edit2 size={16} />
                 {local.t("edit")}
-              </a>
-            )}
-            {password && !editMode && wordId != "new" && (
-              <a
-                className={styles.button}
-                href="#"
-                style={{ backgroundColor: "#c10e0e" }}
-                onClick={deleteItem}
-              >
-                {loading ? (
-                  <Loader size={16} className={styles.rotate} />
-                ) : (
-                  <Trash size={16} />
-                )}
-                {local.t("delete")}
               </a>
             )}
             {password && editMode && (
@@ -251,17 +208,11 @@ export default function WordClient({ wordId, wordData, source }) {
                 }}
                 value={wordInfo.esExampleSentence || ""}
               ></TextareaAutosize>
-              <p className={styles.smallTitle}>{local.t("wordId")}</p>
-              <TextareaAutosize
-                placeholder={local.t("notProvided")}
-                disabled={true}
-                value={wordInfo.id}
-              ></TextareaAutosize>
             </div>
           </div>
           <div className={styles.divider}></div>
           <div>
-            <p className={styles.smallTitle}>{local.t("notes")}</p>
+            <p className={styles.smallTitle}>NOTES</p>
             <TextareaAutosize
               placeholder="no notes yet..."
               className={styles.notes}
@@ -274,37 +225,6 @@ export default function WordClient({ wordId, wordData, source }) {
               }}
               value={wordInfo.notes || ""}
             ></TextareaAutosize>
-            <p className={styles.smallTitle} style={{ marginTop: 10 }}>
-              {local.t("source")}
-            </p>
-            {editMode ? (
-              <select
-                className={styles.sourcePicker}
-                value={wordInfo.sourceId}
-                onChange={(e) => {
-                  setWordInfo({
-                    ...wordInfo,
-                    sourceId: e.target.value,
-                  });
-                }}
-              >
-                <option value="">Unknown source</option>
-                {sources.map((s) => (
-                  <option key={s.id} value={s.id}>
-                    {s.title}
-                  </option>
-                ))}
-              </select>
-            ) : (
-              <a
-                href={source?.url || null}
-                className={styles.source}
-                target="_blank"
-                title="Open this source in a new tab"
-              >
-                {source?.title || "unknown source"}
-              </a>
-            )}
           </div>
           {wordInfo.esWord && (
             <div className={styles.buttons}>

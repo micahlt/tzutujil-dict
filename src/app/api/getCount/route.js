@@ -14,5 +14,3 @@ export async function GET() {
   console.log(results);
   return new Response(results[0][0]["count (*)"]);
 }
-
-//

@@ -3,11 +3,10 @@ import { ArrowLeft, ArrowRightCircle, ArrowLeftCircle } from "react-feather";
 import styles from "./page.module.css";
 import Navbar from "@/components/Navbar";
 import Link from "next/link";
-import local from "@/app/i18n";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-export default function Words() {
+export default function Words({ locale }) {
   const nav = useRouter();
   const params = useSearchParams();
   const [page, setPage] = useState();
@@ -33,20 +32,20 @@ export default function Words() {
   }, [params]);
   return (
     <>
-      <Navbar />
+      <Navbar locale={locale} />
       <main className={styles.main}>
         <Link href="/" className={styles.goBack}>
-          <ArrowLeft size={24}></ArrowLeft> {local.t("goBack")}
+          <ArrowLeft size={24}></ArrowLeft> {locale.goBack}
         </Link>
         <div>
-          <h1 style={{ marginBottom: 10 }}>{local.t("allWords")}</h1>
+          <h1 style={{ marginBottom: 10 }}>{locale.allWords}</h1>
           {listData && (
             <table className={styles.table}>
               <thead>
                 <tr>
                   <th>Tz'utujil</th>
-                  <th>Spanish</th>
-                  <th>English</th>
+                  <th>{locale.spanish}</th>
+                  <th>{locale.english}</th>
                   <th>ID</th>
                 </tr>
               </thead>

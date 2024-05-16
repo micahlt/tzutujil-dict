@@ -19,5 +19,6 @@ export async function GET(req) {
         offset ? " OFFSET " + offset : ""
       }`
     );
+  connection.destroy();
   return Response.json(results[0]);
 }

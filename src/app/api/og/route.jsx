@@ -36,12 +36,10 @@ export async function GET(request) {
           ></path>
         </svg>
         <div style={{ marginTop: 40, fontSize: 65, textAlign: "center" }}>
-          {word ? word : "TzDB"}
+          {word ? word : "Tz'utujil.org"}
         </div>
         <div style={{ fontSize: 30 }}>
-          {word
-            ? "TzDB | Tzutujil Language Database"
-            : "Tzutujil Language Database"}
+          {word ? "Tz'utujil.org Dictionary" : "Dictionary"}
         </div>
       </div>
     ),
