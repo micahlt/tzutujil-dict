@@ -1,10 +1,12 @@
 "use server";
+import { getDict } from "../../i18n";
 import NewClient from "./newClient";
 
-export default async function NewWord() {
+export default async function NewWord({ params: { lang } }) {
+  const locale = await getDict(lang);
   return (
     <>
-      <NewClient />
+      <NewClient locale={locale} />
     </>
   );
 }

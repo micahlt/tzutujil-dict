@@ -23,7 +23,7 @@ export default function SearchBar({ locale }) {
       <input
         type="search"
         className={styles.heroSearch}
-        placeholder={locale.searchPlaceholder}
+        placeholder={`${locale.searchPlaceholder}...`}
         onBlur={() => setTimeout(() => setSearchFocused(false), 250)}
         onFocus={() => setSearchFocused(true)}
         onChange={searchChange}

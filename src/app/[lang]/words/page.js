@@ -1,13 +1,14 @@
 "use server";
+import { Suspense } from "react";
 import WordsClient from "./wordsClient";
 import { getDict } from "../i18n";
 
 export default async function Word({ params: { lang } }) {
   const locale = await getDict(lang);
   return (
-    <>
+    <Suspense>
       <WordsClient locale={locale} />
-    </>
+    </Suspense>
   );
 }
 
