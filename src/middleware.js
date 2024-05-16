@@ -6,7 +6,7 @@ let locales = ["en", "es"];
 
 // Get the preferred locale, similar to the above or using a library
 function getLocale(request) {
-  const overrideLocale = request.cookies.get("NEXT_LOCALE").value;
+  const overrideLocale = request.cookies.get("NEXT_LOCALE")?.value;
   if (overrideLocale) {
     console.log("Overriding locale", overrideLocale);
     return overrideLocale;
