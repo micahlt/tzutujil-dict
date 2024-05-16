@@ -2,9 +2,22 @@ import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
 
+const defaultLang = "en";
+const translations = {
+  en: {
+    tzdict: "Tz'utujil.org Dictionary",
+    dictionary: "Dictionary",
+  },
+  es: {
+    tzdict: "Diccionario Tz'utujil.org",
+    dictionary: "Diccionario",
+  },
+};
+
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const word = searchParams.get("word");
+  const lang = searchParams.get("lang") || defaultLang;
   const fontData = await fetch(
     new URL("../../../../public/Inter-Bold.ttf", import.meta.url)
   ).then((res) => res.arrayBuffer());
@@ -39,7 +52,7 @@ export async function GET(request) {
           {word ? word : "Tz'utujil.org"}
         </div>
         <div style={{ fontSize: 30 }}>
-          {word ? "Tz'utujil.org Dictionary" : "Dictionary"}
+          {word ? translations[lang].tzdict : translations[lang].dictionary}
         </div>
       </div>
     ),

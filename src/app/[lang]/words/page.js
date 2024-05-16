@@ -16,7 +16,7 @@ export async function generateMetadata() {
     title: `Words | Tz'utujil.org Dictionary`,
     description: `Complete word list on the world's largest, most comprehensive Tz'utujil dictionary and translator.`,
     openGraph: {
-      images: [`https://tzdb.micahlindley.com/api/og?word=Word%20List`],
+      images: [`https://dictionary.tzutujil.org/api/og?word=Word%20List`],
     },
   };
 }

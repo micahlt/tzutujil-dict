@@ -16,7 +16,7 @@ export async function generateMetadata() {
     title: `Login | Tz'utujil.org Dictionary`,
     description: `Log in to Tz'utujil.org Dictionary`,
     openGraph: {
-      images: [`https://tzdb.micahlindley.com/api/og?word=Login`],
+      images: [`https://dictionary.tzutujil.org/api/og?word=Login`],
     },
   };
 }

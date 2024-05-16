@@ -6,10 +6,10 @@ import SearchBar from "@/components/SearchBar";
 import { getDict } from "./i18n";
 
 async function getData() {
-  const countRes = await fetch(`https://tzdb.micahlindley.com/api/getCount`);
+  const countRes = await fetch(`https://dictionary.tzutujil.org/api/getCount`);
 
   const wordsRes = await fetch(
-    `https://tzdb.micahlindley.com/api/getAll?limit=15`
+    `https://dictionary.tzutujil.org/api/getAll?limit=15`
   );
 
   if (!countRes.ok || !wordsRes.ok) {
@@ -112,12 +112,13 @@ export default async function Home({ params: { lang } }) {
   );
 }
 
-export async function generateMetadata() {
+export async function generateMetadata({ params: { lang } }) {
+  const locale = await getDict(lang);
   return {
-    title: `TzDB | Tz'utujil Language Database`,
-    description: `The world's largest, most comprehensive Tz'utujil dictionary and translator.`,
+    title: locale.siteName,
+    description: `${locale.tagline}.`,
     openGraph: {
-      images: [`https://tzdb.micahlindley.com/api/og`],
+      images: [`https://dictionary.tzutujil.org/api/og&lang=${locale._code}`],
     },
   };
 }

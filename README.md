@@ -1,4 +1,4 @@
-# TzDB
+# Tz'utujil.org Dictionary
 [![wakatime](https://wakatime.com/badge/user/fcbd1512-601c-4bcb-8ed8-253b91e0001a/project/018cef35-3b27-4f7f-9473-9abfa0ef7947.svg)](https://wakatime.com/badge/user/fcbd1512-601c-4bcb-8ed8-253b91e0001a/project/018cef35-3b27-4f7f-9473-9abfa0ef7947)
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).

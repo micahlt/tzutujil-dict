@@ -3,7 +3,7 @@ import styles from "./DefinitionCard.module.css";
 
 export default async function DefinitionCard(wordId) {
   const wordFetch = await fetch(
-    `https://tzdb.micahlindley.com/api/word?id=${wordId}`
+    `https://dictionary.tzutujil.org/api/word?id=${wordId}`
   );
   const wordData = await wordFetch.json();
   return (
