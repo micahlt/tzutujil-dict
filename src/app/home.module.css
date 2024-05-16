@@ -3,7 +3,7 @@
       rgba(3, 0, 48, 0.585),
       rgba(0, 0, 27, 0.333)
     ),
-    url("https://dictionary.tzutujil.org/lake.jpg");
+    url("/lake.jpg");
   min-height: 500px;
   background-size: cover;
   background-position: 75% center;
