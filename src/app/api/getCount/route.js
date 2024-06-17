@@ -1,16 +1,12 @@
-import "dotenv/config";
-require("dotenv").config();
-
-import mysql from "mysql2";
+import clientPromise from "@/lib/mongodb";
 
 export async function GET() {
   // Create the connection to the database
-  const connection = mysql.createConnection(process.env.PLANET_URL);
+  const client = await clientPromise;
+  const db = client.db("tzdb");
+  const words = db.collection("words");
 
-  // simple query
-  const results = await connection
-    .promise()
-    .query("select count (*) from words");
-  console.log(results);
-  return new Response(results[0][0]["count (*)"]);
+  const results = await words.countDocuments({});
+  await client.close();
+  return new Response(results);
 }

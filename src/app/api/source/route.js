@@ -1,20 +1,26 @@
 import "dotenv/config";
 require("dotenv").config();
-
-import mysql from "mysql2/promise";
+import clientPromise from "@/lib/mongodb";
 import { headers } from "next/headers";
+import { ObjectId } from "mongodb";
 
 export async function GET(req) {
   // Create the connection to the database
-  const connection = await mysql.createConnection(process.env.PLANET_URL);
+  const client = await clientPromise;
+  const db = client.db("tzdb");
+  const sources = db.collection("sources");
   const searchParams = req.nextUrl.searchParams;
   const id = searchParams.get("id");
 
-  // simple query
-  const results = await connection.execute(`SELECT * FROM sources WHERE id=?`, [
-    id,
-  ]);
-  return Response.json(results[0][0]);
+  const result = await sources.findOne({ _id: new ObjectId(id) });
+  if (!!result) {
+    return Response.json(result);
+  } else {
+    return Response.json(
+      { error: "No source found with the provided ID" },
+      { status: 404 }
+    );
+  }
 }
 
 export async function PUT(req) {
@@ -22,18 +28,17 @@ export async function PUT(req) {
   const password = headersList.get("x-pwd");
   // Create the connection to the database
   if (password == process.env.ADMIN_PASSWORD) {
-    const connection = await mysql.createConnection(process.env.PLANET_URL);
+    const client = await clientPromise;
+    const db = client.db("tzdb");
+    const sources = db.collection("sources");
 
     const json = await req.json();
 
     if (!json) {
-      return new Response(
-        JSON.stringify({ success: false, reason: "Missing content" }),
+      return Response.json(
+        { success: false, reason: "Missing content" },
         {
           status: 400,
-          headers: {
-            "Content-Type": "application/json",
-          },
         }
       );
     } else {
@@ -41,47 +46,36 @@ export async function PUT(req) {
         json[key] = json[key].replaceAll("’", "'");
       });
       try {
-        const [res] = await connection.execute(
-          `INSERT INTO sources (url, title) VALUES (?,?)`,
-          [json.url, json.title || null]
-        );
-        connection.end();
-        if (res.err) {
-          return new Response(
-            JSON.stringify({ success: false, code: res.err }),
+        const res = await sources.insertOne({
+          name: json.name,
+          description: json.description || "",
+          url: json.url,
+        });
+        if (!res.acknowledged) {
+          return Response.json(
+            { success: false, code: res.err },
             {
               status: 400,
-              headers: {
-                "Content-Type": "application/json",
-              },
             }
           );
         } else {
-          return Response.json({ success: true, id: res.insertId });
+          return Response.json({ success: true, id: res.insertedId });
         }
       } catch (err) {
-        return new Response(
-          JSON.stringify({
-            success: false,
-            code: err.code == "ER_DUP_ENTRY" ? "ALREADY_EXISTS" : err.code,
-          }),
+        console.error(err);
+        return Response.json(
+          { error: "Could not insert source into DB" },
           {
             status: 500,
-            headers: {
-              "Content-Type": "application/json",
-            },
           }
         );
       }
     }
   } else {
-    return new Response(
-      JSON.stringify({ success: false, reason: "Unauthorized" }),
+    return Response.json(
+      { success: false, reason: "Unauthorized" },
       {
         status: 401,
-        headers: {
-          "Content-Type": "application/json",
-        },
       }
     );
   }
@@ -92,60 +86,55 @@ export async function PATCH(req) {
   const password = headersList.get("x-pwd");
   // Create the connection to the database
   if (password == process.env.ADMIN_PASSWORD) {
-    const connection = await mysql.createConnection(process.env.PLANET_URL);
+    const client = await clientPromise;
+    const db = client.db();
+    const sources = db.collection("sources");
 
     const json = await req.json();
 
     if (!json || !json.id) {
-      return new Response(
-        JSON.stringify({ success: false, reason: "Missing content or ID" }),
+      return Response.json(
+        { success: false, reason: "Missing content or ID" },
         {
           status: 400,
-          headers: {
-            "Content-Type": "application/json",
-          },
         }
       );
     } else {
       try {
-        const { err, res } = await connection.execute(
-          `UPDATE sources SET url=?, title=? WHERE id=?`,
-          [json.url || null, json.title, json.id]
+        const res = await sources.updateOne(
+          { _id: json.id },
+          {
+            name: json.name,
+            words: json.wordCount,
+            description: json.description || "",
+            url: json.url,
+          }
         );
-        connection.end();
-        if (err) {
-          return new Response(JSON.stringify({ success: false, reason: err }), {
-            status: 400,
-            headers: {
-              "Content-Type": "application/json",
-            },
-          });
+
+        if (!res.acknowledged) {
+          return Response.json(
+            { success: false, reason: err },
+            {
+              status: 400,
+            }
+          );
         } else {
           return Response.json({ success: true });
         }
       } catch (err) {
-        return new Response(
-          JSON.stringify({
-            success: false,
-            code: err.code == "ER_DUP_ENTRY" ? "ALREADY_EXISTS" : err.code,
-          }),
+        return Response.json(
+          { error: "Could not update source in DB" },
           {
             status: 500,
-            headers: {
-              "Content-Type": "application/json",
-            },
           }
         );
       }
     }
   } else {
-    return new Response(
-      JSON.stringify({ success: false, reason: "Unauthorized" }),
+    return Response(
+      { success: false, reason: "Unauthorized" },
       {
         status: 401,
-        headers: {
-          "Content-Type": "application/json",
-        },
       }
     );
   }
@@ -156,33 +145,28 @@ export async function DELETE(req) {
   const password = headersList.get("x-pwd");
   // Create the connection to the database
   if (password == process.env.ADMIN_PASSWORD) {
-    const connection = await mysql.createConnection(process.env.PLANET_URL);
+    const client = await clientPromise;
+    const db = client.db();
+    const sources = db.collection("sources");
 
     const json = await req.json();
 
     if (!json || !json.id) {
-      return new Response(
-        JSON.stringify({ success: false, reason: "Missing ID" }),
+      return Response.json(
+        { success: false, reason: "Missing ID" },
         {
           status: 400,
-          headers: {
-            "Content-Type": "application/json",
-          },
         }
       );
     } else {
-      await connection.execute(`DELETE FROM sources WHERE id=?`, [json.id]);
-      connection.end();
+      await sources.deleteOne({ _id: json.id });
       return Response.json({ success: true });
     }
   } else {
-    return new Response(
-      JSON.stringify({ success: false, reason: "Unauthorized" }),
+    return Response.json(
+      { success: false, reason: "Unauthorized" },
       {
         status: 401,
-        headers: {
-          "Content-Type": "application/json",
-        },
       }
     );
   }
