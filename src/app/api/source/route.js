@@ -52,6 +52,7 @@ export async function PUT(req) {
           name: json.name,
           description: json.description || "",
           url: json.url,
+          author: json.author || "",
         });
         if (!res.acknowledged) {
           return Response.json(
@@ -107,9 +108,9 @@ export async function PATCH(req) {
           { _id: json.id },
           {
             name: json.name,
-            words: json.wordCount,
             description: json.description || "",
             url: json.url,
+            author: json.author || "",
           }
         );
 

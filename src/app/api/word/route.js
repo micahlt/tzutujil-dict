@@ -158,7 +158,7 @@ export async function PATCH(req) {
         const existing = await words.findOne({
           variants: { $in: regex },
         });
-        if (existing) {
+        if (existing._id != json._id) {
           return Response.json(
             {
               success: false,
