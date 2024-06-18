@@ -5,11 +5,12 @@ import { useEffect, useState } from "react";
 import { ArrowLeft } from "react-feather";
 import { useRouter } from "next/navigation";
 import WordRow from "@/components/WordRow";
+import { AlertTriangle } from "react-feather";
 
 export default function NewClient({ locale, sources }) {
   const [password, setPassword] = useState();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState();
   const [words, setWords] = useState([]);
   const [defaultSource, setDefaultSource] = useState(sources[0]._id);
   const nav = useRouter();
@@ -29,11 +30,12 @@ export default function NewClient({ locale, sources }) {
         .then((res) => res.json())
         .then((json) => {
           if (json.success) {
+            setError(null);
             setWords([...words, { ...word, _id: json.id }]);
-            setLoading(false);
           } else {
-            setError({ code: json.code || json.reason });
+            setError({ code: json.error, url: json.url });
           }
+          setLoading(false);
         });
     } else {
       fetch(`/api/word`, {
@@ -46,12 +48,13 @@ export default function NewClient({ locale, sources }) {
         .then((res) => res.json())
         .then((json) => {
           if (json.success) {
+            setError(null);
             const i = words.findIndex((w) => w._id == id);
             const newWords = [...words];
             newWords[i] = json.word;
             setWords(newWords);
           } else {
-            setError({ code: json.error });
+            setError({ code: json.error, url: json.url });
           }
           setLoading(false);
         });
@@ -88,6 +91,18 @@ export default function NewClient({ locale, sources }) {
             ))}
           </select>
         </div>
+        {error && error.code && (
+          <div className={styles.error}>
+            <AlertTriangle size={24} />
+            <p>
+              {locale.errorRecieved}: <pre>{error.code}</pre>
+              <br />
+              <a href={error.url} target="_blank">
+                More information here.
+              </a>
+            </p>
+          </div>
+        )}
         <table className={styles.table}>
           <thead>
             <tr>
@@ -107,6 +122,7 @@ export default function NewClient({ locale, sources }) {
                 wordObj={w}
                 wordId={w._id}
                 sourceOpts={sources}
+                locale={locale}
               />
             ))}
             {!loading && (
@@ -114,6 +130,7 @@ export default function NewClient({ locale, sources }) {
                 onSave={(word, wordId) => saveWord(wordId, word)}
                 sourceOpts={sources}
                 defaultSource={defaultSource}
+                locale={locale}
               />
             )}
           </tbody>

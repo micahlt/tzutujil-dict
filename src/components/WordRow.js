@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import BoundMultiInput from "./BoundMultiInput";
 import styles from "./WordRow.module.css";
 import Link from "next/link";
+import { PARTS_COLORS, PARTS_OF_SPEECH } from "@/lib/partsOfSpeech";
 
 export default function WordRow({
   wordObj,
@@ -9,6 +10,7 @@ export default function WordRow({
   onSave,
   sourceOpts = [],
   defaultSource,
+  locale,
 }) {
   const [word, setWord] = useState(
     wordObj || {
@@ -30,6 +32,8 @@ export default function WordRow({
       ],
       sourceId: defaultSource || sourceOpts[0],
       notes: "",
+      part: 1,
+      related: [],
     }
   );
 
@@ -131,8 +135,25 @@ export default function WordRow({
         />
       </td>
       <td>
-        <select className={styles.sourcePicker}>
-          <option>HEllo</option>
+        <select
+          className={styles.sourcePicker}
+          style={{
+            backgroundColor: PARTS_COLORS[word.part],
+            color: "black",
+          }}
+          value={word.part}
+          onChange={(e) => setWord({ ...word, part: Number(e.target.value) })}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && e.ctrlKey) {
+              onSaveProxy();
+            }
+          }}
+        >
+          {Object.keys(PARTS_OF_SPEECH).map((key, i) => (
+            <option key={i} value={key}>
+              {PARTS_OF_SPEECH[key][locale._code]}
+            </option>
+          ))}
         </select>
       </td>
       <td>

@@ -22,6 +22,8 @@
   font-family: inherit;
   transition: all 0.2s;
   outline: transparent solid 2px;
+  font-weight: 500;
+  padding-left: 0.5em;
 }
 
 .sourcePicker:hover {

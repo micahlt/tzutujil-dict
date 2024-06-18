@@ -77,12 +77,28 @@ export async function PUT(req) {
       );
     } else {
       try {
+        const regex = json.variants.map((v) => new RegExp(`^${v}$`, "i"));
+        const existing = await words.findOne({
+          variants: { $in: regex },
+        });
+        if (existing) {
+          return Response.json(
+            {
+              success: false,
+              error: "That word already exists.",
+              url: `/words/${existing._id}`,
+            },
+            { status: 423 }
+          );
+        }
         const res = await words.insertOne({
           variants: json.variants,
           definitions: json.definitions,
           sourceId: json.sourceId,
           notes: json.notes || "",
           lastModified: new Date(),
+          part: json.part || null,
+          related: json.related || [],
         });
         if (!res.acknowledged) {
           return Response.json(
@@ -138,6 +154,20 @@ export async function PATCH(req) {
       );
     } else {
       try {
+        const regex = json.variants.map((v) => new RegExp(`^${v}$`, "i"));
+        const existing = await words.findOne({
+          variants: { $in: regex },
+        });
+        if (existing) {
+          return Response.json(
+            {
+              success: false,
+              error: "This word already exists.",
+              url: `/words/${existing._id}`,
+            },
+            { status: 423 }
+          );
+        }
         const res = await words.findOneAndUpdate(
           {
             _id: ObjectId.createFromHexString(json._id),
@@ -150,6 +180,8 @@ export async function PATCH(req) {
               notes: json.notes || "",
               examples: json.examples || [],
               lastModified: new Date(),
+              part: json.part || null,
+              related: json.related || [],
             },
           }
         );

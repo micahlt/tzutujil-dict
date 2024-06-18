@@ -6,6 +6,7 @@ import {
   AlertTriangle,
   ArrowLeft,
   Edit2,
+  ExternalLink,
   Loader,
   Save,
   Trash,
@@ -13,18 +14,23 @@ import {
 } from "react-feather";
 import { useRouter } from "next/navigation";
 import TextareaAutosize from "react-textarea-autosize";
+import PartOfSpeechBadge from "@/components/PartOfSpeechBadge";
+import { PARTS_COLORS, PARTS_OF_SPEECH } from "@/lib/partsOfSpeech";
 
 export default function WordClient({ wordId, wordData, source, locale }) {
+  const [spellings, setSpellings] = useState(
+    wordData.variants.map((spelling) => spelling).join(", ")
+  );
   const [wordInfo, setWordInfo] = useState(wordData);
   const [password, setPassword] = useState();
   const [editMode, setEditMode] = useState(false);
   const [sources, setSources] = useState([]);
+  const [tab, setTab] = useState(locale._code);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const nav = useRouter();
   useEffect(() => {
     setPassword(window.localStorage.getItem("pwd"));
-    console.log(wordInfo);
   }, []);
   useEffect(() => {
     if (editMode && sources.length == 0) {
@@ -55,7 +61,7 @@ export default function WordClient({ wordId, wordData, source, locale }) {
             setEditMode(false);
             nav.push(`/words/${json.id}`);
           } else {
-            setError({ code: json.code || json.reason });
+            setError({ code: json.code || json.error });
           }
         });
     } else {
@@ -95,6 +101,13 @@ export default function WordClient({ wordId, wordData, source, locale }) {
       });
     }
   };
+
+  const handleDefChange = (locale, property, index, event) => {
+    const newDefs = [...wordInfo.definitions];
+    newDefs[index][locale][property] = event.target.value;
+    setWordInfo({ ...wordInfo, definitions: newDefs });
+  };
+
   return (
     <>
       <Navbar locale={locale} />
@@ -143,6 +156,10 @@ export default function WordClient({ wordId, wordData, source, locale }) {
                     style={{ backgroundColor: "#c10e0e" }}
                     onClick={(e) => {
                       e.preventDefault();
+                      setWordInfo(wordData);
+                      setSpellings(
+                        wordData.variants.map((spelling) => spelling).join(", ")
+                      );
                       setEditMode(false);
                     }}
                   >
@@ -179,86 +196,219 @@ export default function WordClient({ wordId, wordData, source, locale }) {
             className={styles.tzWord}
             placeholder={locale.notProvided}
             disabled={!editMode}
-            onChange={(e) => {
-              setWordInfo({ ...wordInfo, tzWord: e.target.value });
-            }}
-            value={wordInfo.variants
-              .map((spelling) => {
-                return spelling;
+            onChange={(e) => setSpellings(e.target.value)}
+            value={spellings}
+            onBlur={() =>
+              setWordInfo({
+                ...wordInfo,
+                variants: spellings.split(",").map((v) => v.trim()),
               })
-              .join(", ")}
+            }
           ></TextareaAutosize>
-          <div className={styles.divider}></div>
-          <div className={styles.definitionGrid}>
-            <div>
-              <p className={styles.smallTitle}>{locale.spanishTranslation}</p>
-              <TextareaAutosize
-                rows={1}
-                placeholder={locale.notProvided}
-                disabled={!editMode}
-                onChange={(e) => {
-                  setWordInfo({ ...wordInfo, esWord: e.target.value });
-                }}
-                value={wordInfo.esWord || ""}
-              ></TextareaAutosize>
-              <p className={styles.smallTitle}>{locale.tzExample}</p>
-              <TextareaAutosize
-                placeholder={locale.notProvided}
-                disabled={!editMode}
-                onChange={(e) => {
-                  setWordInfo({
-                    ...wordInfo,
-                    tzExampleSentence: e.target.value,
-                  });
-                }}
-                value={wordInfo.tzExampleSentence || ""}
-              ></TextareaAutosize>
-              <p className={styles.smallTitle}>{locale.enExample}</p>
-              <TextareaAutosize
-                placeholder={locale.notProvided}
-                disabled={!editMode}
-                onChange={(e) => {
-                  setWordInfo({
-                    ...wordInfo,
-                    enExampleSentence: e.target.value,
-                  });
-                }}
-                value={wordInfo.enExampleSentence || ""}
-              ></TextareaAutosize>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            {editMode ? (
+              <>
+                <br />
+                <select
+                  className={styles.speechPartPicker}
+                  style={{ backgroundColor: PARTS_COLORS[wordInfo.part] }}
+                  value={wordInfo.part}
+                  onChange={(e) => {
+                    setWordInfo({ ...wordInfo, part: Number(e.target.value) });
+                  }}
+                >
+                  {Object.keys(PARTS_OF_SPEECH).map((key, i) => (
+                    <option key={i} value={key}>
+                      {PARTS_OF_SPEECH[key][locale._code]}
+                    </option>
+                  ))}
+                </select>
+              </>
+            ) : (
+              <>
+                {(!!wordInfo.part || wordInfo.part == 0) && (
+                  <PartOfSpeechBadge
+                    partCode={wordInfo.part}
+                    locale={locale._code}
+                  />
+                )}
+              </>
+            )}
+            {false && <input type="text"></input>}
+          </div>
+          <div className={styles.tabs}>
+            <div
+              className={styles.tab}
+              aria-expanded={tab == "en"}
+              role="button"
+              onClick={() => setTab("en")}
+            >
+              {locale.english}
             </div>
-            <div>
-              <p className={styles.smallTitle}>{locale.englishTranslation}</p>
-              <TextareaAutosize
-                rows={1}
-                placeholder={locale.notProvided}
-                disabled={!editMode}
-                onChange={(e) => {
-                  setWordInfo({ ...wordInfo, enWord: e.target.value });
-                }}
-                value={wordInfo.enWord || ""}
-              ></TextareaAutosize>
-              <p className={styles.smallTitle}>{locale.esExample}</p>
-              <TextareaAutosize
-                placeholder={locale.notProvided}
-                disabled={!editMode}
-                onChange={(e) => {
-                  setWordInfo({
-                    ...wordInfo,
-                    esExampleSentence: e.target.value,
-                  });
-                }}
-                value={wordInfo.esExampleSentence || ""}
-              ></TextareaAutosize>
-              <p className={styles.smallTitle}>{locale.wordId}</p>
-              <TextareaAutosize
-                placeholder={locale.notProvided}
-                disabled={true}
-                value={wordInfo.id}
-              ></TextareaAutosize>
+            <div
+              className={styles.tab}
+              aria-expanded={tab == "es"}
+              role="button"
+              onClick={() => setTab("es")}
+            >
+              {locale.spanish}
+            </div>
+            <div
+              className={styles.tab}
+              aria-expanded={tab == "tz"}
+              role="button"
+              onClick={() => setTab("tz")}
+            >
+              Tz'utujil
             </div>
           </div>
-          <div className={styles.divider}></div>
-          <div>
+          <div className={styles.tabContent}>
+            {tab == "en" &&
+              wordInfo.definitions.map((def, i) =>
+                def.en ? (
+                  <div className={styles.definition} key={i}>
+                    <p className={styles.defNumber}>{i + 1}</p>
+                    <div style={{ display: "flex", flexWrap: "wrap" }}>
+                      <div className={styles.defFlexChild}>
+                        <p className={styles.smallTitle}>
+                          {locale.englishTranslation}
+                        </p>
+                        <TextareaAutosize
+                          rows={1}
+                          placeholder={locale.notProvided}
+                          disabled={!editMode}
+                          onChange={(e) =>
+                            handleDefChange("en", "translation", i, e)
+                          }
+                          value={def.en.translation || ""}
+                        ></TextareaAutosize>
+                      </div>
+                      <div className={styles.defFlexChild}>
+                        <p className={styles.smallTitle}>{locale.enExample}</p>
+                        <TextareaAutosize
+                          placeholder={locale.notProvided}
+                          disabled={!editMode}
+                          onChange={(e) =>
+                            handleDefChange("en", "example", i, e)
+                          }
+                          value={def.en.example || ""}
+                        ></TextareaAutosize>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <></>
+                )
+              )}
+            {tab == "es" &&
+              wordInfo.definitions.map((def, i) =>
+                def.en ? (
+                  <div className={styles.definition} key={i}>
+                    <p className={styles.defNumber}>{i + 1}</p>
+                    <div style={{ display: "flex", flexWrap: "wrap" }}>
+                      <div className={styles.defFlexChild}>
+                        <p className={styles.smallTitle}>
+                          {locale.spanishTranslation}
+                        </p>
+                        <TextareaAutosize
+                          rows={1}
+                          placeholder={locale.notProvided}
+                          disabled={!editMode}
+                          onChange={(e) =>
+                            handleDefChange("es", "translation", i, e)
+                          }
+                          value={def.es.translation || ""}
+                        ></TextareaAutosize>
+                      </div>
+                      <div className={styles.defFlexChild}>
+                        <p className={styles.smallTitle}>{locale.esExample}</p>
+                        <TextareaAutosize
+                          placeholder={locale.notProvided}
+                          disabled={!editMode}
+                          onChange={(e) =>
+                            handleDefChange("es", "example", i, e)
+                          }
+                          value={def.es.example || ""}
+                        ></TextareaAutosize>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <></>
+                )
+              )}
+            {tab == "tz" &&
+              wordInfo.definitions.map((def, i) =>
+                def.en ? (
+                  <div className={styles.definition} key={i}>
+                    <p className={styles.defNumber}>{i + 1}</p>
+                    <div>
+                      <p className={styles.smallTitle}>{locale.tzExample}</p>
+                      <TextareaAutosize
+                        placeholder={locale.notProvided}
+                        disabled={!editMode}
+                        onChange={(e) => handleDefChange("es", "example", i, e)}
+                        value={def.tz.example || ""}
+                        style={{ width: "100%" }}
+                      ></TextareaAutosize>
+                    </div>
+                  </div>
+                ) : (
+                  <></>
+                )
+              )}
+          </div>
+
+          <div className={styles.card}>
+            <div className={styles.definitionGrid}>
+              {wordInfo?.related?.length > 0 && (
+                <div>
+                  <p className={styles.smallTitle}>See Also</p>
+                  <h3>
+                    {wordInfo?.related?.map((w, i) => `${w}`)?.join(", ") || ""}
+                  </h3>
+                </div>
+              )}
+              <div>
+                <p className={styles.smallTitle}>{locale.wordId}</p>
+                <h3>{wordInfo._id}</h3>
+              </div>
+              <div>
+                <p className={styles.smallTitle}>{locale.source}</p>
+                {editMode ? (
+                  <select
+                    className={styles.sourcePicker}
+                    value={wordInfo.sourceId}
+                    onChange={(e) => {
+                      setWordInfo({
+                        ...wordInfo,
+                        sourceId: e.target.value,
+                      });
+                    }}
+                  >
+                    {sources.map((s) => (
+                      <option key={s._id} value={s._id}>
+                        {s.name}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <h3>
+                    <a
+                      href={source?.url || null}
+                      className={styles.source}
+                      target="_blank"
+                      title="Open this source in a new tab"
+                    >
+                      {source?.name || locale.unknownSource}
+                      <ExternalLink size={16} />
+                    </a>
+                  </h3>
+                )}
+              </div>
+            </div>
+          </div>
+          <div className={styles.card}>
             <p className={styles.smallTitle}>{locale.notes}</p>
             <TextareaAutosize
               placeholder="no notes yet..."
@@ -272,37 +422,6 @@ export default function WordClient({ wordId, wordData, source, locale }) {
               }}
               value={wordInfo.notes || ""}
             ></TextareaAutosize>
-            <p className={styles.smallTitle} style={{ marginTop: 10 }}>
-              {locale.source}
-            </p>
-            {editMode ? (
-              <select
-                className={styles.sourcePicker}
-                value={wordInfo.sourceId}
-                onChange={(e) => {
-                  setWordInfo({
-                    ...wordInfo,
-                    sourceId: e.target.value,
-                  });
-                }}
-              >
-                <option value="">Unknown source</option>
-                {sources.map((s) => (
-                  <option key={s.id} value={s.id}>
-                    {s.title}
-                  </option>
-                ))}
-              </select>
-            ) : (
-              <a
-                href={source?.url || null}
-                className={styles.source}
-                target="_blank"
-                title="Open this source in a new tab"
-              >
-                {source?.name || locale.unknownSource}
-              </a>
-            )}
           </div>
           {wordInfo.esWord && (
             <div className={styles.buttons}>

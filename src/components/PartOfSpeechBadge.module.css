@@ -1,0 +1,10 @@
+.badge {
+  width: max-content;
+  padding: 0.25em 0.75em;
+  border-radius: 1em;
+  color: black;
+  font-size: 0.9em;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 500;
+}

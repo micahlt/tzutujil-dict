@@ -116,7 +116,7 @@ export async function generateMetadata({ params: { lang } }) {
     title: locale.siteName,
     description: `${locale.tagline}.`,
     openGraph: {
-      images: [`https://dictionary.tzutujil.org/api/og&lang=${locale._code}`],
+      images: [`https://dictionary.tzutujil.org/api/og?lang=${locale._code}`],
     },
   };
 }
