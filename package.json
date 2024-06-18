@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@elastic/elasticsearch": "^8.14.0",
     "@formatjs/intl-localematcher": "^0.5.4",
     "@vercel/og": "^0.6.2",
     "classnames": "^2.5.1",

@@ -32,7 +32,7 @@ export default async function Home({ params: { lang } }) {
       <main>
         <div className={styles.hero}>
           <div className={styles.heroContent}>
-            <p>{locale.heroSubtitle}</p>
+            <p className={styles.heroSubtitle}>{locale.heroSubtitle}</p>
             <h2>
               {locale.moreThan} <span>{(count - 1).toLocaleString()}</span>{" "}
               {locale.translatedWords}

@@ -39,17 +39,19 @@ export default function SearchBar({ locale }) {
               key={res.id}
               className={styles.suggestion}
             >
-              <h3>{res.tzWord}</h3>
+              <h3>{res.variants[0]}</h3>
               <p>
-                {res.esWord && (
+                {res.definitions[0]?.es?.translation && (
                   <>
-                    <b>ES</b> <span>{res.esWord}</span>
+                    <b>ES</b> <span>{res.definitions[0].es.translation}</span>
                   </>
                 )}
-                {res.esWord && res.enWord && " | "}
-                {res.enWord && (
+                {res.definitions[0]?.es?.translation &&
+                  res.definitions[0]?.en?.translation &&
+                  " | "}
+                {res.definitions[0]?.en?.translation && (
                   <>
-                    <b>EN</b> <span>{res.enWord}</span>
+                    <b>EN</b> <span>{res.definitions[0].en.translation}</span>
                   </>
                 )}
               </p>

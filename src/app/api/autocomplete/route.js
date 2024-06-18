@@ -1,63 +1,68 @@
 import "dotenv/config";
 require("dotenv").config();
-
-import mysql from "mysql2";
+import { Client } from "@elastic/elasticsearch";
 
 export async function GET(req) {
   // Create the connection to the database
-  const connection = mysql.createConnection(process.env.PLANET_URL);
-  connection.config.namedPlaceholders = true;
   const searchParams = req.nextUrl.searchParams;
   const query = searchParams.get("q");
-  const wildcardQuery = `${query.replaceAll("’", "'")}*`;
 
-  if (!query) {
+  if (!query || query.length < 3) {
     return Response.json([]);
   } else {
-    const results = await connection.promise().execute(
-      `(
-        SELECT 
-          tzWord, 
-          enWord, 
-          esWord, 
-          id
-        FROM 
-          words 
-        WHERE 
-          tzWord = :query
-          OR enWord = :query
-          OR esWord = :query
-      ) 
-      UNION
-      (
-        SELECT
-        tzWord, 
-        enWord, 
-        esWord, 
-        id
-        FROM
-        (
-        SELECT 
-          tzWord, 
-          enWord, 
-          esWord, 
-          id, 
-          MATCH (tzWord, esWord, enWord) AGAINST (:wildcardQuery IN BOOLEAN MODE) AS score 
-        FROM 
-          words 
-        WHERE 
-          MATCH (tzWord, esWord, enWord) AGAINST (:wildcardQuery IN BOOLEAN MODE)
-        ORDER BY 
-          SCORE DESC, 
-          tzWord = :query DESC, 
-          enWord = :query DESC, 
-          esWord = :query DESC 
-        LIMIT 
-          5
-      ) AS derivedTable)
-      `,
-      { wildcardQuery: wildcardQuery, query: query.replaceAll("’", "'") }
+    const client = new Client({
+      node: process.env.ELASTIC_URL,
+      auth: {
+        apiKey: process.env.ELASTIC_APIKEY,
+      },
+    });
+    const searchResult = await client.search({
+      index: process.env.ELASTIC_WORD_INDEX,
+      q: query,
+      suggest: {
+        suggest0: {
+          prefix: query,
+          completion: {
+            field: "variants",
+            size: 5,
+            skip_duplicates: true,
+          },
+        },
+        suggest1: {
+          prefix: query,
+          completion: {
+            field: "definitions.en.translation",
+            size: 5,
+            skip_duplicates: true,
+          },
+        },
+        suggest2: {
+          prefix: query,
+          completion: {
+            field: "definitions.en.translation",
+            size: 5,
+            skip_duplicates: true,
+          },
+        },
+      },
+    });
+
+    let suggs = [];
+    Object.keys(searchResult.suggest).forEach((sugKey) => {
+      const opts = searchResult.suggest[sugKey][0].options;
+      if (opts.length == 0) {
+        return;
+      } else {
+        opts.forEach((opt) => {
+          suggs.push(opt._source);
+        });
+      }
+    });
+
+    return Response.json(
+      suggs.filter(
+        (obj1, i, arr) => arr.findIndex((obj2) => obj2.id === obj1.id) === i
+      )
     );
-    return Response.json(results[0]);
   }
 }
