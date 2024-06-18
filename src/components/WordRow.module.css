@@ -24,6 +24,7 @@
   outline: transparent solid 2px;
   font-weight: 500;
   padding-left: 0.5em;
+  max-width: 15em;
 }
 
 .sourcePicker:hover {

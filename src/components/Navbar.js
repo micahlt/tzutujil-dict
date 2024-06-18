@@ -71,6 +71,9 @@ export default function Navbar({ locale }) {
             <Link href={`/${locale._code}/sources/new`} className={style.link}>
               {locale.newSource}
             </Link>
+            <Link href={`/${locale._code}/words/create`} className={style.link}>
+              {locale.bulkAdd}
+            </Link>
           </div>
         </div>
       )}
