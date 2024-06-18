@@ -12,7 +12,7 @@ export async function getWord(idOrTzWord) {
   } catch {
     mode = "tzWord";
   }
-  
+
   const client = await clientPromise;
   const words = client.db("tzdb").collection("words");
 

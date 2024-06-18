@@ -9,7 +9,7 @@ export async function GET(req) {
   const offset = searchParams.get("offset");
   const type = searchParams.get("type") == "sources" ? "sources" : "words";
 
-  const collection = db.collection("words");
+  const collection = db.collection(type);
   const results = await collection
     .find({}, { limit: limit < 100 ? limit : 100, skip: offset })
     .toArray();

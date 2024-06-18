@@ -5,7 +5,7 @@ if (!process.env.MONGODB_URL) {
 }
 
 const uri = process.env.MONGODB_URL;
-const options = {  };
+const options = {};
 
 let client;
 let clientPromise: Promise<MongoClient>;

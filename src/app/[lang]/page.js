@@ -1,4 +1,3 @@
-"use server";
 import styles from "@/app/home.module.css";
 import Navbar from "@/components/Navbar";
 import clientPromise from "@/lib/mongodb";
@@ -121,3 +120,5 @@ export async function generateMetadata({ params: { lang } }) {
     },
   };
 }
+
+export const dynamic = "force-dynamic";

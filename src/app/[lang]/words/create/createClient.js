@@ -4,8 +4,6 @@ import Navbar from "@/components/Navbar";
 import { useEffect, useState } from "react";
 import { ArrowLeft } from "react-feather";
 import { useRouter } from "next/navigation";
-import TextareaAutosize from "react-textarea-autosize";
-import BoundMultiInput from "@/components/BoundMultiInput";
 import WordRow from "@/components/WordRow";
 
 export default function NewClient({ locale, sources }) {

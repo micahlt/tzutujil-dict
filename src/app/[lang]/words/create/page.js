@@ -1,4 +1,3 @@
-"use server";
 import { getSources } from "@/lib/getSources";
 import { getDict } from "../../i18n";
 import NewClient from "./createClient";
@@ -22,3 +21,5 @@ export async function generateMetadata() {
       "Creating a new word on the world's largest, most comprehensive Tz'utujil dictionary and translator.",
   };
 }
+
+export const dynamic = "force-dynamic";
