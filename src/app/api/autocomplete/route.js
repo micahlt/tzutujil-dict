@@ -39,7 +39,7 @@ export async function GET(req) {
         suggest2: {
           prefix: query,
           completion: {
-            field: "definitions.en.translation",
+            field: "definitions.es.translation",
             size: 5,
             skip_duplicates: true,
           },
@@ -59,6 +59,7 @@ export async function GET(req) {
       }
     });
 
+    console.log(suggs);
     return Response.json(
       suggs.filter(
         (obj1, i, arr) => arr.findIndex((obj2) => obj2.id === obj1.id) === i
