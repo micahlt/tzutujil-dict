@@ -16,14 +16,21 @@ import { useRouter } from "next/navigation";
 import TextareaAutosize from "react-textarea-autosize";
 import PartOfSpeechBadge from "@/components/PartOfSpeechBadge";
 import { PARTS_COLORS, PARTS_OF_SPEECH } from "@/lib/partsOfSpeech";
+import Link from "next/link";
 
-export default function WordClient({ wordId, wordData, source, locale }) {
+export default function WordClient({
+  wordId,
+  wordData,
+  source,
+  locale,
+  defaultView = "view",
+}) {
   const [spellings, setSpellings] = useState(
     wordData.variants.map((spelling) => spelling).join(", ")
   );
   const [wordInfo, setWordInfo] = useState(wordData);
   const [password, setPassword] = useState();
-  const [editMode, setEditMode] = useState(false);
+  const [editMode, setEditMode] = useState(defaultView == "new");
   const [sources, setSources] = useState([]);
   const [tab, setTab] = useState(locale._code);
   const [loading, setLoading] = useState(false);
@@ -63,6 +70,7 @@ export default function WordClient({ wordId, wordData, source, locale }) {
           } else {
             setError({ code: json.code || json.error });
           }
+          setLoading(false);
         });
     } else {
       fetch(`/api/word`, {
@@ -89,7 +97,9 @@ export default function WordClient({ wordId, wordData, source, locale }) {
     if (window.confirm(locale.confirmDelete)) {
       fetch(`/api/word`, {
         method: "DELETE",
-        body: JSON.stringify({ id: wordId != "new" ? wordId : false }),
+        body: JSON.stringify({
+          id: wordId.length == 24 ? wordId : wordInfo._id,
+        }),
         headers: {
           "x-pwd": password,
         },
@@ -114,9 +124,9 @@ export default function WordClient({ wordId, wordData, source, locale }) {
       {wordInfo ? (
         <main className={styles.main}>
           <div className={styles.headerFlex}>
-            <a href="#" className={styles.goBack} onClick={() => nav.back()}>
-              <ArrowLeft size={24}></ArrowLeft> {locale.goBack}
-            </a>
+            <Link href="/" className={styles.goBack}>
+              <ArrowLeft size={24}></ArrowLeft> {locale.goHome}
+            </Link>
             <div className={styles.spacer}></div>
             {password && !editMode && (
               <a
@@ -363,7 +373,7 @@ export default function WordClient({ wordId, wordData, source, locale }) {
             <div className={styles.definitionGrid}>
               {wordInfo?.related?.length > 0 && (
                 <div>
-                  <p className={styles.smallTitle}>See Also</p>
+                  <p className={styles.smallTitle}>{locale.seeAlso}</p>
                   <h3>
                     {wordInfo?.related?.map((w, i) => `${w}`)?.join(", ") || ""}
                   </h3>
@@ -372,6 +382,18 @@ export default function WordClient({ wordId, wordData, source, locale }) {
               <div>
                 <p className={styles.smallTitle}>{locale.wordId}</p>
                 <h3>{wordInfo._id}</h3>
+              </div>
+              <div>
+                <p className={styles.smallTitle}>{locale.lastModified}</p>
+                <h3>
+                  {new Date(wordInfo.lastModified).toLocaleString(undefined, {
+                    month: "numeric",
+                    day: "numeric",
+                    year: "numeric",
+                    hour: "numeric",
+                    minute: "numeric",
+                  })}
+                </h3>
               </div>
               <div>
                 <p className={styles.smallTitle}>{locale.source}</p>
@@ -386,11 +408,16 @@ export default function WordClient({ wordId, wordData, source, locale }) {
                       });
                     }}
                   >
-                    {sources.map((s) => (
-                      <option key={s._id} value={s._id}>
-                        {s.name}
-                      </option>
-                    ))}
+                    <option style={{ color: "gray" }} value="unset">
+                      - {locale.selectSource} -
+                    </option>
+                    <optgroup label="Sources">
+                      {sources.map((s) => (
+                        <option key={s._id} value={s._id}>
+                          {s.name}
+                        </option>
+                      ))}
+                    </optgroup>
                   </select>
                 ) : (
                   <h3>
@@ -401,7 +428,7 @@ export default function WordClient({ wordId, wordData, source, locale }) {
                       title="Open this source in a new tab"
                     >
                       {source?.name || locale.unknownSource}
-                      <ExternalLink size={16} />
+                      {source?.name && <ExternalLink size={16} />}
                     </a>
                   </h3>
                 )}

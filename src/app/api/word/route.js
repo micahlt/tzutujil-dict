@@ -70,7 +70,11 @@ export async function PUT(req) {
 
     if (!json || !json?.variants || !json?.definitions || !json?.sourceId) {
       return Response.json(
-        { success: false, reason: "Missing content" },
+        {
+          success: false,
+          error:
+            "Missing content.  Ensure you have entered spelling variants, definitions, and a source ID",
+        },
         {
           status: 400,
         }
@@ -98,7 +102,7 @@ export async function PUT(req) {
           notes: json.notes || "",
           roots: json.roots || [],
           lastModified: new Date(),
-          part: json.part || null,
+          part: json.part,
           related: json.related || [],
         });
         if (!res.acknowledged) {
@@ -181,7 +185,7 @@ export async function PATCH(req) {
               notes: json.notes || "",
               roots: json.roots || [],
               lastModified: new Date(),
-              part: json.part || null,
+              part: json.part,
               related: json.related || [],
             },
           }

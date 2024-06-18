@@ -6,6 +6,30 @@ export async function getWord(idOrTzWord) {
   if (!idOrTzWord) {
     return notFound();
   }
+  if (idOrTzWord == "new") {
+    return JSON.stringify({
+      variants: [""],
+      definitions: [
+        {
+          en: {
+            translation: "",
+            example: "",
+          },
+          es: {
+            translation: "",
+            example: "",
+          },
+          tz: {
+            example: "",
+          },
+        },
+      ],
+      notes: "",
+      part: 0,
+      related: [],
+      roots: [],
+    });
+  }
   let mode = "id";
   try {
     ObjectId.createFromHexString(idOrTzWord);
@@ -22,7 +46,9 @@ export async function getWord(idOrTzWord) {
       _id: ObjectId.createFromHexString(idOrTzWord),
     });
   } else if (mode == "tzWord") {
-    result = await words.findOne({ "variants.0": idOrTzWord });
+    result = await words.findOne({
+      "variants.0": decodeURIComponent(idOrTzWord),
+    });
   }
 
   if (result != null) {

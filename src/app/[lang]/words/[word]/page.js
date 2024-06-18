@@ -23,7 +23,7 @@ export default async function Word({
   const locale = await getDict(lang);
   const wordData = await getData(wordIdOrPrimaryVariant);
   const source =
-    wordData?.sourceId != null
+    wordData?.sourceId != null && wordData?.sourceId?.length == 24
       ? await JSON.parse(await getSource(wordData.sourceId))
       : null;
 
@@ -34,6 +34,7 @@ export default async function Word({
         wordData={wordData}
         source={source || null}
         locale={locale}
+        defaultView={wordIdOrPrimaryVariant == "new" ? "new" : "view"}
       />
     </>
   );
