@@ -29,6 +29,20 @@
   font-weight: bold;
   text-transform: uppercase;
   opacity: 0.6;
+  position: relative;
+}
+
+.heroContent p::after {
+  content: "v2";
+  display: inline-block;
+  font-size: 0.85em;
+  margin-left: 0.5em;
+  background-color: rgb(0, 240, 160);
+  color: black;
+  border-radius: 1em;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  transform: translateY(-1px);
 }
 
 .allWords {
