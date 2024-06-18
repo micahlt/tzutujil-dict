@@ -207,7 +207,11 @@ export default function WordClient({
             placeholder={locale.notProvided}
             disabled={!editMode}
             onChange={(e) => setSpellings(e.target.value)}
-            value={spellings[0].toUpperCase() + spellings.slice(1)}
+            value={
+              spellings.length > 0
+                ? spellings[0].toUpperCase() + spellings.slice(1)
+                : ""
+            }
             onBlur={() =>
               setWordInfo({
                 ...wordInfo,
@@ -359,7 +363,7 @@ export default function WordClient({
                       <TextareaAutosize
                         placeholder={locale.notProvided}
                         disabled={!editMode}
-                        onChange={(e) => handleDefChange("es", "example", i, e)}
+                        onChange={(e) => handleDefChange("tz", "example", i, e)}
                         value={def.tz.example || ""}
                         style={{ width: "100%" }}
                       ></TextareaAutosize>
@@ -385,18 +389,20 @@ export default function WordClient({
                 <p className={styles.smallTitle}>{locale.wordId}</p>
                 <h3>{wordInfo._id}</h3>
               </div>
-              <div>
-                <p className={styles.smallTitle}>{locale.lastModified}</p>
-                <h3>
-                  {new Date(wordInfo.lastModified).toLocaleString(undefined, {
-                    month: "numeric",
-                    day: "numeric",
-                    year: "numeric",
-                    hour: "numeric",
-                    minute: "numeric",
-                  })}
-                </h3>
-              </div>
+              {wordId != "new" && (
+                <div>
+                  <p className={styles.smallTitle}>{locale.lastModified}</p>
+                  <h3>
+                    {new Date(wordInfo.lastModified).toLocaleString(undefined, {
+                      month: "numeric",
+                      day: "numeric",
+                      year: "numeric",
+                      hour: "numeric",
+                      minute: "numeric",
+                    })}
+                  </h3>
+                </div>
+              )}
               <div>
                 <p className={styles.smallTitle}>{locale.source}</p>
                 {editMode ? (
