@@ -23,7 +23,7 @@ export default async function Word({
   const locale = await getDict(lang);
   const wordData = await getData(wordIdOrPrimaryVariant);
   const source =
-    wordData.sourceId != null
+    wordData?.sourceId != null
       ? await JSON.parse(await getSource(wordData.sourceId))
       : null;
 

@@ -34,6 +34,7 @@ export default function WordRow({
       notes: "",
       part: 1,
       related: [],
+      roots: [],
     }
   );
 
