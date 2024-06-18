@@ -207,11 +207,13 @@ export default function WordClient({
             placeholder={locale.notProvided}
             disabled={!editMode}
             onChange={(e) => setSpellings(e.target.value)}
-            value={spellings}
+            value={spellings[0].toUpperCase() + spellings.slice(1)}
             onBlur={() =>
               setWordInfo({
                 ...wordInfo,
-                variants: spellings.split(",").map((v) => v.trim()),
+                variants: (spellings[0].toLowerCase() + spellings.slice(1))
+                  .split(",")
+                  .map((v) => v.trim()),
               })
             }
           ></TextareaAutosize>
