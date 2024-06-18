@@ -1,0 +1,33 @@
+.wordLink {
+  margin: auto;
+}
+
+.wordLink:hover svg path[fill="white"] {
+  fill: #00f0a0;
+}
+
+.wordLink svg {
+  height: 1.25em;
+}
+
+.wordLink svg path {
+  transition: fill 0.2s;
+}
+
+.sourcePicker {
+  height: 2em;
+  background-color: #333333;
+  border: none;
+  border-radius: 0.3em;
+  font-family: inherit;
+  transition: all 0.2s;
+  outline: transparent solid 2px;
+}
+
+.sourcePicker:hover {
+  background-color: #444;
+}
+
+.sourcePicker:focus-visible {
+  outline: #00f0a0 solid 2px;
+}

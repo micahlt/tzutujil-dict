@@ -24,6 +24,7 @@ export default function WordClient({ wordId, wordData, source, locale }) {
   const nav = useRouter();
   useEffect(() => {
     setPassword(window.localStorage.getItem("pwd"));
+    console.log(wordInfo);
   }, []);
   useEffect(() => {
     if (editMode && sources.length == 0) {
@@ -181,7 +182,11 @@ export default function WordClient({ wordId, wordData, source, locale }) {
             onChange={(e) => {
               setWordInfo({ ...wordInfo, tzWord: e.target.value });
             }}
-            value={wordInfo.tzWord || ""}
+            value={wordInfo.variants
+              .map((spelling) => {
+                return spelling;
+              })
+              .join(", ")}
           ></TextareaAutosize>
           <div className={styles.divider}></div>
           <div className={styles.definitionGrid}>
@@ -295,7 +300,7 @@ export default function WordClient({ wordId, wordData, source, locale }) {
                 target="_blank"
                 title="Open this source in a new tab"
               >
-                {source?.title || locale.unknownSource}
+                {source?.name || locale.unknownSource}
               </a>
             )}
           </div>

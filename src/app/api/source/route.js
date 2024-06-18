@@ -12,7 +12,9 @@ export async function GET(req) {
   const searchParams = req.nextUrl.searchParams;
   const id = searchParams.get("id");
 
-  const result = await sources.findOne({ _id: new ObjectId(id) });
+  const result = await sources.findOne({
+    _id: ObjectId.createFromHexString(id),
+  });
   if (!!result) {
     return Response.json(result);
   } else {

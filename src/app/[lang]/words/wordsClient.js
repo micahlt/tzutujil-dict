@@ -53,16 +53,20 @@ export default function Words({ locale }) {
                 {listData.map((word) => (
                   <tr key={word.id}>
                     <td>
-                      <Link href={`/words/${word.id}`}>{word.tzWord}</Link>
+                      <Link href={`/words/${word.id}`}>{word.variants[0]}</Link>
                     </td>
                     <td>
-                      <Link href={`/words/${word.id}`}>{word.esWord}</Link>
+                      <Link href={`/words/${word.id}`}>
+                        {word.definitions[0].es?.translation || ""}
+                      </Link>
                     </td>
                     <td>
-                      <Link href={`/words/${word.id}`}>{word.enWord}</Link>
+                      <Link href={`/words/${word.id}`}>
+                        {word.definitions[0].en?.translation || ""}
+                      </Link>
                     </td>
                     <td>
-                      <Link href={`/words/${word.id}`}>{word.id}</Link>
+                      <Link href={`/words/${word._id}`}>{word._id}</Link>
                     </td>
                   </tr>
                 ))}

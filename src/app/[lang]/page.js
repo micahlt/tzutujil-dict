@@ -1,23 +1,24 @@
 "use server";
 import styles from "@/app/home.module.css";
 import Navbar from "@/components/Navbar";
+import clientPromise from "@/lib/mongodb";
 import Link from "next/link";
 import SearchBar from "@/components/SearchBar";
 import { getDict } from "./i18n";
 
 async function getData() {
-  const countRes = await fetch(`https://dictionary.tzutujil.org/api/getCount`);
+  const client = await clientPromise;
+  const db = client.db("tzdb");
+  const wordsCollection = db.collection("words");
 
-  const wordsRes = await fetch(
-    `https://dictionary.tzutujil.org/api/getAll?limit=15`
-  );
+  const count = await wordsCollection.countDocuments({});
 
-  if (!countRes.ok || !wordsRes.ok) {
+  const words = await wordsCollection.find({}, { limit: 15 }).toArray();
+
+  if (!words || !count) {
     throw new Error("Failed to fetch data");
   }
 
-  const count = await countRes.json();
-  const words = await wordsRes.json();
   return { count, words };
 }
 
@@ -53,10 +54,8 @@ export default async function Home({ params: { lang } }) {
           </p>
           <ul>
             {words.map((word) => (
-              <li key={word.id}>
-                <Link href={`/words/${word.id}`}>
-                  {word.tzWord.replace(/\s+/g, " ").trim()}
-                </Link>
+              <li key={word._id}>
+                <Link href={`/words/${word._id}`}>{word.variants[0]}</Link>
               </li>
             ))}
           </ul>
