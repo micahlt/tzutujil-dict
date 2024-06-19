@@ -30,6 +30,9 @@ export default async function Extractors({ params: { lang } }) {
             >
               Dictionary Extractor
             </Link>
+            <Link href="/extractors/extractor-json" title="JSON extractor">
+              JSON Extractor
+            </Link>
           </div>
         </div>
       </main>

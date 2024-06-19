@@ -46,3 +46,14 @@
 .output {
   grid-area: b;
 }
+
+.uploaderBtn {
+  height: calc(100% - 2em);
+  width: 100%;
+  margin-bottom: 0.5em;
+}
+
+.uploader progress {
+  width: 100%;
+  height: 1.5em;
+}

@@ -95,6 +95,9 @@ export async function PUT(req) {
             { status: 423 }
           );
         }
+        json.variants = json.variants.map(
+          (v) => v[0].toLowerCase() + v.slice(1)
+        );
         const res = await words.insertOne({
           variants: json.variants,
           definitions: json.definitions,
@@ -173,6 +176,9 @@ export async function PATCH(req) {
             { status: 423 }
           );
         }
+        json.variants = json.variants.map(
+          (v) => v[0].toLowerCase() + v.slice(1)
+        );
         const res = await words.findOneAndUpdate(
           {
             _id: ObjectId.createFromHexString(json._id),
