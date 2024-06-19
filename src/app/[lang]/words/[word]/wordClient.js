@@ -237,16 +237,25 @@ export default function WordClient({
                     setWordInfo({ ...wordInfo, part: Number(e.target.value) });
                   }}
                 >
-                  {Object.keys(PARTS_OF_SPEECH).map((key, i) => (
-                    <option key={i} value={key}>
-                      {PARTS_OF_SPEECH[key][locale._code]}
-                    </option>
-                  ))}
+                  <option value={0} style={{ color: "gray" }}>
+                    {locale.select}
+                  </option>
+                  <optgroup label={locale.options}>
+                    {Object.keys(PARTS_OF_SPEECH).map((key, i) => (
+                      <option
+                        key={i}
+                        value={key}
+                        style={{ backgroundColor: PARTS_COLORS[key] }}
+                      >
+                        {PARTS_OF_SPEECH[key][locale._code]}
+                      </option>
+                    ))}
+                  </optgroup>
                 </select>
               </>
             ) : (
               <>
-                {(!!wordInfo.part || wordInfo.part == 0) && (
+                {!!wordInfo.part && (
                   <PartOfSpeechBadge
                     partCode={wordInfo.part}
                     locale={locale._code}

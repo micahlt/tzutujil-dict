@@ -1,16 +1,17 @@
 export const PARTS_OF_SPEECH = {
-  0: { en: "Other" },
-  1: { en: "Pronoun" },
-  2: { en: "Verb" },
-  3: { en: "Noun" },
-  4: { en: "Adjective" },
-  5: { en: "Adverb" },
-  6: { en: "Particle" },
-  7: { en: "Interjection" },
+  // 1-indexed because 0 represents undefined
+  1: { en: "Pronoun", es: "Pronombre" },
+  2: { en: "Verb", es: "Verbo" },
+  3: { en: "Noun", es: "Sustantivo" },
+  4: { en: "Adjective", es: "Adjectivo" },
+  5: { en: "Adverb", es: "Adverbio" },
+  6: { en: "Particle", es: "Partículo" },
+  7: { en: "Interjection", es: "Interjección" },
+  8: { en: "Other", es: "Otro" },
 };
 
 export const PARTS_COLORS = {
-  0: "#acacac",
+  0: "#ffffff", // For unset part of speech
   1: "#218cff",
   2: "#00f0a0",
   3: "#fa2c48",
@@ -18,4 +19,5 @@ export const PARTS_COLORS = {
   5: "#ffd700",
   6: "#03e5ff",
   7: "#a253ff",
+  8: "#acacac",
 };
