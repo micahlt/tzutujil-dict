@@ -32,7 +32,11 @@ export default function WordClient({
   const [password, setPassword] = useState();
   const [editMode, setEditMode] = useState(defaultView == "new");
   const [sources, setSources] = useState([]);
-  const [tab, setTab] = useState(locale._code);
+  const [tab, setTab] = useState(
+    wordData?.defintitions && wordData?.defintitions[0]?.en?.translation
+      ? locale._code
+      : "es"
+  );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const nav = useRouter();
@@ -255,19 +259,19 @@ export default function WordClient({
           <div className={styles.tabs}>
             <div
               className={styles.tab}
-              aria-expanded={tab == "en"}
-              role="button"
-              onClick={() => setTab("en")}
-            >
-              {locale.english}
-            </div>
-            <div
-              className={styles.tab}
               aria-expanded={tab == "es"}
               role="button"
               onClick={() => setTab("es")}
             >
               {locale.spanish}
+            </div>
+            <div
+              className={styles.tab}
+              aria-expanded={tab == "en"}
+              role="button"
+              onClick={() => setTab("en")}
+            >
+              {locale.english}
             </div>
             <div
               className={styles.tab}
@@ -281,7 +285,7 @@ export default function WordClient({
           <div className={styles.tabContent}>
             {tab == "en" &&
               wordInfo.definitions.map((def, i) =>
-                def.en ? (
+                def.en && (def.en.translation || def.en.example || i == 0) ? (
                   <div className={styles.definition} key={i}>
                     <p className={styles.defNumber}>{i + 1}</p>
                     <div style={{ display: "flex", flexWrap: "wrap" }}>
@@ -318,7 +322,7 @@ export default function WordClient({
               )}
             {tab == "es" &&
               wordInfo.definitions.map((def, i) =>
-                def.en ? (
+                def.es && (def.es.translation || def.es.example || i == 0) ? (
                   <div className={styles.definition} key={i}>
                     <p className={styles.defNumber}>{i + 1}</p>
                     <div style={{ display: "flex", flexWrap: "wrap" }}>
@@ -355,7 +359,7 @@ export default function WordClient({
               )}
             {tab == "tz" &&
               wordInfo.definitions.map((def, i) =>
-                def.en ? (
+                def.tz && (def.tz.example || i == 0) ? (
                   <div className={styles.definition} key={i}>
                     <p className={styles.defNumber}>{i + 1}</p>
                     <div>
