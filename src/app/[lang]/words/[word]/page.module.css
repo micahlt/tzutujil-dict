@@ -290,6 +290,9 @@
   border-radius: 0.25em;
 }
 
+.definition:not(:last-of-type) {
+  margin-bottom: 0.5rem;
+}
 .defNumber {
   color: #757575;
   font-size: 0.8em;

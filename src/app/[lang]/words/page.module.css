@@ -47,6 +47,7 @@
   margin-bottom: 0.5em;
   font-weight: bold;
   text-align: left;
+  text-transform: capitalize;
 }
 
 .table tbody td {
@@ -101,4 +102,33 @@
 
 .navButtons svg:hover {
   stroke: rgb(0, 240, 160);
+}
+
+.sortOptions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 1em;
+  gap: 0.5em;
+}
+
+.sortPicker {
+  margin-top: 0.25em;
+  font-size: 1em;
+  height: 2em;
+  background-color: #333333;
+  border: none;
+  border-radius: 0.3em;
+  font-family: inherit;
+  transition: all 0.2s;
+  outline: transparent solid 2px;
+  padding-left: 0.5em;
+}
+
+.sortPicker:hover {
+  background-color: #444;
+}
+
+.sortPicker:focus-visible {
+  outline: #00f0a0 solid 2px;
 }

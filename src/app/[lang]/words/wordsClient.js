@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { sortDirections } from "@/lib/sort";
 
 export default function Words({ locale }) {
   const nav = useRouter();
@@ -13,20 +14,34 @@ export default function Words({ locale }) {
   const [perPage, setPerPage] = useState();
   const [listData, setListData] = useState(null);
   const [hasFetchedParams, setHasFetchedParams] = useState(false);
+  const [sort, setSort] = useState({
+    by: "lastModifed",
+    dir: sortDirections.DESC,
+  });
   useEffect(() => {
     if (hasFetchedParams && page && perPage) {
-      nav.push(`/words?perPage=${perPage}&page=${page}`);
-      fetch(`/api/getAll?limit=${perPage}&offset=${(page - 1) * perPage}`)
+      nav.push(
+        `/words?perPage=${perPage}&page=${page}&sortBy=${sort.by}&sortDir=${sort.dir}`
+      );
+      fetch(
+        `/api/getAll?limit=${perPage}&offset=${(page - 1) * perPage}&sortBy=${
+          sort.by
+        }&sortDir=${sort.dir}`
+      )
         .then((res) => res.json())
         .then((json) => {
           setListData(json);
         });
     }
-  }, [page, perPage]);
+  }, [page, perPage, sort]);
   useEffect(() => {
     if (params && !hasFetchedParams) {
       setPage(Number(params.get("page") || 1));
       setPerPage(Number(params.get("perPage") || 50));
+      setSort({
+        by: params.get("sortBy") || "lastModified",
+        dir: params.get("sortDir") || sortDirections.DESC,
+      });
       setHasFetchedParams(true);
     }
   }, [params]);
@@ -39,6 +54,24 @@ export default function Words({ locale }) {
         </Link>
         <div>
           <h1 style={{ marginBottom: 10 }}>{locale.allWords}</h1>
+          <div className={styles.sortOptions}>
+            <h4>Sort by</h4>
+            <select
+              className={styles.sortPicker}
+              value={sort.by}
+              onChange={(e) => setSort({ ...sort, by: e.target.value })}
+            >
+              <option value="lastModified">{locale.lastModified}</option>
+            </select>
+            <select
+              className={styles.sortPicker}
+              value={sort.dir}
+              onChange={(e) => setSort({ ...sort, dir: e.target.value })}
+            >
+              <option value={sortDirections.ASC}>{locale.ascending}</option>
+              <option value={sortDirections.DESC}>{locale.descending}</option>
+            </select>
+          </div>
           {listData && (
             <table className={styles.table}>
               <thead>
@@ -46,27 +79,38 @@ export default function Words({ locale }) {
                   <th>Tz'utujil</th>
                   <th>{locale.spanish}</th>
                   <th>{locale.english}</th>
-                  <th>ID</th>
+                  <th>{locale.lastModified}</th>
                 </tr>
               </thead>
               <tbody>
                 {listData.map((word) => (
                   <tr key={word.id}>
                     <td>
-                      <Link href={`/words/${word.id}`}>{word.variants[0]}</Link>
+                      <Link href={`/words/${word._id}`}>
+                        {word.variants[0]}
+                      </Link>
                     </td>
                     <td>
-                      <Link href={`/words/${word.id}`}>
+                      <Link href={`/words/${word._id}`}>
                         {word.definitions[0].es?.translation || ""}
                       </Link>
                     </td>
                     <td>
-                      <Link href={`/words/${word.id}`}>
+                      <Link href={`/words/${word._id}`}>
                         {word.definitions[0].en?.translation || ""}
                       </Link>
                     </td>
                     <td>
-                      <Link href={`/words/${word._id}`}>{word._id}</Link>
+                      <Link href={`/words/${word._id}`}>
+                        {new Date(word.lastModified).toLocaleDateString(
+                          undefined,
+                          {
+                            month: "numeric",
+                            day: "numeric",
+                            year: "2-digit",
+                          }
+                        )}
+                      </Link>
                     </td>
                   </tr>
                 ))}
