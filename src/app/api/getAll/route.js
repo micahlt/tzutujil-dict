@@ -14,14 +14,10 @@ export async function GET(req) {
 
   const collection = db.collection(type);
   const results = await collection
-    .find(
-      {},
-      {
-        limit: limit < 100 ? limit : 100,
-        skip: offset,
-        sort: [[sortBy, sortDir]],
-      }
-    )
+    .find({})
+    .skip(Number(offset))
+    .limit(Number(limit) < 100 ? Number(limit) : 100)
+    .sort([[sortBy, Number(sortDir)]])
     .toArray();
   return Response.json(results);
 }
