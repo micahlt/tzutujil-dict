@@ -48,22 +48,14 @@
 .allWords {
   margin: auto;
   margin-top: 2em;
-  max-width: 80vw;
+  max-width: 85vw;
 }
 
-.allWords ul {
-  column-count: 3;
+.allWords .wordGrid {
   column-gap: 0.5em;
-  list-style-type: none;
-}
-
-.allWords li {
-  text-align: center;
-  padding: 0.5em 0.5em;
-  font-style: italic;
-  border-radius: 0.2em;
-  border: 1px solid rgb(36, 36, 36);
-  margin-bottom: 0.5em;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 @media only screen and (max-width: 680px) {

@@ -1,0 +1,87 @@
+.def {
+  display: block;
+  text-align: left;
+  padding: 0.5em 0.5em;
+  border-radius: 0.4em;
+  border: 1px solid #242424;
+  margin-bottom: 0.5em;
+  transition: 0.2s;
+  flex-grow: 1;
+  width: 32%;
+  min-width: max-content;
+}
+
+.def:hover {
+  background-color: #00f0a0;
+  color: black;
+  transform: translateY(-5px);
+}
+
+.def h3 {
+  position: relative;
+  width: max-content;
+}
+
+.def h3::after {
+  content: "";
+  height: 3px;
+  background-color: white;
+  width: 100%;
+  max-width: 0;
+  bottom: 0;
+  position: absolute;
+  display: block;
+  transition: max-width 0.4s;
+  z-index: -1;
+}
+
+.def h3::before {
+  content: "TZ";
+  opacity: 0.5;
+  font-size: 0.5em;
+  margin-top: 0;
+  margin-bottom: auto;
+  display: block;
+}
+
+.def:hover h3::after {
+  max-width: 100%;
+}
+
+.translations {
+  margin-top: 0.5em;
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 1em;
+}
+
+.translations div {
+  font-style: italic;
+  opacity: 0.5;
+}
+
+.def .es::before {
+  content: "ES";
+  opacity: 1;
+  font-size: 0.6em;
+  font-weight: bold;
+  margin-top: 0;
+  margin-bottom: auto;
+  display: block;
+  font-style: normal;
+}
+
+.def .en::before {
+  content: "EN";
+  opacity: 1;
+  font-size: 0.6em;
+  font-weight: bold;
+  margin-top: 0;
+  margin-bottom: auto;
+  display: block;
+  font-style: normal;
+}
+
+.def div:empty {
+  display: none;
+}

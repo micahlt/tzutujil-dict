@@ -1,14 +1,15 @@
 "use server";
+import Link from "next/link";
 import styles from "./DefinitionCard.module.css";
 
-export default async function DefinitionCard(wordId) {
-  const wordFetch = await fetch(
-    `https://dictionary.tzutujil.org/api/word?id=${wordId}`
-  );
-  const wordData = await wordFetch.json();
+export default async function DefinitionCard({ wordId, word }) {
   return (
-    <div className={styles.def}>
-      <h2>{wordData.tzWord}</h2>
-    </div>
+    <Link className={styles.def} href={`/words/${word._id}`}>
+      <h3>{word.variants[0]}</h3>
+      <div className={styles.translations}>
+        <div className={styles.es}>{word.definitions[0].es.translation}</div>
+        <div className={styles.en}>{word.definitions[0].en.translation}</div>
+      </div>
+    </Link>
   );
 }

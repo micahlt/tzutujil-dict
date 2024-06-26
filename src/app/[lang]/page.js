@@ -1,9 +1,9 @@
 import styles from "@/app/home.module.css";
 import Navbar from "@/components/Navbar";
 import clientPromise from "@/lib/mongodb";
-import Link from "next/link";
 import SearchBar from "@/components/SearchBar";
 import { getDict } from "./i18n";
+import DefinitionCard from "@/components/DefinitionCard";
 
 async function getData() {
   const client = await clientPromise;
@@ -12,7 +12,7 @@ async function getData() {
 
   const count = await wordsCollection.countDocuments({});
 
-  const words = await wordsCollection.find({}, { limit: 15 }).toArray();
+  const words = await wordsCollection.find({}, { limit: 6 }).toArray();
 
   if (!words || !count) {
     throw new Error("Failed to fetch data");
@@ -51,13 +51,11 @@ export default async function Home({ params: { lang } }) {
           >
             {locale.previewEntryBelow}
           </p>
-          <ul>
+          <div className={styles.wordGrid}>
             {words.map((word) => (
-              <li key={word._id}>
-                <Link href={`/words/${word._id}`}>{word.variants[0]}</Link>
-              </li>
+              <DefinitionCard key={word._id} word={word} />
             ))}
-          </ul>
+          </div>
         </div>
         <div className={styles.aboutWrapper}>
           <div>
