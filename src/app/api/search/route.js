@@ -15,8 +15,9 @@ export async function GET(req) {
   const results = await client.search({
     query: {
       multi_match: {
-        query: query,
+        query: query.replaceAll("'", "*").replaceAll("’", "*"),
         fields: ["variants^2", "definitions.*"],
+        max_expansions: 100,
       },
     },
     collapse: {
