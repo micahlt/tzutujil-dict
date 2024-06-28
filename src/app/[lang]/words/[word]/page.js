@@ -51,7 +51,7 @@ export async function generateMetadata({
     description: `${wordData.variants[0]} on the world's largest, most comprehensive Tz'utujil dictionary and translator.`,
     openGraph: {
       images: [
-        `https://dictionary.tzutujil.org/api/og?word=${wordData.tzWord}&lang=${locale._code}`,
+        `https://dictionary.tzutujil.org/api/og?word=${wordData.variants[0]}&lang=${locale._code}`,
       ],
     },
   };

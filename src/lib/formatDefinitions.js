@@ -15,15 +15,20 @@ export default function formatDefinitions(definitionArr, forceLower = false) {
   for (let index in definitionArr) {
     // Trim whitespace from examples
     for (const key of ["en", "es", "tz"]) {
-      definitionArr[index][key].example =
-        definitionArr[index][key].example.trim();
-      definitionArr[index][key].translation =
-        definitionArr[index][key].translation.trim();
-      if (forceLower) {
-        definitionArr[index][key].translation = toLowerCaseFirstLetter(
-          definitionArr[index][key].translation
-        );
+      if (definitionArr[index][key]?.example) {
+        definitionArr[index][key].example =
+          definitionArr[index][key].example.trim();
+      }
+      if (definitionArr[index][key]?.translation) {
+        definitionArr[index][key].translation =
+          definitionArr[index][key].translation.trim();
+        if (forceLower) {
+          definitionArr[index][key].translation = toLowerCaseFirstLetter(
+            definitionArr[index][key].translation
+          );
+        }
       }
     }
   }
+  return definitionArr;
 }

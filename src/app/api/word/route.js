@@ -95,7 +95,7 @@ export async function PUT(req) {
             const merged = mergeWords(existing, json);
             const res = await words.findOneAndUpdate(
               {
-                _id: ObjectId.createFromHexString(json._id),
+                _id: merged._id,
               },
               {
                 $set: {
@@ -113,7 +113,7 @@ export async function PUT(req) {
             if (res._id) {
               return Response.json(
                 {
-                  success: false,
+                  success: true,
                   info: "The word already exists; new content was successfully merged into the existing word.",
                   url: `/words/${res._id}`,
                   id: res._id,
@@ -132,6 +132,7 @@ export async function PUT(req) {
               );
             }
           } catch (err) {
+            console.error(err);
             return Response.json(
               {
                 success: false,
