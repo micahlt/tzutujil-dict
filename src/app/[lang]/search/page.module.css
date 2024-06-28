@@ -72,6 +72,13 @@
   border-top: none;
 }
 
+.result .headingWrapper {
+  padding-bottom: 0.5em;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
 .result:hover h3 {
   color: #00f0a0;
 }
@@ -80,7 +87,7 @@
   font-size: 1rem;
   font-weight: bold;
   transition: color 0.2s;
-  padding-bottom: 0.5em;
+  padding-bottom: 0;
 }
 
 .result p {

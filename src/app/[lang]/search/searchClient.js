@@ -1,15 +1,17 @@
 "use client";
 import { ArrowLeft } from "react-feather";
+import "@/lib/types";
 import styles from "./page.module.css";
 import Navbar from "@/components/Navbar";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import PartOfSpeechBadge from "@/components/PartOfSpeechBadge";
 
 export default function SearchClient({ locale }) {
   const searchParams = useSearchParams();
   const [loadState, setLoadState] = useState("loading");
-  const [results, setResults] = useState([]);
+  const [results, setResults] = useState(/** @type {Word[]} */ ([]));
   const [query, setQuery] = useState("");
   useEffect(() => {
     const localQuery = searchParams.get("q");
@@ -48,7 +50,14 @@ export default function SearchClient({ locale }) {
                 key={res.id}
                 className={styles.result}
               >
-                <h3>{res.variants.map((v) => v).join(", ")}</h3>
+                <div className={styles.headingWrapper}>
+                  <h3>{res.variants.map((v) => v).join(", ")}</h3>
+                  <PartOfSpeechBadge
+                    partCode={res.part}
+                    locale={locale._code}
+                    context="search"
+                  />
+                </div>
                 <p>
                   {res.definitions[0]?.es?.translation && (
                     <>
