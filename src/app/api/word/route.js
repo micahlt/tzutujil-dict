@@ -5,6 +5,8 @@ import clientPromise from "@/lib/mongodb";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { ObjectId } from "mongodb";
+import "@/lib/types";
+import mergeWords from "@/lib/mergeWords";
 
 // Get a word by its ID or primary spelling variant
 export async function GET(req) {
@@ -49,7 +51,7 @@ export async function GET(req) {
   }
 
   if (result != null) {
-    return Response.json(result);
+    return Response.json(result, { status: 200 });
   } else {
     return Response.json(
       { success: false, reason: "Word not found" },
@@ -66,6 +68,7 @@ export async function PUT(req) {
     const client = await clientPromise;
     const words = client.db("tzdb").collection("words");
 
+    /** @type {Word} */
     const json = await req.json();
 
     if (!json || !json?.variants || !json?.definitions || !json?.sourceId) {
@@ -86,14 +89,57 @@ export async function PUT(req) {
           variants: { $in: regex },
         });
         if (existing) {
-          return Response.json(
-            {
-              success: false,
-              error: "That word already exists.",
-              url: `/words/${existing._id}`,
-            },
-            { status: 423 }
-          );
+          try {
+            const merged = mergeWords(existing, json);
+            const res = await words.findOneAndUpdate(
+              {
+                _id: ObjectId.createFromHexString(json._id),
+              },
+              {
+                $set: {
+                  variants: merged.variants,
+                  definitions: merged.definitions,
+                  sourceId: merged.sourceId,
+                  notes: merged.notes || "",
+                  roots: merged.roots || [],
+                  lastModified: new Date(),
+                  part: merged.part,
+                  related: merged.related || [],
+                },
+              }
+            );
+            if (res._id) {
+              return Response.json(
+                {
+                  success: false,
+                  info: "The word already exists; new content was successfully merged into the existing word.",
+                  url: `/words/${res._id}`,
+                  id: res._id,
+                },
+                { status: 200 }
+              );
+            } else {
+              return Response.json(
+                {
+                  success: false,
+                  error:
+                    "That word already exists and could not be automatically merged.",
+                  url: `/words/${existing._id}`,
+                },
+                { status: 409 }
+              );
+            }
+          } catch (err) {
+            return Response.json(
+              {
+                success: false,
+                error:
+                  "That word already exists and could not be automatically merged.",
+                url: `/words/${existing._id}`,
+              },
+              { status: 409 }
+            );
+          }
         }
         json.variants = json.variants.map(
           (v) => v[0].toLowerCase() + v.slice(1)
@@ -119,7 +165,12 @@ export async function PUT(req) {
             }
           );
         } else {
-          return Response.json({ success: true, id: res.insertedId });
+          return Response.json(
+            { success: true, id: res.insertedId },
+            {
+              status: 201,
+            }
+          );
         }
       } catch (err) {
         return Response.json(
