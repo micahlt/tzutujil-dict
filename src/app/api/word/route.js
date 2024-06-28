@@ -7,6 +7,7 @@ import { headers } from "next/headers";
 import { ObjectId } from "mongodb";
 import "@/lib/types";
 import mergeWords from "@/lib/mergeWords";
+import formatDefinitions from "@/lib/formatDefinitions";
 
 // Get a word by its ID or primary spelling variant
 export async function GET(req) {
@@ -88,6 +89,7 @@ export async function PUT(req) {
         const existing = await words.findOne({
           variants: { $in: regex },
         });
+        // If word already exists, merge any new content into the existing word
         if (existing) {
           try {
             const merged = mergeWords(existing, json);
@@ -98,7 +100,7 @@ export async function PUT(req) {
               {
                 $set: {
                   variants: merged.variants,
-                  definitions: merged.definitions,
+                  definitions: formatDefinitions(merged.definitions, true),
                   sourceId: merged.sourceId,
                   notes: merged.notes || "",
                   roots: merged.roots || [],
@@ -146,7 +148,7 @@ export async function PUT(req) {
         );
         const res = await words.insertOne({
           variants: json.variants,
-          definitions: json.definitions,
+          definitions: formatDefinitions(json.definitions, true),
           sourceId: json.sourceId,
           notes: json.notes || "",
           roots: json.roots || [],
@@ -237,7 +239,7 @@ export async function PATCH(req) {
           {
             $set: {
               variants: json.variants,
-              definitions: json.definitions,
+              definitions: formatDefinitions(json.definitions),
               sourceId: json.sourceId,
               notes: json.notes || "",
               roots: json.roots || [],
