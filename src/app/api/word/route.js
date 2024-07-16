@@ -85,9 +85,14 @@ export async function PUT(req) {
       );
     } else {
       try {
-        const regex = json.variants.map((v) => new RegExp(`^${v}$`, "i"));
+        let wordExistsArr = [];
+        json.variants.forEach((v) => {
+          wordExistsArr.push(v);
+          wordExistsArr.push(v.toLowerCase());
+          wordExistsArr.push(v[0].toUpperCase() + v.slice(1));
+        });
         const existing = await words.findOne({
-          variants: { $in: regex },
+          variants: { $in: wordExistsArr },
         });
         // If word already exists, merge any new content into the existing word
         if (existing) {
@@ -216,9 +221,14 @@ export async function PATCH(req) {
       );
     } else {
       try {
-        const regex = json.variants.map((v) => new RegExp(`^${v}$`, "i"));
+        let wordExistsArr = [];
+        json.variants.forEach((v) => {
+          wordExistsArr.push(v);
+          wordExistsArr.push(v.toLowerCase());
+          wordExistsArr.push(v[0].toUpperCase() + v.slice(1));
+        });
         const existing = await words.findOne({
-          variants: { $in: regex },
+          variants: { $in: wordExistsArr },
         });
         if (existing._id != json._id) {
           return Response.json(

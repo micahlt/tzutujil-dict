@@ -59,7 +59,6 @@ export async function GET(req) {
       }
     });
 
-    console.log(suggs);
     return Response.json(
       suggs.filter(
         (obj1, i, arr) => arr.findIndex((obj2) => obj2.id === obj1.id) === i
