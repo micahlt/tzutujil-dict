@@ -14,7 +14,7 @@
     "classnames": "^2.5.1",
     "dotenv": "^16.4.5",
     "eslint-config-next": "^14.2.3",
-    "mysql2": "^3.9.7",
+    "mysql2": "^3.9.8",
     "negotiator": "^0.6.3",
     "next": "^14.2.3",
     "react": "^18.3.1",
