@@ -8,6 +8,7 @@ import {
   Edit2,
   ExternalLink,
   Loader,
+  Plus,
   Save,
   Trash,
   X,
@@ -17,6 +18,7 @@ import TextareaAutosize from "react-textarea-autosize";
 import PartOfSpeechBadge from "@/components/PartOfSpeechBadge";
 import { PARTS_COLORS, PARTS_OF_SPEECH } from "@/lib/partsOfSpeech";
 import Link from "next/link";
+import React from "react";
 
 export default function WordClient({
   wordId,
@@ -294,98 +296,122 @@ export default function WordClient({
           <div className={styles.tabContent}>
             {tab == "en" &&
               wordInfo.definitions.map((def, i) =>
-                def.en && (def.en.translation || def.en.example || i == 0) ? (
-                  <div className={styles.definition} key={i}>
-                    <p className={styles.defNumber}>{i + 1}</p>
-                    <div style={{ display: "flex", flexWrap: "wrap" }}>
-                      <div className={styles.defFlexChild}>
-                        <p className={styles.smallTitle}>
-                          {locale.englishTranslation}
-                        </p>
-                        <TextareaAutosize
-                          rows={1}
-                          placeholder={locale.notProvided}
-                          disabled={!editMode}
-                          onChange={(e) =>
-                            handleDefChange("en", "translation", i, e)
-                          }
-                          value={def.en.translation || ""}
-                        ></TextareaAutosize>
-                      </div>
-                      <div className={styles.defFlexChild}>
-                        <p className={styles.smallTitle}>{locale.enExample}</p>
-                        <TextareaAutosize
-                          placeholder={locale.notProvided}
-                          disabled={!editMode}
-                          onChange={(e) =>
-                            handleDefChange("en", "example", i, e)
-                          }
-                          value={def.en.example || ""}
-                        ></TextareaAutosize>
+                <React.Fragment key={i}>
+                  {def.en && (def.en.translation || def.en.example || i == 0 || !!editMode) ? (
+                    <div className={styles.definition}>
+                      <p className={styles.defNumber}>{i + 1}</p>
+                      <div style={{ display: "flex", flexWrap: "wrap" }}>
+                        <div className={styles.defFlexChild}>
+                          <p className={styles.smallTitle}>
+                            {locale.englishTranslation}
+                          </p>
+                          <TextareaAutosize
+                            rows={1}
+                            placeholder={locale.notProvided}
+                            disabled={!editMode}
+                            onChange={(e) =>
+                              handleDefChange("en", "translation", i, e)
+                            }
+                            value={def.en.translation || ""}
+                          ></TextareaAutosize>
+                        </div>
+                        <div className={styles.defFlexChild}>
+                          <p className={styles.smallTitle}>{locale.enExample}</p>
+                          <TextareaAutosize
+                            placeholder={locale.notProvided}
+                            disabled={!editMode}
+                            onChange={(e) =>
+                              handleDefChange("en", "example", i, e)
+                            }
+                            value={def.en.example || ""}
+                          ></TextareaAutosize>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ) : (
-                  <></>
-                )
+                  ) : (
+                    <></>
+                  )}
+                </React.Fragment>
               )}
             {tab == "es" &&
               wordInfo.definitions.map((def, i) =>
-                def.es && (def.es.translation || def.es.example || i == 0) ? (
-                  <div className={styles.definition} key={i}>
-                    <p className={styles.defNumber}>{i + 1}</p>
-                    <div style={{ display: "flex", flexWrap: "wrap" }}>
-                      <div className={styles.defFlexChild}>
-                        <p className={styles.smallTitle}>
-                          {locale.spanishTranslation}
-                        </p>
-                        <TextareaAutosize
-                          rows={1}
-                          placeholder={locale.notProvided}
-                          disabled={!editMode}
-                          onChange={(e) =>
-                            handleDefChange("es", "translation", i, e)
-                          }
-                          value={def.es.translation || ""}
-                        ></TextareaAutosize>
-                      </div>
-                      <div className={styles.defFlexChild}>
-                        <p className={styles.smallTitle}>{locale.esExample}</p>
-                        <TextareaAutosize
-                          placeholder={locale.notProvided}
-                          disabled={!editMode}
-                          onChange={(e) =>
-                            handleDefChange("es", "example", i, e)
-                          }
-                          value={def.es.example || ""}
-                        ></TextareaAutosize>
+                <React.Fragment key={i}>
+                  {def.es && (def.es.translation || def.es.example || i == 0 || !!editMode) ? (
+                    <div className={styles.definition}>
+                      <p className={styles.defNumber}>{i + 1}</p>
+                      <div style={{ display: "flex", flexWrap: "wrap" }}>
+                        <div className={styles.defFlexChild}>
+                          <p className={styles.smallTitle}>
+                            {locale.spanishTranslation}
+                          </p>
+                          <TextareaAutosize
+                            rows={1}
+                            placeholder={locale.notProvided}
+                            disabled={!editMode}
+                            onChange={(e) =>
+                              handleDefChange("es", "translation", i, e)
+                            }
+                            value={def.es.translation || ""}
+                          ></TextareaAutosize>
+                        </div>
+                        <div className={styles.defFlexChild}>
+                          <p className={styles.smallTitle}>{locale.esExample}</p>
+                          <TextareaAutosize
+                            placeholder={locale.notProvided}
+                            disabled={!editMode}
+                            onChange={(e) =>
+                              handleDefChange("es", "example", i, e)
+                            }
+                            value={def.es.example || ""}
+                          ></TextareaAutosize>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ) : (
-                  <></>
-                )
+                  ) : (
+                    <></>
+                  )}
+                </React.Fragment>
               )}
             {tab == "tz" &&
               wordInfo.definitions.map((def, i) =>
-                def.tz && (def.tz.example || i == 0) ? (
-                  <div className={styles.definition} key={i}>
-                    <p className={styles.defNumber}>{i + 1}</p>
-                    <div>
-                      <p className={styles.smallTitle}>{locale.tzExample}</p>
-                      <TextareaAutosize
-                        placeholder={locale.notProvided}
-                        disabled={!editMode}
-                        onChange={(e) => handleDefChange("tz", "example", i, e)}
-                        value={def.tz.example || ""}
-                        style={{ width: "100%" }}
-                      ></TextareaAutosize>
+                <React.Fragment key={i}>
+                  {def.tz && (def.tz.example || i == 0 || !!editMode) ? (
+                    <div className={styles.definition}>
+                      <p className={styles.defNumber}>{i + 1}</p>
+                      <div>
+                        <p className={styles.smallTitle}>{locale.tzExample}</p>
+                        <TextareaAutosize
+                          placeholder={locale.notProvided}
+                          disabled={!editMode}
+                          onChange={(e) => handleDefChange("tz", "example", i, e)}
+                          value={def.tz.example || ""}
+                          style={{ width: "100%" }}
+                        ></TextareaAutosize>
+                      </div>
                     </div>
-                  </div>
-                ) : (
-                  <></>
-                )
+                  ) : (
+                    <></>
+                  )}
+                </React.Fragment>
               )}
+            {editMode && <a className={styles.button} href="#" style={{ width: "max-content", marginTop: 10, backgroundColor: "rgb(0, 146, 98)" }} onClick={(e) => {
+              e.preventDefault();
+              setWordInfo({
+                ...wordInfo, definitions: [...wordInfo.definitions, {
+                  en: {
+                    translation: "",
+                    example: ""
+                  },
+                  es: {
+                    translation: "",
+                    example: ""
+                  },
+                  tz: {
+                    example: ""
+                  }
+                }]
+              })
+            }}><Plus size={16} />Add definition</a>}
           </div>
 
           <div className={styles.card}>
