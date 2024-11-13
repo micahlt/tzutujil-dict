@@ -1,6 +1,7 @@
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { Inter } from "next/font/google";
 import "../globals.css";
+import NextTopLoader from "nextjs-toploader";
 
 export async function generateStaticParams() {
   return [{ lang: "en" }, { lang: "es" }];
@@ -39,7 +40,10 @@ export const metadata = {
 export default function RootLayout({ children, params }) {
   return (
     <html lang={params.lang}>
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <NextTopLoader showSpinner={false} color="#00f0a0" />
+        {children}
+      </body>
       <GoogleAnalytics gaId="G-4D30PF9DZY" />
     </html>
   );
