@@ -1,5 +1,4 @@
 import "dotenv/config";
-require("dotenv").config();
 
 import clientPromise from "@/lib/mongodb";
 import { revalidatePath } from "next/cache";
@@ -174,7 +173,7 @@ export async function PUT(req) {
           );
         } else {
           return Response.json(
-            { success: true, id: res.insertedId },
+            { success: true, id: res.insertedId, url: `/words/${res.insertedId}`, },
             {
               status: 201,
             }
