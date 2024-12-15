@@ -5,7 +5,7 @@
  * @returns {Word} The merged word object
  */
 export default function mergeWords(baseWord, newWord) {
-  console.log("\n| TzDB WordMerge 1.0 starting\n|============================");
+  console.log("\n| TzDB WordMerge 2.0 starting\n|============================");
   // Merge spelling variants
   baseWord.variants = Array.from(
     new Set([...baseWord.variants, ...newWord.variants])
@@ -28,64 +28,123 @@ export default function mergeWords(baseWord, newWord) {
         console.log(`| Not overwriting field ${field}`);
       }
     } else if (typeof baseWord[field] == "object") {
-      console.log(`| Merging array for field ${field}`);
-      baseWord[field] = [...baseWord[field], ...newWord[field]];
+      if (baseWord[field] === null) {
+        console.log(`| Overwriting field ${field}`);
+        baseWord[field] = newWord[field];
+      } else {
+        console.log(`| Merging array for field ${field}`);
+        baseWord[field] = [...baseWord[field], ...newWord[field]];
+      }
     }
   }
   console.log("| Word merged successfully\n|============================\n");
   return baseWord;
 }
 
-function mergeDefinitions(A, B) {
-  const res = [...A];
+/** @type {Definition} */
+const blankDefinition = {
+  en: { translation: "", example: "" },
+  es: { translation: "", example: "" },
+  tz: { example: "" },
+};
 
-  B.forEach((b) => {
-    let flag = false;
+/**
+ * Merge two definition arrays
+ * @param {Definition[]} A
+ * @param {Definition[]} B
+ */
+function mergeDefinitions(A = [], B = []) {
+  // Validate inputs are arrays
+  if (!Array.isArray(A) || !Array.isArray(B)) {
+    throw new Error("Both inputs must be arrays");
+  }
 
-    res.forEach((a) => {
-      Object.keys(b).forEach((lang) => {
-        if (!a[lang]) {
-          a[lang] = {
-            translation: "",
-            example: "",
-          };
-        }
+  const locales = ["es", "en", "tz"];
 
+  // Loop over definitions in the incoming word
+  B.forEach((def) => {
+    // The index of the closest definition in the base word def array
+    const baseIndex = A.findIndex(
+      (base) => base.es.translation == def.es.translation
+    );
+    // If the Spanish translation does not yet exist then create a new definition
+    if (baseIndex == -1) {
+      if (!!def.es?.translation) {
+        A.push({
+          ...blankDefinition,
+          ...def,
+        });
+      } else {
         if (
-          b[lang].translation &&
-          b[lang].translation === a[lang].translation
+          !A[0].tz.example &&
+          !A[0].en.translation &&
+          !A[0].en.example &&
+          !A[0].es.example
         ) {
-          if (b[lang].example && !a[lang].example) {
-            a[lang].example = b[lang].example;
+          A[0] = { ...A[0], ...def };
+        } else {
+          A.push({
+            ...blankDefinition,
+            ...def,
+          });
+        }
+      }
+    }
+    // If the Spanish translation already exists then merge the definitions
+    else {
+      A[baseIndex].es.translation = def.es?.translation || "";
+      A[baseIndex].en.translation = def.en?.translation || "";
+      locales.forEach((l) => {
+        if (!!def[l]?.example) {
+          if (!!A[baseIndex][l].example) {
+            // In the case of two different examples under the same translation,
+            // we simply append the second example as a string
+            if (A[baseIndex][l].example != def[l].example) {
+              A[baseIndex][l].example += "\n" + def[l].example;
+            }
+          } else {
+            A[baseIndex][l].example = def[l].example;
           }
-          flag = true;
-        } else if (b[lang].translation && !a[lang].translation) {
-          a[lang].translation = b[lang].translation;
-          a[lang].example = b[lang].example || "";
-          flag = true;
         }
       });
-    });
-
-    if (!flag) {
-      res.push({ ...b });
     }
   });
 
-  res.forEach((def) => {
-    Object.keys(def).forEach((lang) => {
-      const vis = new Set();
-      res.forEach((d) => {
-        if (d[lang] && d[lang].example) {
-          if (vis.has(d[lang].example)) {
-            d[lang].example = "";
-          } else {
-            vis.add(d[lang].example);
-          }
-        }
-      });
-    });
-  });
-
-  return res;
+  return A;
 }
+
+// let r = mergeDefinitions(
+//   [
+//     {
+//       es: {
+//         translation: "hola",
+//       },
+//       en: {},
+//       tz: {},
+//     },
+//   ],
+//   [
+//     {
+//       es: {
+//         translation: "mega",
+//         example: "hey hola",
+//       },
+//     },
+//     {
+//       es: {
+//         translation: "hola",
+//         example: "this is a joke",
+//       },
+//     },
+//     {
+//       es: {
+//         example: "this is a jork",
+//       },
+//       en: {
+//         translation: "hey",
+//       },
+//     },
+//   ]
+// );
+
+// console.log(r);
