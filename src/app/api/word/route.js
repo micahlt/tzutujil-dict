@@ -149,7 +149,7 @@ export async function PUT(req) {
           }
         }
         json.variants = json.variants.map(
-          (v) => v[0].toLowerCase() + v.slice(1)
+          (v) => (v[0].toLowerCase() + v.slice(1)).replaceAll("’", "'")
         );
         const res = await words.insertOne({
           variants: json.variants,
