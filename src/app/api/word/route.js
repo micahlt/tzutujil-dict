@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { ObjectId } from "mongodb";
 import "@/lib/types";
-import mergeWords from "@/lib/mergeWords";
+import mergeWords from "@/lib/mergeWords.js";
 import formatDefinitions from "@/lib/formatDefinitions";
 
 // Get a word by its ID or primary spelling variant
@@ -86,6 +86,7 @@ export async function PUT(req) {
       try {
         let wordExistsArr = [];
         json.variants.forEach((v) => {
+          v.replaceAll("’", "'");
           wordExistsArr.push(v);
           wordExistsArr.push(v.toLowerCase());
           wordExistsArr.push(v[0].toUpperCase() + v.slice(1));

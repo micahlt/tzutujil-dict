@@ -113,38 +113,38 @@ function mergeDefinitions(A = [], B = []) {
   return A;
 }
 
-// let r = mergeDefinitions(
-//   [
-//     {
-//       es: {
-//         translation: "hola",
-//       },
-//       en: {},
-//       tz: {},
-//     },
-//   ],
-//   [
-//     {
-//       es: {
-//         translation: "mega",
-//         example: "hey hola",
-//       },
-//     },
-//     {
-//       es: {
-//         translation: "hola",
-//         example: "this is a joke",
-//       },
-//     },
-//     {
-//       es: {
-//         example: "this is a jork",
-//       },
-//       en: {
-//         translation: "hey",
-//       },
-//     },
-//   ]
-// );
+let r = mergeDefinitions(
+  [
+    {
+      es: {
+        translation: "hola",
+      },
+      en: {},
+      tz: {},
+    },
+  ],
+  [
+    {
+      es: {
+        translation: "mega",
+        example: "hey hola",
+      },
+    },
+    {
+      es: {
+        translation: "hola",
+        example: "this is a joke",
+      },
+    },
+    {
+      es: {
+        example: "this is a jork",
+      },
+      en: {
+        translation: "hey",
+      },
+    },
+  ]
+);
 
-// console.log(r);
+console.log(r);
