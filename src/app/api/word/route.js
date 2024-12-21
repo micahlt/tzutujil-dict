@@ -86,10 +86,9 @@ export async function PUT(req) {
       try {
         let wordExistsArr = [];
         json.variants.forEach((v) => {
-          v.replaceAll("’", "'");
-          wordExistsArr.push(v);
-          wordExistsArr.push(v.toLowerCase());
-          wordExistsArr.push(v[0].toUpperCase() + v.slice(1));
+          wordExistsArr.push(v.replaceAll("’", "'"));
+          wordExistsArr.push(v.toLowerCase().replaceAll("’", "'"));
+          wordExistsArr.push((v[0].toUpperCase() + v.slice(1)).replaceAll("’", "'"));
         });
         const existing = await words.findOne({
           variants: { $in: wordExistsArr },
@@ -241,7 +240,7 @@ export async function PATCH(req) {
           );
         }
         json.variants = json.variants.map(
-          (v) => v[0].toLowerCase() + v.slice(1)
+          (v) => (v[0].toLowerCase() + v.slice(1)).replaceAll("’", "'")
         );
         const res = await words.findOneAndUpdate(
           {
