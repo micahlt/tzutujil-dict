@@ -9,7 +9,7 @@ export default function mergeWords(baseWord, newWord) {
   // Merge spelling variants
   baseWord.variants = Array.from(
     new Set([...baseWord.variants, ...newWord.variants])
-  );
+  ).map((v) => v.replaceAll("’", "'"));
   // Merge translations and examples
   baseWord.definitions = mergeDefinitions(
     baseWord.definitions,
