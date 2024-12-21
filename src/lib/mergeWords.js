@@ -6,10 +6,13 @@
  */
 export default function mergeWords(baseWord, newWord) {
   console.log("\n| TzDB WordMerge 2.0 starting\n|============================");
+  // Remove the weird apostraphe characters
+  baseWord.variants = baseWord.map((v) => v.replaceAll("’", "'"));
+  newWord.variants = newWord.map((v) => v.replaceAll("’", "'"));
   // Merge spelling variants
   baseWord.variants = Array.from(
     new Set([...baseWord.variants, ...newWord.variants])
-  ).map((v) => v.replaceAll("’", "'"));
+  );
   // Merge translations and examples
   baseWord.definitions = mergeDefinitions(
     baseWord.definitions,
