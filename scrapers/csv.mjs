@@ -4,7 +4,7 @@ import { csv2json, json2csv } from "json-2-csv";
 import fs from "fs";
 import path from "path";
 let __dirname = path.resolve(path.dirname(''));
-const input = fs.readFileSync("testinput.csv", {
+const input = fs.readFileSync("input.csv", {
     encoding: "utf-8"
 })
 let parsed = csv2json(input, {
@@ -12,8 +12,6 @@ let parsed = csv2json(input, {
     trimFieldValues: true,
     parseValue: (v) => v.trim().replaceAll("\r", '').replaceAll("\n", '')
 });
-
-parsed = parsed.slice(0, 5);
 
 for (const i in parsed) {
     if (i > 0) {

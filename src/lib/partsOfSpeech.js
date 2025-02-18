@@ -11,7 +11,7 @@ export const PARTS_OF_SPEECH = {
 };
 
 export const PARTS_COLORS = {
-  0: "#ffffff", // For unset part of speech
+  0: "#333333", // For unset part of speech
   1: "#218cff",
   2: "#00f0a0",
   3: "#fa2c48",

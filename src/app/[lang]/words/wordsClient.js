@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { sortDirections } from "@/lib/sort";
+import { PARTS_COLORS, PARTS_OF_SPEECH } from "@/lib/partsOfSpeech";
 
 export default function Words({ locale }) {
   const nav = useRouter();
@@ -18,22 +19,24 @@ export default function Words({ locale }) {
     by: "lastModifed",
     dir: sortDirections.DESC,
   });
+  const [filter, setFilter] = useState({
+    partOfSpeech: 0,
+  });
   useEffect(() => {
     if (hasFetchedParams && page && perPage) {
       nav.push(
-        `/words?perPage=${perPage}&page=${page}&sortBy=${sort.by}&sortDir=${sort.dir}`
+        `/words?perPage=${perPage}&page=${page}&sortBy=${sort.by}&sortDir=${sort.dir}&partOfSpeech=${filter.partOfSpeech === 0 ? "" : filter.partOfSpeech}`
       );
       fetch(
-        `/api/getAll?limit=${perPage}&offset=${(page - 1) * perPage}&sortBy=${
-          sort.by
-        }&sortDir=${sort.dir}`
+        `/api/getAll?limit=${perPage}&offset=${(page - 1) * perPage}&sortBy=${sort.by
+        }&sortDir=${sort.dir}&partOfSpeech=${filter.partOfSpeech === 0 ? "" : filter.partOfSpeech}`
       )
         .then((res) => res.json())
         .then((json) => {
           setListData(json);
         });
     }
-  }, [page, perPage, sort]);
+  }, [page, perPage, sort, filter]);
   useEffect(() => {
     if (params && !hasFetchedParams) {
       setPage(Number(params.get("page") || 1));
@@ -42,6 +45,9 @@ export default function Words({ locale }) {
         by: params.get("sortBy") || "lastModified",
         dir: params.get("sortDir") || sortDirections.DESC,
       });
+      setFilter({
+        partOfSpeech: params.get("partOfSpeech") || "",
+      })
       setHasFetchedParams(true);
     }
   }, [params]);
@@ -70,6 +76,30 @@ export default function Words({ locale }) {
             >
               <option value={sortDirections.ASC}>{locale.ascending}</option>
               <option value={sortDirections.DESC}>{locale.descending}</option>
+            </select>
+            <h4 style={{ marginLeft: 15 }}>Filter by</h4>
+            <select
+              className={styles.sortPicker}
+              style={{ backgroundColor: PARTS_COLORS[filter.partOfSpeech] }}
+              value={filter.partOfSpeech}
+              onChange={(e) => {
+                setFilter({ partOfSpeech: Number(e.target.value) });
+              }}
+            >
+              <option value={0} style={{ color: "gray" }}>
+                {locale.anyPartOfSpeech}
+              </option>
+              <optgroup label={locale.options}>
+                {Object.keys(PARTS_OF_SPEECH).map((key, i) => (
+                  <option
+                    key={i}
+                    value={key}
+                    style={{ backgroundColor: PARTS_COLORS[key] }}
+                  >
+                    {PARTS_OF_SPEECH[key][locale._code]}
+                  </option>
+                ))}
+              </optgroup>
             </select>
           </div>
           {listData && (

@@ -11,10 +11,16 @@ export async function GET(req) {
   const type = searchParams.get("type") == "sources" ? "sources" : "words";
   const sortBy = searchParams.get("sortBy") || "lastModified";
   const sortDir = searchParams.get("sortDir") || sortDirections.DESC;
+  const partOfSpeech = searchParams.get("partOfSpeech") || false;
 
   const collection = db.collection(type);
   const results = await collection
-    .find({})
+    .find(
+      partOfSpeech ?
+        {
+          part: Number(partOfSpeech),
+        } : {}
+    )
     .skip(Number(offset))
     .limit(Number(limit) < 100 ? Number(limit) : 100)
     .sort([[sortBy, Number(sortDir)]])
