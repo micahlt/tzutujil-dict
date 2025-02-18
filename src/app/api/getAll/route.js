@@ -12,15 +12,19 @@ export async function GET(req) {
   const sortBy = searchParams.get("sortBy") || "lastModified";
   const sortDir = searchParams.get("sortDir") || sortDirections.DESC;
   const partOfSpeech = searchParams.get("partOfSpeech") || false;
+  const source = searchParams.get("source") || false;
+
+  let filterObj = {};
+  if (partOfSpeech) {
+    filterObj.part = Number(partOfSpeech);
+  }
+  if (source) {
+    filterObj.sourceId = source;
+  }
 
   const collection = db.collection(type);
   const results = await collection
-    .find(
-      partOfSpeech ?
-        {
-          part: Number(partOfSpeech),
-        } : {}
-    )
+    .find(filterObj)
     .skip(Number(offset))
     .limit(Number(limit) < 100 ? Number(limit) : 100)
     .sort([[sortBy, Number(sortDir)]])

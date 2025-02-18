@@ -7,8 +7,8 @@
 export default function mergeWords(baseWord, newWord) {
   console.log("\n| TzDB WordMerge 2.0 starting\n|============================");
   // Remove the weird apostraphe characters
-  baseWord.variants = baseWord.map((v) => v.replaceAll("’", "'"));
-  newWord.variants = newWord.map((v) => v.replaceAll("’", "'"));
+  baseWord.variants = baseWord.variants.map((v) => v.replaceAll("’", "'"));
+  newWord.variants = newWord.variants.map((v) => v.replaceAll("’", "'"));
   // Merge spelling variants
   baseWord.variants = Array.from(
     new Set([...baseWord.variants, ...newWord.variants])
@@ -95,18 +95,21 @@ function mergeDefinitions(A = [], B = []) {
     }
     // If the Spanish translation already exists then merge the definitions
     else {
-      A[baseIndex].es.translation = def.es?.translation || "";
-      A[baseIndex].en.translation = def.en?.translation || "";
+      console.log("| Incoming def")
+      console.log(A[baseIndex]);
+      A[baseIndex].es.translation = A[baseIndex].es.translation || (def.es?.translation || "");
+      A[baseIndex].en.translation = A[baseIndex].en.translation || (def.en?.translation || "");
       locales.forEach((l) => {
         if (!!def[l]?.example) {
           if (!!A[baseIndex][l].example) {
             // In the case of two different examples under the same translation,
             // we simply append the second example as a string
-            if (A[baseIndex][l].example != def[l].example) {
+            if (A[baseIndex][l].example != def[l].example.replaceAll("’", "'")) {
               A[baseIndex][l].example += "\n" + def[l].example;
+              A[baseIndex][l].example = A[baseIndex][l].example.replaceAll("’", "'")
             }
           } else {
-            A[baseIndex][l].example = def[l].example;
+            A[baseIndex][l].example = def[l].example.replaceAll("’", "'");
           }
         }
       });
@@ -149,5 +152,3 @@ let r = mergeDefinitions(
     },
   ]
 );
-
-console.log(r);

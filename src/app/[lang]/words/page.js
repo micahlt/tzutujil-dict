@@ -2,12 +2,14 @@
 import { Suspense } from "react";
 import WordsClient from "./wordsClient";
 import { getDict } from "../i18n";
+import { getSources } from "@/lib/getSources";
 
 export default async function Word({ params: { lang } }) {
   const locale = await getDict(lang);
+  const sources = await JSON.parse(await getSources());
   return (
     <Suspense>
-      <WordsClient locale={locale} />
+      <WordsClient locale={locale} sources={sources} />
     </Suspense>
   );
 }

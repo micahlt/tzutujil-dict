@@ -48,6 +48,7 @@
   font-weight: bold;
   text-align: left;
   text-transform: capitalize;
+  user-select: none;
 }
 
 .table tbody td {
@@ -55,12 +56,12 @@
   padding-bottom: 0.5em;
 }
 
-.table tr {
+.table tbody tr {
   transition: color 0.2s;
   cursor: pointer;
 }
 
-.table tr:hover {
+.table tbody tr:hover {
   color: rgb(0, 240, 160);
 }
 
@@ -108,8 +109,9 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  margin-bottom: 1em;
+  margin-bottom: 0.2em;
   gap: 0.5em;
+  font-size: 0.9rem;
 }
 
 .sortPicker {

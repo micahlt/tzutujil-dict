@@ -10,7 +10,7 @@ async function main() {
     const tzdb = db.collection("words");
     const w = await tzdb.find({
         definitions: {
-            $size: 3
+            $size: 4
         }
     })
     /** @type {Word[]} */
@@ -36,7 +36,7 @@ async function main() {
     words.forEach(async (word) => {
         console.log(word.variants);
         console.log(word.definitions);
-        await tzdb.updateOne({ _id: new ObjectId(word._id) }, { $set: { definitions: word.definitions, variants: word.variants } });
+        // await tzdb.updateOne({ _id: new ObjectId(word._id) }, { $set: { definitions: word.definitions, variants: word.variants } });
     });
 }
 

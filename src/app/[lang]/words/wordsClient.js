@@ -8,7 +8,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { sortDirections } from "@/lib/sort";
 import { PARTS_COLORS, PARTS_OF_SPEECH } from "@/lib/partsOfSpeech";
 
-export default function Words({ locale }) {
+export default function Words({ locale, sources }) {
   const nav = useRouter();
   const params = useSearchParams();
   const [page, setPage] = useState();
@@ -21,15 +21,16 @@ export default function Words({ locale }) {
   });
   const [filter, setFilter] = useState({
     partOfSpeech: 0,
+    source: ""
   });
   useEffect(() => {
     if (hasFetchedParams && page && perPage) {
       nav.push(
-        `/words?perPage=${perPage}&page=${page}&sortBy=${sort.by}&sortDir=${sort.dir}&partOfSpeech=${filter.partOfSpeech === 0 ? "" : filter.partOfSpeech}`
+        `/words?perPage=${perPage}&page=${page}&sortBy=${sort.by}&sortDir=${sort.dir}&partOfSpeech=${filter.partOfSpeech === -1 ? "" : filter.partOfSpeech}&source=${filter.source}`
       );
       fetch(
         `/api/getAll?limit=${perPage}&offset=${(page - 1) * perPage}&sortBy=${sort.by
-        }&sortDir=${sort.dir}&partOfSpeech=${filter.partOfSpeech === 0 ? "" : filter.partOfSpeech}`
+        }&sortDir=${sort.dir}&partOfSpeech=${filter.partOfSpeech === -1 ? "" : filter.partOfSpeech}&source=${filter.source}`
       )
         .then((res) => res.json())
         .then((json) => {
@@ -47,6 +48,7 @@ export default function Words({ locale }) {
       });
       setFilter({
         partOfSpeech: params.get("partOfSpeech") || "",
+        source: params.get("source") || "",
       })
       setHasFetchedParams(true);
     }
@@ -77,29 +79,49 @@ export default function Words({ locale }) {
               <option value={sortDirections.ASC}>{locale.ascending}</option>
               <option value={sortDirections.DESC}>{locale.descending}</option>
             </select>
-            <h4 style={{ marginLeft: 15 }}>Filter by</h4>
+          </div>
+          <div className={styles.sortOptions} style={{ marginBottom: "1em" }}>
+            <h4>Filter by</h4>
             <select
               className={styles.sortPicker}
               style={{ backgroundColor: PARTS_COLORS[filter.partOfSpeech] }}
               value={filter.partOfSpeech}
               onChange={(e) => {
-                setFilter({ partOfSpeech: Number(e.target.value) });
+                setFilter({ ...filter, partOfSpeech: Number(e.target.value) });
               }}
             >
-              <option value={0} style={{ color: "gray" }}>
+              <option value={-1} style={{ color: "gray" }}>
                 {locale.anyPartOfSpeech}
               </option>
-              <optgroup label={locale.options}>
-                {Object.keys(PARTS_OF_SPEECH).map((key, i) => (
-                  <option
-                    key={i}
-                    value={key}
-                    style={{ backgroundColor: PARTS_COLORS[key] }}
-                  >
-                    {PARTS_OF_SPEECH[key][locale._code]}
-                  </option>
-                ))}
-              </optgroup>
+              {Object.keys(PARTS_OF_SPEECH).map((key, i) => (
+                <option
+                  key={i}
+                  value={key}
+                  style={{ backgroundColor: PARTS_COLORS[key] }}
+                >
+                  {PARTS_OF_SPEECH[key][locale._code].toLowerCase()}
+                </option>
+              ))}
+              <option value={0}>unset</option>
+            </select>
+            <select
+              className={styles.sortPicker}
+              value={filter.source}
+              onChange={(e) => {
+                setFilter({
+                  ...filter,
+                  source: e.target.value
+                })
+              }}
+            >
+              <option style={{ color: "gray" }} value="">
+                any source
+              </option>
+              {sources.map((s) => (
+                <option key={s._id} value={s._id}>
+                  {s.name}
+                </option>
+              ))}
             </select>
           </div>
           {listData && (
@@ -114,7 +136,7 @@ export default function Words({ locale }) {
               </thead>
               <tbody>
                 {listData.map((word) => (
-                  <tr key={word.id}>
+                  <tr key={word._id} onClick={() => nav.push(`/words/${word._id}`)}>
                     <td>
                       <Link href={`/words/${word._id}`}>
                         {word.variants[0]}

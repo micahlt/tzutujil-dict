@@ -96,6 +96,7 @@ export async function PUT(req) {
         // If word already exists, merge any new content into the existing word
         if (existing) {
           try {
+            console.log(existing);
             const merged = mergeWords(existing, json);
             const res = await words.findOneAndUpdate(
               {
@@ -115,6 +116,7 @@ export async function PUT(req) {
               }
             );
             if (res._id) {
+              revalidatePath(`/words/${res._id}`);
               return Response.json(
                 {
                   success: true,
@@ -173,6 +175,7 @@ export async function PUT(req) {
             }
           );
         } else {
+          revalidatePath(`/words/${res._id}`);
           return Response.json(
             { success: true, id: res.insertedId, url: `/words/${res.insertedId}`, },
             {
