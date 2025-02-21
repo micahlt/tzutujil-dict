@@ -10,7 +10,6 @@ export async function getSource(id) {
   const sources = client.db("tzdb").collection("sources");
 
   let result = await sources.findOne({ _id: ObjectId.createFromHexString(id) });
-
   if (result != null) {
     return JSON.stringify(result);
   } else {

@@ -8,21 +8,20 @@ const input = fs.readFileSync("input.csv", {
     encoding: "utf-8"
 })
 let parsed = csv2json(input, {
-    headerFields: ["tzWord", "esWord"],
+    headerFields: ["tzWord", "esWord", "partOfSpeech"],
     trimFieldValues: true,
-    parseValue: (v) => v.trim().replaceAll("\r", '').replaceAll("\n", '')
+    parseValue: (v) => v.trim().replaceAll("\r", '').replaceAll("\n", '').replaceAll("’", "'")
 });
 
 for (const i in parsed) {
-    if (i > 0) {
-        break;
-    }
+    // if (i > 0) {
+    //     break;
+    // }
     const d = parsed[i];
+    const variants = d.tzWord.split(",").map((v) => v.trim().toLowerCase());
     const def = {
-        sourceId: "66713f70e33053ebab5fe944",
-        variants: [
-            d.tzWord
-        ],
+        sourceId: "67b8a54773e10d34d08b210c",
+        variants: variants,
         definitions: [
             {
                 en: {
@@ -38,7 +37,7 @@ for (const i in parsed) {
                 }
             }
         ],
-        part: 0
+        part: Number(d.partOfSpeech)
     };
     const req = await fetch(`https://v2.dictionary.tzutujil.org/api/word`, {
         method: "PUT",

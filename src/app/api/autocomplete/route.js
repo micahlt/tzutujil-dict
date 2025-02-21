@@ -5,7 +5,7 @@ import { Client } from "@elastic/elasticsearch";
 export async function GET(req) {
   // Create the connection to the database
   const searchParams = req.nextUrl.searchParams;
-  const query = searchParams.get("q");
+  const query = "*" + searchParams.get("q") + "*";
 
   if (!query || query.length < 3) {
     return Response.json([]);

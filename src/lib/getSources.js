@@ -2,6 +2,7 @@ import clientPromise from "./mongodb";
 
 export async function getSources() {
   const client = await clientPromise;
+  await client.connect();
   const sources = client.db("tzdb").collection("sources");
 
   let result = await sources.find({}).toArray();
