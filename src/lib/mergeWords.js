@@ -68,7 +68,7 @@ function mergeDefinitions(A = [], B = []) {
   B.forEach((def) => {
     // The index of the closest definition in the base word def array
     const baseIndex = A.findIndex(
-      (base) => base.es.translation == def.es.translation
+      (base) => base.es.translation?.trim()?.toLowerCase() == def.es.translation?.trim()?.toLowerCase()
     );
     // If the Spanish translation does not yet exist then create a new definition
     if (baseIndex == -1) {
