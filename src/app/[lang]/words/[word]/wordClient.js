@@ -130,8 +130,8 @@ export default function WordClient({
       {wordInfo ? (
         <main className={styles.main}>
           <div className={styles.headerFlex}>
-            <Link href="/" className={styles.goBack}>
-              <ArrowLeft size={24}></ArrowLeft> {locale.goHome}
+            <Link href={window.localStorage.getItem("previous") || "/"} onClick={() => window.localStorage.removeItem("previous")} className={styles.goBack}>
+              <ArrowLeft size={24}></ArrowLeft> {window.localStorage.getItem("previous") ? locale.goBack : locale.goHome}
             </Link>
             <div className={styles.spacer}></div>
             {password && !editMode && (

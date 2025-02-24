@@ -8,10 +8,15 @@ const input = fs.readFileSync("input.csv", {
     encoding: "utf-8"
 })
 let parsed = csv2json(input, {
-    headerFields: ["tzWord", "esWord", "partOfSpeech"],
+    headerFields: ["tzWord", "esWord"],
     trimFieldValues: true,
-    parseValue: (v) => v.trim().replaceAll("\r", '').replaceAll("\n", '').replaceAll("’", "'")
+    parseValue: (v) => v.trim().replaceAll("\r", '').replaceAll("\n", '').replaceAll("’", "'"),
+    delimiter: {
+        field: "	",
+    }
 });
+
+console.log(parsed.length, "words to upload");
 
 for (const i in parsed) {
     // if (i > 0) {
@@ -20,7 +25,7 @@ for (const i in parsed) {
     const d = parsed[i];
     const variants = d.tzWord.split(",").map((v) => v.trim().toLowerCase());
     const def = {
-        sourceId: "67b8a54773e10d34d08b210c",
+        sourceId: "66713f70e33053ebab5fe944",
         variants: variants,
         definitions: [
             {
@@ -37,7 +42,7 @@ for (const i in parsed) {
                 }
             }
         ],
-        part: Number(d.partOfSpeech)
+        part: 0
     };
     const req = await fetch(`https://v2.dictionary.tzutujil.org/api/word`, {
         method: "PUT",
@@ -48,7 +53,15 @@ for (const i in parsed) {
     });
     if ([200, 201, 409].includes(req.status)) {
         const j = await req.json();
-        parsed[i].URL = "https://v2.dictionary.tzutujil.org" + j.url;
+        parsed[i].url = "https://v2.dictionary.tzutujil.org" + j.url;
+        if (req.status === 201) {
+            parsed[i].status = "Created";
+        } else if (req.status === 409) {
+            parsed[i].status = "Conflict";
+        } else if (req.status === 200) {
+            parsed[i].status = "Merged";
+        }
+        console.log(`Uploaded ${i} of ${parsed.length}`);
     } else {
         console.error(req.status);
         console.error(await req.text());

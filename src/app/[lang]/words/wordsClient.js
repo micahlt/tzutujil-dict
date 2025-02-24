@@ -138,7 +138,7 @@ export default function Words({ locale, sources }) {
                 {listData.map((word) => (
                   <tr key={word._id} onClick={() => nav.push(`/words/${word._id}`)}>
                     <td>
-                      <Link href={`/words/${word._id}`}>
+                      <Link href={`/words/${word._id}`} onClick={() => window.localStorage.setItem("previous", window.location.pathname)}>
                         {word.variants[0]}
                       </Link>
                     </td>
