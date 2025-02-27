@@ -16,8 +16,8 @@ export async function GET(req) {
     query: {
       multi_match: {
         query: query.replaceAll("'", "*").replaceAll("’", "*"),
-        fields: ["variants^2", "definitions.*"],
-        max_expansions: 100,
+        fields: ["variants^2", "definitions.en.translation", "definitions.es.translation"],
+        analyzer: "standard",
       },
     },
     collapse: {
