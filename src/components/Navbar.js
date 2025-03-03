@@ -56,6 +56,12 @@ export default function Navbar({ locale }) {
         {locale.allWords}
       </Link>
       <Link
+        href="https://tools.tzutujil.org"
+        className={style.link}
+      >
+        {locale.tools}
+      </Link>
+      <Link
         href="https://tzutujil.notion.site/Resource-Database-51b8931bedff4f1a862835479a65d38e"
         className={style.link}
       >
