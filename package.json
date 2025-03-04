@@ -24,7 +24,8 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-feather": "^2.0.10",
-    "react-textarea-autosize": "^8.5.7"
+    "react-textarea-autosize": "^8.5.7",
+    "tzii.js": "^1.1.0"
   },
   "devDependencies": {
     "crawler": "^2.0.2",

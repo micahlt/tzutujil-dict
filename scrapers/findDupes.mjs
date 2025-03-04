@@ -9,8 +9,8 @@ async function main() {
     const db = client.db("tzdb");
     const tzdb = db.collection("words");
     const w = await tzdb.find({
-        definitions: {
-            $size: 4
+        variants: {
+            $size: 2
         }
     })
     /** @type {Word[]} */

@@ -6,9 +6,12 @@ export default function ExtractorTzEs() {
   const [lines, setLines] = useState("");
   const [extracted, setExtracted] = useState("");
   const [words, setWords] = useState([]);
+  const [uploaded, setUploaded] = useState(0);
   const extractInfo = (testString) => {
-    const tzWord = testString.split("—")[0].trim();
-    const esWord = testString.split("—")[1].trim();
+    testString = testString.replace(/[0-9]*\./g, "");
+
+    const tzWord = testString.split("=")[0].trim().toLowerCase();
+    const esWord = testString.split("=")[1].trim().toLowerCase();
     return {
       tzWord,
       esWord,
@@ -20,7 +23,7 @@ export default function ExtractorTzEs() {
     let newLines = "";
     let data = [];
     splitLines.forEach((line) => {
-      if (line.includes("—")) {
+      if (line.includes("=")) {
         let info = extractInfo(line.replaceAll("", "").trim());
         data.push(info);
         let lineText = `| TZ WORD: ${info.tzWord}\n| ES WORD: ${info.esWord}\n---------------------------`;
@@ -30,16 +33,37 @@ export default function ExtractorTzEs() {
     setWords(data);
     setExtracted(newLines);
   };
-  const performUpload = () => {
-    words.forEach((word) => {
-      fetch("/api/upload", {
-        method: "POST",
-        body: JSON.stringify(word),
+  const performUpload = async () => {
+    setUploaded(0);
+    for (let i = 0; i < words.length; i++) {
+      await fetch("/api/word", {
+        method: "PUT",
+        body: JSON.stringify({
+          variants: [words[i].tzWord],
+          definitions: [
+            {
+              en: {
+                translation: "",
+                example: "",
+              },
+              es: {
+                translation: words[i].esWord,
+                example: "",
+              },
+              tz: {
+                example: "",
+              },
+            },
+          ],
+          sourceId: "66714030e33053ebab5fe946"
+        }),
         headers: {
           "x-pwd": window.localStorage.getItem("pwd"),
         },
       });
-    });
+      setUploaded((prevState) => prevState + 1);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    }
   };
   return (
     <main className={styles.exgrid}>
@@ -51,9 +75,12 @@ export default function ExtractorTzEs() {
       <button className={styles.extractor} onClick={performExtraction}>
         Preview Extraction Data
       </button>
-      <button className={styles.uploader} onClick={performUpload}>
-        Upload to TzDB
-      </button>
+      <div className={styles.uploader}>
+        <button onClick={performUpload} className={styles.uploaderBtn}>
+          Upload to TzDB
+        </button>
+        <progress value={uploaded} max={words.length} />
+      </div>
       <textarea
         readOnly
         className={styles.output}
