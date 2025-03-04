@@ -85,10 +85,6 @@ export default async function Home({ params: { lang } }) {
               https://www.almg.org.gt/wp-content/uploads/2020/10/NEOLOGISMO-TZ_UTUJIL.pdf
             </p>
             <p className={styles.citation}>
-              OpenAI. (2024). ChatGPT (Jan 10 version) [Large language model].
-              https://chat.openai.com
-            </p>
-            <p className={styles.citation}>
               Sonia_Lorainos. (n.d.). Palabras básicas en tz’utujil. Scribd.
               https://es.scribd.com/document/412504778/Palabras-basicas-en-tz-utujil
             </p>

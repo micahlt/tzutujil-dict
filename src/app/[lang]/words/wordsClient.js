@@ -3,10 +3,11 @@ import { ArrowLeft, ArrowRightCircle, ArrowLeftCircle } from "react-feather";
 import styles from "./page.module.css";
 import Navbar from "@/components/Navbar";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { sortDirections } from "@/lib/sort";
 import { PARTS_COLORS, PARTS_OF_SPEECH } from "@/lib/partsOfSpeech";
+import PartOfSpeechBadge from "@/components/PartOfSpeechBadge";
 
 export default function Words({ locale, sources }) {
   const nav = useRouter();
@@ -15,6 +16,8 @@ export default function Words({ locale, sources }) {
   const [perPage, setPerPage] = useState();
   const [listData, setListData] = useState(null);
   const [hasFetchedParams, setHasFetchedParams] = useState(false);
+  const pageNumRef = useRef();
+  const perPageRef = useRef();
   const [sort, setSort] = useState({
     by: "lastModifed",
     dir: sortDirections.DESC,
@@ -36,6 +39,12 @@ export default function Words({ locale, sources }) {
         .then((json) => {
           setListData(json);
         });
+    }
+    if (perPageRef.current) {
+      perPageRef.current.value = perPage;
+    }
+    if (pageNumRef.current) {
+      pageNumRef.current.value = page;
     }
   }, [page, perPage, sort, filter]);
   useEffect(() => {
@@ -131,6 +140,7 @@ export default function Words({ locale, sources }) {
                   <th>Tz'utujil</th>
                   <th>{locale.spanish}</th>
                   <th>{locale.english}</th>
+                  <th>{locale.part}</th>
                   <th>{locale.lastModified}</th>
                 </tr>
               </thead>
@@ -150,6 +160,11 @@ export default function Words({ locale, sources }) {
                     <td>
                       <Link href={`/words/${word._id}`}>
                         {word.definitions[0].en?.translation || ""}
+                      </Link>
+                    </td>
+                    <td>
+                      <Link href={`/words/${word._id}`}>
+                        <PartOfSpeechBadge partCode={word.part} locale={locale._code} context="search" />
                       </Link>
                     </td>
                     <td>
@@ -175,16 +190,28 @@ export default function Words({ locale, sources }) {
               <div className={styles.pageNav}>
                 Page{" "}
                 <input
+                  ref={pageNumRef}
                   type="text"
-                  value={page}
-                  onChange={(e) => setPage(e.target.value)}
+                  defaultValue={page}
+                  onKeyUp={(e) => {
+                    if (e.key === "Enter") {
+                      setPage(e.target.value)
+                    }
+                  }}
+                  onBlur={(e) => setPage(e.target.value)}
                   suppressHydrationWarning={true}
                 />
                 {"  "}showing{"  "}
                 <input
+                  ref={perPageRef}
                   type="text"
-                  value={perPage}
-                  onChange={(e) => setPerPage(e.target.value)}
+                  defaultValue={perPage}
+                  onKeyUp={(e) => {
+                    if (e.key === "Enter") {
+                      setPerPage(e.target.value)
+                    }
+                  }}
+                  onBlur={(e) => setPerPage(e.target.value)}
                   suppressHydrationWarning={true}
                 />{" "}
                 per page

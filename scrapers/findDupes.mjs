@@ -33,11 +33,12 @@ async function main() {
         });
         word.variants = uniqueVariants;
     });
-    words.forEach(async (word) => {
-        console.log(word.variants);
-        console.log(word.definitions);
-        // await tzdb.updateOne({ _id: new ObjectId(word._id) }, { $set: { definitions: word.definitions, variants: word.variants } });
-    });
+    for (let w of words) {
+        // console.log(word.variants);
+        // console.log(word.definitions);
+        await tzdb.updateOne({ _id: new ObjectId(w._id) }, { $set: { definitions: w.definitions, variants: w.variants } });
+        console.log("Fixed word", w._id);
+    }
 }
 
 main();

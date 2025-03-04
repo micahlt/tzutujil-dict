@@ -3,7 +3,7 @@ import { PARTS_COLORS, PARTS_OF_SPEECH } from "@/lib/partsOfSpeech";
 import styles from "./PartOfSpeechBadge.module.css";
 
 export default function PartOfSpeechBadge({ partCode, locale, context }) {
-  if (partCode === 0) return <></>;
+  if (partCode < 1 || partCode > 8) return <></>;
   return (
     <div
       className={classNames(
