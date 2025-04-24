@@ -107,10 +107,12 @@ export async function PATCH(req) {
         const res = await sources.updateOne(
           { _id: json.id },
           {
-            name: json.name,
-            description: json.description || "",
-            url: json.url,
-            author: json.author || "",
+            $set: {
+              name: json.name,
+              description: json.description || "",
+              url: json.url,
+              author: json.author || "",
+            }
           }
         );
 
@@ -125,6 +127,7 @@ export async function PATCH(req) {
           return Response.json({ success: true });
         }
       } catch (err) {
+        console.error(err);
         return Response.json(
           { error: "Could not update source in DB" },
           {

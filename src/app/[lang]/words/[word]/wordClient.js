@@ -57,6 +57,7 @@ export default function WordClient({
         });
     }
   }, [editMode]);
+
   const saveWord = (e) => {
     e.preventDefault();
     setLoading(true);
@@ -98,6 +99,7 @@ export default function WordClient({
         });
     }
   };
+
   const deleteItem = () => {
     setLoading(true);
     if (window.confirm(locale.confirmDelete)) {
@@ -469,7 +471,7 @@ export default function WordClient({
                 ) : (
                   <h3>
                     <a
-                      href={source?.url || null}
+                      href={`/sources/${source?._id}`}
                       className={styles.source}
                       target="_blank"
                       title="Open this source in a new tab"
