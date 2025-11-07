@@ -8,20 +8,20 @@ datasource db {
 }
 
 model Examples {
-  id                 Int     @id @default(autoincrement())
-  word_id            String @db.Uuid
-  text_tz            String?
-  text_es            String?
-  text_en            String?
-  Words       Words      @relation(fields: [word_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "word_id")
+  id      Int     @id @default(autoincrement())
+  text_en String?
+  text_es String?
+  text_tz String?
+  word_id String  @db.Uuid
+  Words   Words   @relation(fields: [word_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "word_id")
 }
 
 model Senses {
-  id          Int        @id @default(autoincrement())
-  word_id     String     @db.Uuid
+  id          Int    @id @default(autoincrement())
+  word_id     String @db.Uuid
   translation String
   language    lang
-  Words       Words      @relation(fields: [word_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "word_id")
+  Words       Words  @relation(fields: [word_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "word_id")
 }
 
 model Sources {
@@ -29,10 +29,10 @@ model Sources {
   name          String
   description   String?
   url           String?
-  author        String?
   last_modified DateTime @default(now()) @updatedAt
+  author        String?
+  mongo_id      String?  @unique
   Words         Words[]
-  mongo_id      String?  @unique @db.Text
 }
 
 model Spellings {
@@ -44,16 +44,30 @@ model Spellings {
 }
 
 model Words {
-  id            String      @id @default(uuid()) @db.Uuid
-  last_modified DateTime    @default(now()) @updatedAt
-  notes         String?
-  source_id     String      @db.Uuid
-  Senses        Senses[]
-  Spellings     Spellings[]
-  Sources       Sources     @relation(fields: [source_id], references: [id], onDelete: SetNull, onUpdate: NoAction, map: "source_id")
-  Examples    Examples[]
-  mongo_id String? @unique @db.Text
+  id             String      @id @default(uuid()) @db.Uuid
+  last_modified  DateTime    @default(now()) @updatedAt
+  notes          String?
+  source_id      String      @db.Uuid
   part_of_speech part
+  mongo_id       String?     @unique
+  Examples       Examples[]
+  Senses         Senses[]
+  Spellings      Spellings[]
+  Sources        Sources     @relation(fields: [source_id], references: [id], onDelete: SetNull, onUpdate: NoAction, map: "source_id")
+}
+
+model word_search {
+  word_id        String                   @id @db.Uuid
+  spellings_text String?
+  senses_text    String?
+  examples_text  String?
+  tsv            Unsupported("tsvector")?
+  updated_at     DateTime?                @default(now()) @db.Timestamptz(6)
+
+  @@index([examples_text(ops: raw("gin_trgm_ops"))], map: "word_search_examples_trgm_idx", type: Gin)
+  @@index([senses_text(ops: raw("gin_trgm_ops"))], map: "word_search_senses_trgm_idx", type: Gin)
+  @@index([spellings_text(ops: raw("gin_trgm_ops"))], map: "word_search_spellings_trgm_idx", type: Gin)
+  @@index([tsv], type: Gin)
 }
 
 enum lang {
