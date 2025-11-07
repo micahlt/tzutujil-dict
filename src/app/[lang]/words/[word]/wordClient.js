@@ -296,7 +296,6 @@ export default function WordClient({
                 ...wordInfo,
                 Spellings: newSpellings
               });
-              console.log("WORDINFO UPDATE", wordInfo)
             }}
           ></TextareaAutosize>
           <div style={{ display: "flex", alignItems: "center" }}>

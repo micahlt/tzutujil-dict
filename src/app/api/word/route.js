@@ -208,7 +208,7 @@ export async function PUT(req) {
               })
             },
             Senses: {
-              create: json.Senses.map(sense => ({
+              create: json.Senses.filter(s => s.translation.trim().length > 0).map(sense => ({
                 translation: sense.translation,
                 language: sense.language
               }))
@@ -319,21 +319,22 @@ export async function PATCH(req) {
         };
 
         const spellingsToCreate = Array.isArray(json.Spellings)
-          ? json.Spellings.map((s) => ({
+          ? json.Spellings.filter(s => s.spelling.trim().length > 0).map((s) => ({
             spelling: sanitizeSpelling(s.spelling),
             is_primary: !!s.is_primary,
           }))
           : [];
 
         const sensesToCreate = Array.isArray(json.Senses)
-          ? json.Senses.map((sense) => ({
-            translation: sense.translation ?? null,
-            language: sense.language ?? null,
-          }))
+          ? json.Senses.filter(s => s.translation.trim().length > 0)
+            .map((sense) => ({
+              translation: sense.translation ?? null,
+              language: sense.language ?? null,
+            }))
           : [];
 
         const examplesToCreate = Array.isArray(json.Examples)
-          ? json.Examples.map((ex) => ({
+          ? json.Examples.filter(s => s.text_en.trim().length > 0 || s.text_es.trim().length > 0 || s.text_tz.trim().length > 0).map((ex) => ({
             text_tz: sanitize(ex.text_tz),
             text_es: sanitize(ex.text_es),
             text_en: sanitize(ex.text_en)
