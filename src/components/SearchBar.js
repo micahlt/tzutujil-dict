@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CornerDownLeft } from "react-feather";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -10,14 +10,42 @@ export default function SearchBar({ locale }) {
   const [searchFocused, setSearchFocused] = useState(false);
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
+  const [debounceTimer, setDebounceTimer] = useState(null);
+
   const searchChange = (e) => {
-    setQuery(e.target.value);
-    fetch(`/api/autocomplete?q=${e.target.value}&ac=true`)
-      .then((res) => res.json())
-      .then((json) => {
-        setResults(json);
-      });
+    const value = e.target.value;
+    setQuery(value);
+
+    // Clear existing timer
+    if (debounceTimer) {
+      clearTimeout(debounceTimer);
+    }
+
+    // Set new timer for 300ms delay
+    const newTimer = setTimeout(() => {
+      if (value.trim()) {
+        fetch(`/api/search?q=${value}&limit=5`)
+          .then((res) => res.json())
+          .then((json) => {
+            setResults(json);
+          });
+      } else {
+        setResults([]);
+      }
+    }, 500);
+
+    setDebounceTimer(newTimer);
   };
+
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => {
+      if (debounceTimer) {
+        clearTimeout(debounceTimer);
+      }
+    };
+  }, [debounceTimer]);
+
   return (
     <div className={styles.heroSearchWrapper}>
       <input
@@ -35,23 +63,23 @@ export default function SearchBar({ locale }) {
         <div className={styles.searchSuggestions}>
           {results.map((res) => (
             <Link
-              href={`/words/${res.id}`}
-              key={res.id}
+              href={`/words/${res.word_id}`}
+              key={res.word_id}
               className={styles.suggestion}
             >
-              <h3>{res.variants[0]}</h3>
+              <h3>{res.spelling}</h3>
               <p>
-                {res.definitions[0]?.es?.translation && (
+                {res.sense_es && (
                   <>
-                    <b>ES</b> <span>{res.definitions[0].es.translation}</span>
+                    <b>ES</b> <span>{res.sense_es}</span>
                   </>
                 )}
-                {res.definitions[0]?.es?.translation &&
-                  res.definitions[0]?.en?.translation &&
+                {res.sense_es &&
+                  res.sense_en &&
                   " | "}
-                {res.definitions[0]?.en?.translation && (
+                {res.sense_en && (
                   <>
-                    <b>EN</b> <span>{res.definitions[0].en.translation}</span>
+                    <b>EN</b> <span>{res.sense_en}</span>
                   </>
                 )}
               </p>

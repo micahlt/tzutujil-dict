@@ -1,17 +1,32 @@
 import "dotenv/config";
 
+/**
+ * @typedef { import("@prisma/client").Words } Word
+ * @typedef { import("@prisma/client").Sources } Source
+ * @typedef { import("@prisma/client").Senses } Sense
+ * @typedef { import("@prisma/client").Examples } Example
+ * @typedef { import("@prisma/client").Spellings } Spelling
+ * 
+ * @typedef {Object} WordExtras
+ * @property {Source} Source
+ * @property {Sense[]} Senses
+ * @property {Example[]} Examples
+ * @property {Spelling[]} Spellings
+ * 
+ * @typedef { Word & WordExtras } FullWord
+ */
+
 import clientPromise from "@/lib/mongodb";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { ObjectId } from "mongodb";
-import "@/lib/types";
 import mergeWords from "@/lib/mergeWords.js";
 import formatDefinitions from "@/lib/formatDefinitions";
+import prisma from "@/lib/prisma";
+import idCompat from "@/lib/idCompat";
 
 // Get a word by its ID or primary spelling variant
 export async function GET(req) {
-  const client = await clientPromise;
-  const words = client.db("tzdb").collection("words");
   const searchParams = req.nextUrl.searchParams;
   const id = searchParams.get("id");
   const tzWord = searchParams.get("tzWord");
@@ -27,27 +42,38 @@ export async function GET(req) {
       }
     );
   }
-  try {
-    if (id) {
-      ObjectId.createFromHexString(id);
-    }
-  } catch (err) {
-    return Response.json(
-      {
-        success: false,
-        reason: "Improper ID format",
-      },
-      {
-        status: 400,
-      }
-    );
-  }
 
   let result;
   if (id) {
-    result = await words.findOne({ _id: ObjectId.createFromHexString(id) });
+    result = await prisma.words.findUnique({
+      where: idCompat(id),
+      include: {
+        Spellings: true,
+        Senses: true,
+        Sources: true,
+        Examples: true
+      },
+    });
   } else if (tzWord) {
-    result = await words.findOne({ "variants.0": tzWord });
+    result = await prisma.words.findFirst({
+      where: {
+        Spellings: {
+          some: {
+            is_primary: true,
+            spelling: {
+              equals: tzWord,
+              mode: "insensitive"
+            }
+          }
+        }
+      },
+      include: {
+        Spellings: true,
+        Senses: true,
+        Sources: true,
+        Examples: true
+      },
+    })
   }
 
   if (result != null) {
@@ -65,13 +91,10 @@ export async function PUT(req) {
   const headersList = headers();
   const password = headersList.get("x-pwd");
   if (password == process.env.ADMIN_PASSWORD) {
-    const client = await clientPromise;
-    const words = client.db("tzdb").collection("words");
-
-    /** @type {Word} */
+    /** @type {FullWord} */
     const json = await req.json();
 
-    if (!json || !json?.variants || !json?.definitions || !json?.sourceId) {
+    if (!json || !json?.Spellings || !json?.Senses || !json?.source_id) {
       return Response.json(
         {
           success: false,
@@ -85,58 +108,69 @@ export async function PUT(req) {
     } else {
       try {
         let wordExistsArr = [];
-        json.variants.forEach((v) => {
-          wordExistsArr.push(v.replaceAll("’", "'"));
-          wordExistsArr.push(v.toLowerCase().replaceAll("’", "'"));
-          wordExistsArr.push((v[0].toUpperCase() + v.slice(1)).replaceAll("’", "'"));
+
+        json.Spellings.forEach((s) => {
+          wordExistsArr.push(s.spelling.replaceAll("'", "'"));
+          wordExistsArr.push(s.spelling.toLowerCase().replaceAll("'", "'"));
+          wordExistsArr.push((s.spelling[0].toUpperCase() + s.spelling.slice(1)).replaceAll("'", "'"));
         });
-        const existing = await words.findOne({
-          variants: { $in: wordExistsArr },
+
+        const existing = await prisma.words.findFirst({
+          where: {
+            Spellings: {
+              some: {
+                spelling: {
+                  in: wordExistsArr
+                }
+              }
+            }
+          }
         });
         // If word already exists, merge any new content into the existing word
         if (existing) {
           try {
             console.log(existing);
-            const merged = mergeWords(existing, json);
-            const res = await words.findOneAndUpdate(
-              {
-                _id: merged._id,
-              },
-              {
-                $set: {
-                  variants: merged.variants,
-                  definitions: formatDefinitions(merged.definitions, true),
-                  sourceId: merged.sourceId,
-                  notes: merged.notes || "",
-                  roots: merged.roots || [],
-                  lastModified: new Date(),
-                  part: merged.part,
-                  related: merged.related || [],
-                },
-              }
-            );
-            if (res._id) {
-              revalidatePath(`/words/${res._id}`);
-              return Response.json(
-                {
-                  success: true,
-                  info: "The word already exists; new content was successfully merged into the existing word.",
-                  url: `/words/${res._id}`,
-                  id: res._id,
-                },
-                { status: 200 }
-              );
-            } else {
-              return Response.json(
-                {
-                  success: false,
-                  error:
-                    "That word already exists and could not be automatically merged.",
-                  url: `/words/${existing._id}`,
-                },
-                { status: 409 }
-              );
-            }
+            return Response.json({ "nope": "Not gonna do it" });
+            // const merged = mergeWords(existing, json);
+            // const res = await words.findOneAndUpdate(
+            //   {
+            //     _id: merged._id,
+            //   },
+            //   {
+            //     $set: {
+            //       variants: merged.variants,
+            //       definitions: formatDefinitions(merged.definitions, true),
+            //       sourceId: merged.sourceId,
+            //       notes: merged.notes || "",
+            //       roots: merged.roots || [],
+            //       lastModified: new Date(),
+            //       part: merged.part,
+            //       related: merged.related || [],
+            //     },
+            //   }
+            // );
+            // if (res._id) {
+            //   revalidatePath(`/words/${res._id}`);
+            //   return Response.json(
+            //     {
+            //       success: true,
+            //       info: "The word already exists; new content was successfully merged into the existing word.",
+            //       url: `/words/${res._id}`,
+            //       id: res._id,
+            //     },
+            //     { status: 200 }
+            //   );
+            // } else {
+            //   return Response.json(
+            //     {
+            //       success: false,
+            //       error:
+            //         "That word already exists and could not be automatically merged.",
+            //       url: `/words/${existing._id}`,
+            //     },
+            //     { status: 409 }
+            //   );
+            // }
           } catch (err) {
             console.error(err);
             return Response.json(
@@ -151,20 +185,36 @@ export async function PUT(req) {
           }
         }
 
-        json.variants = json.variants.map(
-          (v) => (v[0].toLowerCase() + v.slice(1)).replaceAll("’", "'")
-        );
-        const res = await words.insertOne({
-          variants: json.variants,
-          definitions: formatDefinitions(json.definitions, true),
-          sourceId: json.sourceId,
-          notes: json.notes || "",
-          roots: json.roots || [],
-          lastModified: new Date(),
-          part: json.part,
-          related: json.related || [],
+        const res = await prisma.words.create({
+          data: {
+            source_id: json.source_id,
+            notes: json.notes || "",
+            last_modified: new Date(),
+            part_of_speech: json.part_of_speech,
+            Spellings: {
+              create: json.Spellings.map(s => {
+                return ({
+                  spelling: (s.spelling[0].toLowerCase() + s.spelling.slice(1)).replaceAll("’", "'"),
+                  is_primary: s.is_primary || false
+                })
+              })
+            },
+            Senses: {
+              create: json.Senses.map(sense => ({
+                translation: sense.translation,
+                language: sense.language
+              }))
+            },
+            Examples: json.Examples ? {
+              create: json.Examples.map(ex => ({
+                text_tz: ex.text_tz.replaceAll("’", "'"),
+                text_es: ex.text_es,
+                text_en: ex.text_en
+              }))
+            } : undefined
+          }
         });
-        if (!res.acknowledged) {
+        if (!res) {
           return Response.json(
             {
               success: false,
@@ -175,15 +225,16 @@ export async function PUT(req) {
             }
           );
         } else {
-          revalidatePath(`/words/${res._id}`);
+          revalidatePath(`/words/${res.id}`);
           return Response.json(
-            { success: true, id: res.insertedId, url: `/words/${res.insertedId}`, },
+            { success: true, id: res.id, url: `/words/${res.id}`, },
             {
               status: 201,
             }
           );
         }
       } catch (err) {
+        console.error(err);
         return Response.json(
           {
             success: false,
@@ -210,12 +261,9 @@ export async function PATCH(req) {
   const headersList = headers();
   const password = headersList.get("x-pwd");
   if (password == process.env.ADMIN_PASSWORD) {
-    const client = await clientPromise;
-    const words = client.db("tzdb").collection("words");
-
     const json = await req.json();
 
-    if (!json || !json._id) {
+    if (!json || !json.id) {
       return Response.json(
         { success: false, reason: "Missing content or ID" },
         {
@@ -225,15 +273,25 @@ export async function PATCH(req) {
     } else {
       try {
         let wordExistsArr = [];
-        json.variants.forEach((v) => {
-          wordExistsArr.push(v);
-          wordExistsArr.push(v.toLowerCase());
-          wordExistsArr.push(v[0].toUpperCase() + v.slice(1));
+
+        json.Spellings.forEach((s) => {
+          wordExistsArr.push(s.spelling.replaceAll("'", "'"));
+          wordExistsArr.push(s.spelling.toLowerCase().replaceAll("'", "'"));
+          wordExistsArr.push((s.spelling[0].toUpperCase() + s.spelling.slice(1)).replaceAll("'", "'"));
         });
-        const existing = await words.findOne({
-          variants: { $in: wordExistsArr },
+
+        const existing = await prisma.words.findFirst({
+          where: {
+            Spellings: {
+              some: {
+                spelling: {
+                  in: wordExistsArr
+                }
+              }
+            }
+          }
         });
-        if (existing._id != json._id) {
+        if (existing.id != json.id) {
           return Response.json(
             {
               success: false,
@@ -243,27 +301,91 @@ export async function PATCH(req) {
             { status: 423 }
           );
         }
-        json.variants = json.variants.map(
-          (v) => (v[0].toLowerCase() + v.slice(1)).replaceAll("’", "'")
-        );
-        const res = await words.findOneAndUpdate(
-          {
-            _id: ObjectId.createFromHexString(json._id),
-          },
-          {
-            $set: {
-              variants: json.variants,
-              definitions: formatDefinitions(json.definitions),
-              sourceId: json.sourceId,
-              notes: json.notes || "",
-              roots: json.roots || [],
-              lastModified: new Date(),
-              part: json.part,
-              related: json.related || [],
-            },
+        const sanitize = (s) => (typeof s === "string" ? s.replaceAll("’", "'") : s ?? null);
+        const sanitizeSpelling = (s) => {
+          if (!s) return null;
+          const s0 = String(s);
+          return s0.length > 0
+            ? (s0[0].toLowerCase() + s0.slice(1)).replaceAll("’", "'")
+            : s0.replaceAll("’", "'");
+        };
+
+        const spellingsToCreate = Array.isArray(json.Spellings)
+          ? json.Spellings.map((s) => ({
+            spelling: sanitizeSpelling(s.spelling),
+            is_primary: !!s.is_primary,
+          }))
+          : [];
+
+        const sensesToCreate = Array.isArray(json.Senses)
+          ? json.Senses.map((sense) => ({
+            translation: sense.translation ?? null,
+            language: sense.language ?? null,
+          }))
+          : [];
+
+        const examplesToCreate = Array.isArray(json.Examples)
+          ? json.Examples.map((ex) => ({
+            text_tz: sanitize(ex.text_tz),
+            text_es: sanitize(ex.text_es),
+            text_en: sanitize(ex.text_en)
+          }))
+          : [];
+        const updated = await prisma.$transaction(async (tx) => {
+          // Make sure word exists (if using mongoId fallback, you might want to upsert instead)
+          // If you want strict update-only: throw if not found
+          const existing = await tx.words.findUnique({ where: { id: json.id } });
+          if (!existing) {
+            throw new Error(`Word not found for identifier: ${json.id}`);
           }
-        );
-        if (!res) {
+
+          // Nested update with deleteMany + create is supported; do it in one update call.
+          // This keeps the entire operation atomic for that word.
+          const res = await tx.words.update({
+            where: {
+              id: json.id
+            },
+            data: {
+              source_id: json.source_id ?? null,
+              notes: json.notes ?? "",
+              part_of_speech: json.part_of_speech ?? null,
+
+              // Replace Spellings
+              Spellings: {
+                deleteMany: {}, // deletes all existing spellings for this word
+                create: spellingsToCreate,
+              },
+
+              // Replace Senses
+              Senses: {
+                deleteMany: {},
+                create: sensesToCreate,
+              },
+
+              // Replace Examples (word-scoped examples)
+              Examples:
+                examplesToCreate.length > 0
+                  ? {
+                    deleteMany: {},
+                    create: examplesToCreate,
+                  }
+                  : {
+                    deleteMany: {}, // still clear any old examples if none provided
+                  },
+            },
+
+            // include children so caller gets newest shape back
+            include: {
+              Spellings: true,
+              Senses: true,
+              Examples: true,
+              Sources: true,
+            },
+          });
+
+          return res;
+        });
+        if (!updated) {
           return Response.json(
             { success: false, error: "Failed to update document" },
             {
@@ -271,8 +393,8 @@ export async function PATCH(req) {
             }
           );
         } else {
-          revalidatePath(`/words/${json._id}`);
-          return Response.json({ success: true, word: res });
+          revalidatePath(`/words/${json.id}`);
+          return Response.json({ success: true, word: updated });
         }
       } catch (err) {
         console.error(err);
@@ -301,9 +423,6 @@ export async function DELETE(req) {
   const headersList = headers();
   const password = headersList.get("x-pwd");
   if (password == process.env.ADMIN_PASSWORD) {
-    const client = await clientPromise;
-    const words = client.db("tzdb").collection("words");
-
     const json = await req.json();
 
     if (!json || !json.id) {
@@ -314,7 +433,11 @@ export async function DELETE(req) {
         }
       );
     } else {
-      await words.deleteOne({ _id: ObjectId.createFromHexString(json.id) });
+      await prisma.words.delete({
+        where: {
+          id: json.id
+        }
+      });
       return Response.json({ success: true });
     }
   } else {

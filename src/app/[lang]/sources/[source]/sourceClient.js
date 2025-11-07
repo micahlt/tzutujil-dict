@@ -192,8 +192,12 @@ export default function SourceClient({
                                 </div>
                             )}
                             <div>
+                                <p className={styles.smallTitle}>{locale.author}</p>
+                                <h3>{sourceInfo.author}</h3>
+                            </div>
+                            <div>
                                 <p className={styles.smallTitle}>{locale.sourceId}</p>
-                                <h3>{sourceInfo._id}</h3>
+                                <h3>{sourceInfo.id}</h3>
                             </div>
                             {sourceId != "new" && (
                                 <div>

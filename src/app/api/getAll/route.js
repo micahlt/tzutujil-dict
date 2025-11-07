@@ -1,33 +1,39 @@
-import clientPromise from "@/lib/mongodb";
+import prisma from "@/lib/prisma";
 import { sortDirections } from "@/lib/sort";
 
 export async function GET(req) {
-  // Create the connection to the database
-  const client = await clientPromise;
-  const db = client.db("tzdb");
   const searchParams = req.nextUrl.searchParams;
   const limit = searchParams.get("limit") || 50;
   const offset = searchParams.get("offset");
   const type = searchParams.get("type") == "sources" ? "sources" : "words";
   const sortBy = searchParams.get("sortBy") || "lastModified";
   const sortDir = searchParams.get("sortDir") || sortDirections.DESC;
-  const partOfSpeech = searchParams.get("partOfSpeech") || false;
+  const partOfSpeech = searchParams.get("part") || false;
   const source = searchParams.get("source") || false;
 
-  let filterObj = {};
+  let filterObj = {}, sortObj = {};
+  sortObj[sortBy] = sortDir;
   if (partOfSpeech) {
-    filterObj.part = Number(partOfSpeech);
+    filterObj.part_of_speech = partOfSpeech;
   }
   if (source) {
-    filterObj.sourceId = source;
+    filterObj.source_id = source;
   }
 
-  const collection = db.collection(type);
-  const results = await collection
-    .find(filterObj)
-    .skip(Number(offset))
-    .limit(Number(limit) < 100 ? Number(limit) : 100)
-    .sort([[sortBy, Number(sortDir)]])
-    .toArray();
-  return Response.json(results);
+  if (type == "sources") {
+    const results = await prisma.sources.findMany();
+    return Response.json(results);
+  } else if (type == "words") {
+    const results = await prisma.words.findMany({
+      where: filterObj,
+      orderBy: sortObj,
+      skip: Number(offset),
+      take: Number(limit),
+      include: {
+        Spellings: true,
+        Senses: true
+      }
+    });
+    return Response.json(results);
+  }
 }

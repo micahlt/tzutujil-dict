@@ -7,11 +7,11 @@ import { notFound } from "next/navigation";
 
 async function getData(wordIdOrPrimaryVariant) {
   try {
-    const res = await getWord(wordIdOrPrimaryVariant);
+    const res = getWord(wordIdOrPrimaryVariant);
     if (!res) {
       notFound();
     }
-    return await JSON.parse(res);
+    return res;
   } catch (err) {
     notFound();
   }
@@ -23,8 +23,8 @@ export default async function Word({
   const locale = await getDict(lang);
   const wordData = await getData(wordIdOrPrimaryVariant);
   const source =
-    wordData?.sourceId != null && wordData?.sourceId?.length == 24
-      ? await JSON.parse(await getSource(wordData.sourceId))
+    wordData?.source_id != null
+      ? await JSON.parse(await getSource(wordData.source_id))
       : null;
 
   return (
@@ -47,11 +47,11 @@ export async function generateMetadata({
   const locale = await getDict(lang);
 
   return {
-    title: `${wordData.variants[0]} | ${locale.siteName}`,
-    description: `${wordData.variants[0]} on the world's largest, most comprehensive Tz'utujil dictionary and translator.`,
+    title: `${wordData.Spellings[0].spelling} | ${locale.siteName}`,
+    description: `${wordData.Spellings[0]} on the world's largest, most comprehensive Tz'utujil dictionary and translator.`,
     openGraph: {
       images: [
-        `https://dictionary.tzutujil.org/api/og?word=${wordData.variants[0]}&lang=${locale._code}`,
+        `https://dictionary.tzutujil.org/api/og?word=${wordData.Spellings[0]}&lang=${locale._code}`,
       ],
     },
   };

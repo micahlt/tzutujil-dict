@@ -1,0 +1,74 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Examples {
+  id                 Int     @id @default(autoincrement())
+  word_id            String @db.Uuid
+  text_tz            String?
+  text_es            String?
+  text_en            String?
+  Words       Words      @relation(fields: [word_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "word_id")
+}
+
+model Senses {
+  id          Int        @id @default(autoincrement())
+  word_id     String     @db.Uuid
+  translation String
+  language    lang
+  Words       Words      @relation(fields: [word_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "word_id")
+}
+
+model Sources {
+  id            String   @id @default(uuid()) @db.Uuid
+  name          String
+  description   String?
+  url           String?
+  author        String?
+  last_modified DateTime @default(now()) @updatedAt
+  Words         Words[]
+  mongo_id      String?  @unique @db.Text
+}
+
+model Spellings {
+  id         Int      @id @default(autoincrement())
+  word_id    String?  @db.Uuid
+  spelling   String?
+  is_primary Boolean?
+  Words      Words?   @relation(fields: [word_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "word_id")
+}
+
+model Words {
+  id            String      @id @default(uuid()) @db.Uuid
+  last_modified DateTime    @default(now()) @updatedAt
+  notes         String?
+  source_id     String      @db.Uuid
+  Senses        Senses[]
+  Spellings     Spellings[]
+  Sources       Sources     @relation(fields: [source_id], references: [id], onDelete: SetNull, onUpdate: NoAction, map: "source_id")
+  Examples    Examples[]
+  mongo_id String? @unique @db.Text
+  part_of_speech part
+}
+
+enum lang {
+  EN
+  ES
+  TZ
+}
+
+enum part {
+  Pronoun
+  Verb
+  Noun
+  Adjective
+  Adverb
+  Particle
+  Interjection
+  Other
+}

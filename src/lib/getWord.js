@@ -1,58 +1,82 @@
-import { ObjectId } from "mongodb";
-import clientPromise from "./mongodb";
-import { notFound } from "next/navigation";
+/**
+ * @typedef { import("@prisma/client").Words } Word
+ */
 
+import prisma from "./prisma";
+import { notFound } from "next/navigation";
+import idCompat from "./idCompat";
+
+/**
+ * @param {String} idOrTzWord 
+ * @returns {Word}
+ */
 export async function getWord(idOrTzWord) {
   if (!idOrTzWord) {
     return notFound();
   }
+
   if (idOrTzWord == "new") {
-    return JSON.stringify({
-      variants: [""],
-      definitions: [
+    return {
+      notes: null,
+      source_id: "",
+      part_of_speech: "Other",
+      Spellings: [
         {
-          en: {
-            translation: "",
-            example: "",
-          },
-          es: {
-            translation: "",
-            example: "",
-          },
-          tz: {
-            example: "",
-          },
-        },
+          spelling: "",
+          is_primary: true
+        }
       ],
-      notes: "",
-      part: 0,
-      related: [],
-      roots: [],
-    });
+      Senses: [],
+      Examples: []
+    }
   }
+
   let mode = "id";
   try {
-    ObjectId.createFromHexString(idOrTzWord);
+    idCompat(idOrTzWord);
   } catch {
     mode = "tzWord";
   }
 
-  const client = await clientPromise;
-  const words = client.db("tzdb").collection("words");
-
   let result;
   if (mode == "id") {
-    result = await words.findOne({
-      _id: ObjectId.createFromHexString(idOrTzWord),
-    });
+    try {
+      result = await prisma.words.findUnique({
+        where: idCompat(idOrTzWord),
+        include: {
+          Spellings: true,
+          Senses: true,
+          Sources: true,
+          Examples: true
+        },
+      });
+    } catch (e) {
+      console.error(e);
+    }
   } else if (mode == "tzWord") {
-    result = await words.findOne({
-      "variants.0": decodeURIComponent(idOrTzWord),
-    });
+    result = await prisma.words.findFirst({
+      where: {
+        Spellings: {
+          some: {
+            is_primary: true,
+            spelling: {
+              equals: decodeURIComponent(idOrTzWord),
+              mode: "insensitive"
+            }
+          }
+        }
+      },
+      include: {
+        Spellings: true,
+        Senses: true,
+        Sources: true,
+        Examples: true
+      },
+    })
   }
 
   if (result != null) {
-    return JSON.stringify(result);
+    return result;
   } else {
     return notFound();
   }

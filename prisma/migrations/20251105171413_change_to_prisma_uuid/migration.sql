@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "Sources" ALTER COLUMN "id" DROP DEFAULT;
+
+-- AlterTable
+ALTER TABLE "Words" ALTER COLUMN "id" DROP DEFAULT;

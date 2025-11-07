@@ -1,4 +1,21 @@
 "use client";
+
+/**
+ * @typedef { import("@prisma/client").Words } Word
+ * @typedef { import("@prisma/client").Sources } Source
+ * @typedef { import("@prisma/client").Senses } Sense
+ * @typedef { import("@prisma/client").Examples } Example
+ * @typedef { import("@prisma/client").Spellings } Spelling
+ * 
+ * @typedef {Object} WordExtras
+ * @property {Source} Source
+ * @property {Sense[]} Senses
+ * @property {Example[]} Examples
+ * @property {Spelling[]} Spellings
+ * 
+ * @typedef { Word & WordExtras } FullWord
+ */
+
 import { ArrowLeft, ArrowRightCircle, ArrowLeftCircle } from "react-feather";
 import styles from "./page.module.css";
 import Navbar from "@/components/Navbar";
@@ -14,26 +31,29 @@ export default function Words({ locale, sources }) {
   const params = useSearchParams();
   const [page, setPage] = useState();
   const [perPage, setPerPage] = useState();
+
+  /** @type {ReturnType<typeof useState<FullWord[]>>} */
   const [listData, setListData] = useState(null);
   const [hasFetchedParams, setHasFetchedParams] = useState(false);
   const pageNumRef = useRef();
   const perPageRef = useRef();
   const [sort, setSort] = useState({
-    by: "lastModifed",
+    by: "last_modified",
     dir: sortDirections.DESC,
   });
   const [filter, setFilter] = useState({
-    partOfSpeech: 0,
+    partOfSpeech: "",
     source: ""
   });
+
   useEffect(() => {
     if (hasFetchedParams && page && perPage) {
       nav.push(
-        `/words?perPage=${perPage}&page=${page}&sortBy=${sort.by}&sortDir=${sort.dir}&partOfSpeech=${filter.partOfSpeech === -1 ? "" : filter.partOfSpeech}&source=${filter.source}`
+        `/words?perPage=${perPage}&page=${page}&sortBy=${sort.by}&sortDir=${sort.dir}&part=${filter.partOfSpeech}&source=${filter.source}`
       );
       fetch(
         `/api/getAll?limit=${perPage}&offset=${(page - 1) * perPage}&sortBy=${sort.by
-        }&sortDir=${sort.dir}&partOfSpeech=${filter.partOfSpeech === -1 ? "" : filter.partOfSpeech}&source=${filter.source}`
+        }&sortDir=${sort.dir}&part=${filter.partOfSpeech}&source=${filter.source}`
       )
         .then((res) => res.json())
         .then((json) => {
@@ -52,11 +72,11 @@ export default function Words({ locale, sources }) {
       setPage(Number(params.get("page") || 1));
       setPerPage(Number(params.get("perPage") || 50));
       setSort({
-        by: params.get("sortBy") || "lastModified",
+        by: params.get("sortBy") || "last_modified",
         dir: params.get("sortDir") || sortDirections.DESC,
       });
       setFilter({
-        partOfSpeech: params.get("partOfSpeech") || "",
+        partOfSpeech: params.get("part") || "",
         source: params.get("source") || "",
       })
       setHasFetchedParams(true);
@@ -78,7 +98,7 @@ export default function Words({ locale, sources }) {
               value={sort.by}
               onChange={(e) => setSort({ ...sort, by: e.target.value })}
             >
-              <option value="lastModified">{locale.lastModified}</option>
+              <option value="last_modified">{locale.lastModified}</option>
             </select>
             <select
               className={styles.sortPicker}
@@ -96,17 +116,17 @@ export default function Words({ locale, sources }) {
               style={{ backgroundColor: PARTS_COLORS[filter.partOfSpeech] }}
               value={filter.partOfSpeech}
               onChange={(e) => {
-                setFilter({ ...filter, partOfSpeech: Number(e.target.value) });
+                setFilter({ ...filter, partOfSpeech: e.target.value });
               }}
             >
-              <option value={-1} style={{ color: "gray" }}>
+              <option value="" style={{ color: "gray" }}>
                 {locale.anyPartOfSpeech}
               </option>
-              {Object.keys(PARTS_OF_SPEECH).map((key, i) => (
+              {Object.keys(PARTS_OF_SPEECH).map((key) => (
                 <option
-                  key={i}
-                  value={key}
-                  style={{ backgroundColor: PARTS_COLORS[key] }}
+                  key={key}
+                  value={PARTS_OF_SPEECH[key].en}
+                  style={{ backgroundColor: PARTS_COLORS[PARTS_OF_SPEECH[key].en] }}
                 >
                   {PARTS_OF_SPEECH[key][locale._code].toLowerCase()}
                 </option>
@@ -127,7 +147,7 @@ export default function Words({ locale, sources }) {
                 any source
               </option>
               {sources.map((s) => (
-                <option key={s._id} value={s._id}>
+                <option key={s.id} value={s.id}>
                   {s.name}
                 </option>
               ))}
@@ -146,30 +166,30 @@ export default function Words({ locale, sources }) {
               </thead>
               <tbody>
                 {listData.map((word) => (
-                  <tr key={word._id} onClick={() => nav.push(`/words/${word._id}`)}>
+                  <tr key={word.id} onClick={() => nav.push(`/words/${word.id}`)}>
                     <td>
-                      <Link href={`/words/${word._id}`} onClick={() => window.localStorage.setItem("previous", window.location.pathname)}>
-                        {word.variants[0]}
+                      <Link href={`/words/${word.id}`} onClick={() => window.localStorage.setItem("previous", window.location.pathname)}>
+                        {word.Spellings.find(s => s.is_primary)?.spelling || ""}
                       </Link>
                     </td>
                     <td>
-                      <Link href={`/words/${word._id}`}>
-                        {word.definitions[0].es?.translation || ""}
+                      <Link href={`/words/${word.id}`}>
+                        {word.Senses.find(s => s.language == "ES")?.translation || ""}
                       </Link>
                     </td>
                     <td>
-                      <Link href={`/words/${word._id}`}>
-                        {word.definitions[0].en?.translation || ""}
+                      <Link href={`/words/${word.id}`}>
+                        {word.Senses.find(s => s.language == "EN")?.translation || ""}
                       </Link>
                     </td>
                     <td>
-                      <Link href={`/words/${word._id}`}>
-                        <PartOfSpeechBadge partCode={word.part} locale={locale._code} context="search" />
+                      <Link href={`/words/${word.id}`}>
+                        <PartOfSpeechBadge partCode={word.part_of_speech} locale={locale._code} context="search" />
                       </Link>
                     </td>
                     <td>
-                      <Link href={`/words/${word._id}`}>
-                        {new Date(word.lastModified).toLocaleDateString(
+                      <Link href={`/words/${word.id}`}>
+                        {new Date(word.last_modified).toLocaleDateString(
                           undefined,
                           {
                             month: "numeric",

@@ -1,4 +1,12 @@
 "use client";
+
+/**
+ * @typedef { import("@prisma/client").Words } Word
+ * @typedef { import("@prisma/client").Sources } Source
+ * @typedef { import("@prisma/client").Senses } Sense
+ * @typedef { import("@prisma/client").Examples } Example
+ */
+
 import styles from "./page.module.css";
 import Navbar from "@/components/Navbar";
 import { useEffect, useState } from "react";
@@ -28,14 +36,22 @@ export default function WordClient({
   defaultView = "view",
 }) {
   const [spellings, setSpellings] = useState(
-    wordData.variants.map((spelling) => spelling).join(", ")
+    wordData.Spellings?.map((s) => s.spelling).join(", ") || ""
   );
+
+  /**
+ * @type {ReturnType<typeof useState<Word>>}
+ */
   const [wordInfo, setWordInfo] = useState(wordData);
+  console.log(wordInfo);
   const [password, setPassword] = useState();
   const [editMode, setEditMode] = useState(defaultView == "new");
+  /**
+ * @type {ReturnType<typeof useState<Source[]>>}
+ */
   const [sources, setSources] = useState([]);
   const [tab, setTab] = useState(
-    wordData?.defintitions && wordData?.defintitions[0]?.en?.translation
+    wordData?.Senses?.find(s => s.language === "EN")?.translation
       ? locale._code
       : "es"
   );
@@ -106,7 +122,7 @@ export default function WordClient({
       fetch(`/api/word`, {
         method: "DELETE",
         body: JSON.stringify({
-          id: wordId.length == 24 ? wordId : wordInfo._id,
+          id: wordId.length == 36 ? wordId : wordInfo.id,
         }),
         headers: {
           "x-pwd": password,
@@ -121,10 +137,56 @@ export default function WordClient({
   };
 
   const handleDefChange = (locale, property, index, event) => {
-    const newDefs = [...wordInfo.definitions];
-    newDefs[index][locale][property] = event.target.value;
-    setWordInfo({ ...wordInfo, definitions: newDefs });
+    if (property === "translation") {
+      // Handle sense translation changes
+      const newSenses = [...wordInfo.Senses];
+      const senseIndex = newSenses.findIndex(s => s.language === locale.toUpperCase());
+      if (senseIndex >= 0) {
+        newSenses[senseIndex].translation = event.target.value;
+        setWordInfo({ ...wordInfo, Senses: newSenses });
+      }
+    }
   };
+
+  const handleExampleChange = (languageCode, index, event) => {
+    const newExamples = [...wordInfo.Examples];
+    const fieldName = `text_${languageCode.toLowerCase()}`;
+    if (newExamples[index]) {
+      newExamples[index][fieldName] = event.target.value;
+      setWordInfo({ ...wordInfo, Examples: newExamples });
+    }
+  };
+
+  const addNewSense = (language) => {
+    const newSense = {
+      id: Math.random(), // temporary ID for new senses
+      word_id: wordInfo.id,
+      translation: "",
+      language: language
+    };
+    setWordInfo({
+      ...wordInfo,
+      Senses: [...wordInfo.Senses, newSense]
+    });
+  };
+
+  const addNewExample = () => {
+    const newExample = {
+      id: Math.random(), // temporary ID for new examples
+      word_id: wordInfo.id,
+      text_tz: "",
+      text_es: "",
+      text_en: ""
+    };
+    setWordInfo({
+      ...wordInfo,
+      Examples: [...wordInfo.Examples, newExample]
+    });
+  };
+
+  if (!window) {
+    return null;
+  }
 
   return (
     <>
@@ -176,7 +238,7 @@ export default function WordClient({
                       e.preventDefault();
                       setWordInfo(wordData);
                       setSpellings(
-                        wordData.variants.map((spelling) => spelling).join(", ")
+                        wordData.Spellings.map((spelling) => spelling.spelling).join(", ")
                       );
                       setEditMode(false);
                     }}
@@ -220,14 +282,22 @@ export default function WordClient({
                 ? spellings[0].toUpperCase() + spellings.slice(1)
                 : ""
             }
-            onBlur={() =>
+            onBlur={() => {
+              const spellingsArray = (spellings[0].toLowerCase() + spellings.slice(1))
+                .split(",")
+                .map((v) => v.trim());
+
+              const newSpellings = spellingsArray.map((spelling, index) => ({
+                spelling: spelling,
+                is_primary: index === 0
+              }));
+
               setWordInfo({
                 ...wordInfo,
-                variants: (spellings[0].toLowerCase() + spellings.slice(1))
-                  .split(",")
-                  .map((v) => v.trim()),
-              })
-            }
+                Spellings: newSpellings
+              });
+              console.log("WORDINFO UPDATE", wordInfo)
+            }}
           ></TextareaAutosize>
           <div style={{ display: "flex", alignItems: "center" }}>
             {editMode ? (
@@ -235,10 +305,10 @@ export default function WordClient({
                 <br />
                 <select
                   className={styles.speechPartPicker}
-                  style={{ backgroundColor: PARTS_COLORS[wordInfo.part] }}
-                  value={wordInfo.part}
+                  style={{ backgroundColor: PARTS_COLORS[wordInfo.part_of_speech] }}
+                  value={wordInfo.part_of_speech}
                   onChange={(e) => {
-                    setWordInfo({ ...wordInfo, part: Number(e.target.value) });
+                    setWordInfo({ ...wordInfo, part_of_speech: e.target.value });
                   }}
                 >
                   <option value={0} style={{ color: "gray" }}>
@@ -248,7 +318,7 @@ export default function WordClient({
                     {Object.keys(PARTS_OF_SPEECH).map((key, i) => (
                       <option
                         key={i}
-                        value={key}
+                        value={PARTS_OF_SPEECH[key].en}
                         style={{ backgroundColor: PARTS_COLORS[key] }}
                       >
                         {PARTS_OF_SPEECH[key][locale._code]}
@@ -259,9 +329,9 @@ export default function WordClient({
               </>
             ) : (
               <>
-                {!!wordInfo.part && (
+                {!!wordInfo.part_of_speech && (
                   <PartOfSpeechBadge
-                    partCode={wordInfo.part}
+                    partCode={wordInfo.part_of_speech}
                     locale={locale._code}
                   />
                 )}
@@ -288,18 +358,20 @@ export default function WordClient({
             </div>
             <div
               className={styles.tab}
-              aria-expanded={tab == "tz"}
+              aria-expanded={tab == "examples"}
               role="button"
-              onClick={() => setTab("tz")}
+              onClick={() => setTab("examples")}
             >
-              Tz'utujil
+              {locale.examples}
             </div>
           </div>
           <div className={styles.tabContent}>
             {tab == "en" &&
-              wordInfo.definitions.map((def, i) =>
-                <React.Fragment key={i}>
-                  {def.en && (def.en.translation || def.en.example || i == 0 || !!editMode) ? (
+              wordInfo.Senses
+                .filter(s => s.language == "EN")
+                .map((/** @type {Sense} */ sense, i) =>
+                  <React.Fragment key={i}>
+
                     <div className={styles.definition}>
                       <p className={styles.defNumber}>{i + 1}</p>
                       <div style={{ display: "flex", flexWrap: "wrap" }}>
@@ -314,31 +386,18 @@ export default function WordClient({
                             onChange={(e) =>
                               handleDefChange("en", "translation", i, e)
                             }
-                            value={def.en.translation || ""}
-                          ></TextareaAutosize>
-                        </div>
-                        <div className={styles.defFlexChild}>
-                          <p className={styles.smallTitle}>{locale.enExample}</p>
-                          <TextareaAutosize
-                            placeholder={locale.notProvided}
-                            disabled={!editMode}
-                            onChange={(e) =>
-                              handleDefChange("en", "example", i, e)
-                            }
-                            value={def.en.example || ""}
+                            value={sense.translation || ""}
                           ></TextareaAutosize>
                         </div>
                       </div>
                     </div>
-                  ) : (
-                    <></>
-                  )}
-                </React.Fragment>
-              )}
+                  </React.Fragment>
+                )}
             {tab == "es" &&
-              wordInfo.definitions.map((def, i) =>
-                <React.Fragment key={i}>
-                  {def.es && (def.es.translation || def.es.example || i == 0 || !!editMode) ? (
+              wordInfo.Senses
+                .filter(s => s.language == "ES")
+                .map((/** @type {Sense} */ sense, i) =>
+                  <React.Fragment key={i}>
                     <div className={styles.definition}>
                       <p className={styles.defNumber}>{i + 1}</p>
                       <div style={{ display: "flex", flexWrap: "wrap" }}>
@@ -353,31 +412,17 @@ export default function WordClient({
                             onChange={(e) =>
                               handleDefChange("es", "translation", i, e)
                             }
-                            value={def.es.translation || ""}
-                          ></TextareaAutosize>
-                        </div>
-                        <div className={styles.defFlexChild}>
-                          <p className={styles.smallTitle}>{locale.esExample}</p>
-                          <TextareaAutosize
-                            placeholder={locale.notProvided}
-                            disabled={!editMode}
-                            onChange={(e) =>
-                              handleDefChange("es", "example", i, e)
-                            }
-                            value={def.es.example || ""}
+                            value={sense.translation || ""}
                           ></TextareaAutosize>
                         </div>
                       </div>
                     </div>
-                  ) : (
-                    <></>
-                  )}
-                </React.Fragment>
-              )}
-            {tab == "tz" &&
-              wordInfo.definitions.map((def, i) =>
-                <React.Fragment key={i}>
-                  {def.tz && (def.tz.example || i == 0 || !!editMode) ? (
+                  </React.Fragment>
+                )}
+            {tab == "examples" &&
+              wordInfo.Examples
+                .map((/** @type {Example} */ ex, i) =>
+                  <React.Fragment key={i}>
                     <div className={styles.definition}>
                       <p className={styles.defNumber}>{i + 1}</p>
                       <div>
@@ -385,35 +430,46 @@ export default function WordClient({
                         <TextareaAutosize
                           placeholder={locale.notProvided}
                           disabled={!editMode}
-                          onChange={(e) => handleDefChange("tz", "example", i, e)}
-                          value={def.tz.example || ""}
+                          onChange={(e) => handleExampleChange("tz", i, e)}
+                          value={ex.text_tz || ""}
+                          style={{ width: "100%" }}
+                        ></TextareaAutosize>
+                      </div>
+                      <div>
+                        <p className={styles.smallTitle}>{locale.esExample}</p>
+                        <TextareaAutosize
+                          placeholder={locale.notProvided}
+                          disabled={!editMode}
+                          onChange={(e) => handleExampleChange("es", i, e)}
+                          value={ex.text_es || ""}
+                          style={{ width: "100%" }}
+                        ></TextareaAutosize>
+                      </div>
+                      <div>
+                        <p className={styles.smallTitle}>{locale.enExample}</p>
+                        <TextareaAutosize
+                          placeholder={locale.notProvided}
+                          disabled={!editMode}
+                          onChange={(e) => handleExampleChange("en", i, e)}
+                          value={ex.text_en || ""}
                           style={{ width: "100%" }}
                         ></TextareaAutosize>
                       </div>
                     </div>
-                  ) : (
-                    <></>
-                  )}
-                </React.Fragment>
-              )}
-            {editMode && <a className={styles.button} href="#" style={{ width: "max-content", marginTop: 10, backgroundColor: "rgb(0, 146, 98)" }} onClick={(e) => {
+                  </React.Fragment>
+                )}
+            {editMode && tab === "en" && <a className={styles.button} href="#" style={{ width: "max-content", marginTop: 10, backgroundColor: "rgb(0, 146, 98)" }} onClick={(e) => {
               e.preventDefault();
-              setWordInfo({
-                ...wordInfo, definitions: [...wordInfo.definitions, {
-                  en: {
-                    translation: "",
-                    example: ""
-                  },
-                  es: {
-                    translation: "",
-                    example: ""
-                  },
-                  tz: {
-                    example: ""
-                  }
-                }]
-              })
-            }}><Plus size={16} />Add definition</a>}
+              addNewSense("EN");
+            }}><Plus size={16} />Add English translation</a>}
+            {editMode && tab === "es" && <a className={styles.button} href="#" style={{ width: "max-content", marginTop: 10, backgroundColor: "rgb(0, 146, 98)" }} onClick={(e) => {
+              e.preventDefault();
+              addNewSense("ES");
+            }}><Plus size={16} />Add Spanish translation</a>}
+            {editMode && tab === "examples" && <a className={styles.button} href="#" style={{ width: "max-content", marginTop: 10, backgroundColor: "rgb(0, 146, 98)" }} onClick={(e) => {
+              e.preventDefault();
+              addNewExample();
+            }}><Plus size={16} />Add example</a>}
           </div>
 
           <div className={styles.card}>
@@ -428,13 +484,13 @@ export default function WordClient({
               )}
               <div>
                 <p className={styles.smallTitle}>{locale.wordId}</p>
-                <h3>{wordInfo._id}</h3>
+                <h3>{wordInfo.id}</h3>
               </div>
               {wordId != "new" && (
                 <div>
                   <p className={styles.smallTitle}>{locale.lastModified}</p>
                   <h3>
-                    {new Date(wordInfo.lastModified).toLocaleString(undefined, {
+                    {new Date(wordInfo.last_modified).toLocaleString(undefined, {
                       month: "numeric",
                       day: "numeric",
                       year: "numeric",
@@ -449,11 +505,11 @@ export default function WordClient({
                 {editMode ? (
                   <select
                     className={styles.sourcePicker}
-                    value={wordInfo.sourceId}
+                    value={wordInfo.source_id}
                     onChange={(e) => {
                       setWordInfo({
                         ...wordInfo,
-                        sourceId: e.target.value,
+                        source_id: e.target.value,
                       });
                     }}
                   >
@@ -462,7 +518,7 @@ export default function WordClient({
                     </option>
                     <optgroup label="Sources">
                       {sources.map((s) => (
-                        <option key={s._id} value={s._id}>
+                        <option key={s.id} value={s.id}>
                           {s.name}
                         </option>
                       ))}
@@ -471,7 +527,7 @@ export default function WordClient({
                 ) : (
                   <h3>
                     <a
-                      href={`/sources/${source?._id}`}
+                      href={`/sources/${source?.id}`}
                       className={styles.source}
                       target="_blank"
                       title="Open this source in a new tab"

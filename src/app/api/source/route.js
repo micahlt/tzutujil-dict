@@ -1,20 +1,15 @@
 import "dotenv/config";
 require("dotenv").config();
-import clientPromise from "@/lib/mongodb";
 import { headers } from "next/headers";
-import { ObjectId } from "mongodb";
+import prisma from "@/lib/prisma";
+import idCompat from "@/lib/idCompat";
 
 export async function GET(req) {
   // Create the connection to the database
-  const client = await clientPromise;
-  const db = client.db("tzdb");
-  const sources = db.collection("sources");
   const searchParams = req.nextUrl.searchParams;
   const id = searchParams.get("id");
 
-  const result = await sources.findOne({
-    _id: ObjectId.createFromHexString(id),
-  });
+  const result = await prisma.sources.findUnique({ where: idCompat(id) });
   if (!!result) {
     return Response.json(result);
   } else {
@@ -30,10 +25,6 @@ export async function PUT(req) {
   const password = headersList.get("x-pwd");
   // Create the connection to the database
   if (password == process.env.ADMIN_PASSWORD) {
-    const client = await clientPromise;
-    const db = client.db("tzdb");
-    const sources = db.collection("sources");
-
     const json = await req.json();
 
     if (!json) {
@@ -48,13 +39,15 @@ export async function PUT(req) {
         json[key] = json[key].replaceAll("’", "'");
       });
       try {
-        const res = await sources.insertOne({
-          name: json.name,
-          description: json.description || "",
-          url: json.url,
-          author: json.author || "",
+        const res = await prisma.sources.create({
+          data: {
+            name: json.name,
+            description: json.description || "",
+            url: json.url,
+            author: json.author || "",
+          }
         });
-        if (!res.acknowledged) {
+        if (!res) {
           return Response.json(
             { success: false, code: res.err },
             {
@@ -62,7 +55,7 @@ export async function PUT(req) {
             }
           );
         } else {
-          return Response.json({ success: true, id: res.insertedId });
+          return Response.json({ success: true, id: res.id });
         }
       } catch (err) {
         console.error(err);
@@ -89,10 +82,6 @@ export async function PATCH(req) {
   const password = headersList.get("x-pwd");
   // Create the connection to the database
   if (password == process.env.ADMIN_PASSWORD) {
-    const client = await clientPromise;
-    const db = client.db();
-    const sources = db.collection("sources");
-
     const json = await req.json();
 
     if (!json || !json.id) {
@@ -104,27 +93,25 @@ export async function PATCH(req) {
       );
     } else {
       try {
-        const res = await sources.updateOne(
-          { _id: json.id },
-          {
-            $set: {
-              name: json.name,
-              description: json.description || "",
-              url: json.url,
-              author: json.author || "",
-            }
+        const res = await prisma.sources.update({
+          where: idCompat(json.id),
+          data: {
+            name: json.name,
+            description: json.description || "",
+            url: json.url,
+            author: json.author || "",
           }
-        );
+        });
 
-        if (!res.acknowledged) {
+        if (!res) {
           return Response.json(
-            { success: false, reason: err },
+            { success: false, reason: "Failed" },
             {
               status: 400,
             }
           );
         } else {
-          return Response.json({ success: true });
+          return Response.json({ success: true, id: res.id });
         }
       } catch (err) {
         console.error(err);
@@ -151,10 +138,6 @@ export async function DELETE(req) {
   const password = headersList.get("x-pwd");
   // Create the connection to the database
   if (password == process.env.ADMIN_PASSWORD) {
-    const client = await clientPromise;
-    const db = client.db();
-    const sources = db.collection("sources");
-
     const json = await req.json();
 
     if (!json || !json.id) {
@@ -165,7 +148,7 @@ export async function DELETE(req) {
         }
       );
     } else {
-      await sources.deleteOne({ _id: json.id });
+      await prisma.sources.delete({ where: idCompat(json.id) });
       return Response.json({ success: true });
     }
   } else {

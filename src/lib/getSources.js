@@ -1,14 +1,11 @@
-import clientPromise from "./mongodb";
+import prisma from "./prisma";
 
 export async function getSources() {
-  const client = await clientPromise;
-  await client.connect();
-  const sources = client.db("tzdb").collection("sources");
 
-  let result = await sources.find({}).toArray();
+  let result = await prisma.sources.findMany();
 
   if (result != null) {
-    return JSON.stringify(result);
+    return result;
   } else {
     return false;
   }

@@ -6,7 +6,7 @@ import { getSources } from "@/lib/getSources";
 
 export default async function Word({ params: { lang } }) {
   const locale = await getDict(lang);
-  const sources = await JSON.parse(await getSources());
+  const sources = await getSources();
   return (
     <Suspense>
       <WordsClient locale={locale} sources={sources} />

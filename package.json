@@ -9,9 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@elastic/elasticsearch": "^8.17.0",
     "@formatjs/intl-localematcher": "^0.5.10",
     "@next/third-parties": "^14.2.24",
+    "@prisma/client": "^6.19.0",
+    "@prisma/extension-accelerate": "^2.0.2",
     "@vercel/og": "^0.6.5",
     "classnames": "^2.5.1",
     "dotenv": "^16.4.7",
@@ -30,6 +31,7 @@
   "devDependencies": {
     "crawler": "^2.0.2",
     "json-2-csv": "^5.5.8",
+    "prisma": "^6.19.0",
     "scrape-it": "^6.1.4"
   }
 }

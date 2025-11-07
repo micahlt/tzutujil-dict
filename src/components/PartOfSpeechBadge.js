@@ -1,9 +1,16 @@
 import classNames from "classnames";
 import { PARTS_COLORS, PARTS_OF_SPEECH } from "@/lib/partsOfSpeech";
 import styles from "./PartOfSpeechBadge.module.css";
+import { useMemo } from "react";
 
 export default function PartOfSpeechBadge({ partCode, locale, context }) {
-  if (partCode < 1 || partCode > 8) return <></>;
+  const text = useMemo(() => {
+    for (let entry of Object.values(PARTS_OF_SPEECH)) {
+      if (entry.en == partCode) {
+        return entry[locale];
+      }
+    }
+  }, [partCode, locale])
   return (
     <div
       className={classNames(
@@ -12,7 +19,7 @@ export default function PartOfSpeechBadge({ partCode, locale, context }) {
       )}
       style={{ backgroundColor: PARTS_COLORS[partCode] }}
     >
-      {PARTS_OF_SPEECH[partCode][locale]}
+      {text}
     </div>
   );
 }

@@ -1,18 +1,15 @@
 import styles from "@/app/home.module.css";
 import Navbar from "@/components/Navbar";
-import clientPromise from "@/lib/mongodb";
 import SearchBar from "@/components/SearchBar";
 import { getDict } from "./i18n";
 import DefinitionCard from "@/components/DefinitionCard";
+import { frontPageWords } from "@/lib/frontPageWords";
+import prisma from "@/lib/prisma";
 
 async function getData() {
-  const client = await clientPromise;
-  const db = client.db("tzdb");
-  const wordsCollection = db.collection("words");
-
-  const count = await wordsCollection.countDocuments({});
-
-  const words = await wordsCollection.find({}, { limit: 6 }).toArray();
+  const words = await frontPageWords();
+  console.log(words);
+  const count = await prisma.words.count();
 
   if (!words || !count) {
     throw new Error("Failed to fetch data");
@@ -53,7 +50,7 @@ export default async function Home({ params: { lang } }) {
           </p>
           <div className={styles.wordGrid}>
             {words.map((word) => (
-              <DefinitionCard key={word._id} word={word} />
+              <DefinitionCard key={word.id} word={word} />
             ))}
           </div>
         </div>

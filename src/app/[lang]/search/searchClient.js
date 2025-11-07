@@ -11,7 +11,7 @@ import PartOfSpeechBadge from "@/components/PartOfSpeechBadge";
 export default function SearchClient({ locale }) {
   const searchParams = useSearchParams();
   const [loadState, setLoadState] = useState("loading");
-  const [results, setResults] = useState(/** @type {Word[]} */ ([]));
+  const [results, setResults] = useState(/** @type {Word[]} */([]));
   const [query, setQuery] = useState("");
   useEffect(() => {
     const localQuery = searchParams.get("q");
@@ -46,30 +46,30 @@ export default function SearchClient({ locale }) {
           <div className={styles.searchResults}>
             {results.map((res) => (
               <Link
-                href={`/words/${res.id}`}
-                key={res.id}
+                href={`/words/${res.word_id}`}
+                key={res.word_id}
                 className={styles.result}
               >
                 <div className={styles.headingWrapper}>
-                  <h3>{res.variants.map((v) => v).join(", ")}</h3>
+                  <h3>{res.spelling}</h3>
                   <PartOfSpeechBadge
-                    partCode={res.part}
+                    partCode={res.part_of_speech}
                     locale={locale._code}
                     context="search"
                   />
                 </div>
                 <p>
-                  {res.definitions[0]?.es?.translation && (
+                  {res.sense_es && (
                     <>
-                      <b>ES</b> <span>{res.definitions[0].es.translation}</span>
+                      <b>ES</b> <span>{res.sense_es}</span>
                     </>
                   )}
-                  {res.definitions[0]?.es?.translation &&
-                    res.definitions[0]?.en?.translation &&
+                  {res.sense_es &&
+                    res.sense_en &&
                     " | "}
-                  {res.definitions[0]?.en?.translation && (
+                  {res.sense_en && (
                     <>
-                      <b>EN</b> <span>{res.definitions[0].en.translation}</span>
+                      <b>EN</b> <span>{res.sense_en}</span>
                     </>
                   )}
                 </p>
