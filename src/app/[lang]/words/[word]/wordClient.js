@@ -91,7 +91,7 @@ export default function WordClient({
             setEditMode(false);
             nav.push(`/words/${json.id}`);
           } else {
-            setError({ code: json.code || json.error });
+            setError({ code: json.error || json.code, existing_id: json.existing_id });
           }
           setLoading(false);
         });
@@ -109,7 +109,7 @@ export default function WordClient({
             setEditMode(false);
             nav.refresh();
           } else {
-            setError({ code: json.code });
+            setError({ code: json.error, existing_id: json.existing_id });
           }
           setLoading(false);
         });
@@ -267,7 +267,7 @@ export default function WordClient({
             <div className={styles.error}>
               <AlertTriangle size={24} />
               <p>
-                {locale.errorRecieved}: <pre>{error.code}</pre>
+                {locale.errorRecieved}: <pre>{error.code}</pre> {error.existing_id ? <Link href={`/words/${error.existing_id}`}>{error.existing_id}</Link> : <></>}
               </p>
             </div>
           )}

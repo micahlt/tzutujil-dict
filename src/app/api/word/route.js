@@ -130,7 +130,15 @@ export async function PUT(req) {
         if (existing) {
           try {
             console.log(existing);
-            return Response.json({ "nope": "Not gonna do it" });
+            return Response.json(
+              {
+                success: false,
+                error:
+                  "That word already exists and could not be automatically merged.",
+                existing_id: existing.id,
+              },
+              { status: 409 }
+            );
             // const merged = mergeWords(existing, json);
             // const res = await words.findOneAndUpdate(
             //   {
@@ -178,7 +186,7 @@ export async function PUT(req) {
                 success: false,
                 error:
                   "That word already exists and could not be automatically merged.",
-                url: `/words/${existing._id}`,
+                url: `/words/${existing.id}`,
               },
               { status: 409 }
             );
@@ -296,7 +304,7 @@ export async function PATCH(req) {
             {
               success: false,
               error: "This word already exists.",
-              url: `/words/${existing._id}`,
+              existing_id: existing.id,
             },
             { status: 423 }
           );
