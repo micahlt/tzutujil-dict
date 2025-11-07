@@ -3,7 +3,13 @@ import SearchClient from "./searchClient";
 import { getDict } from "../i18n";
 import { Suspense } from "react";
 
-export default async function Login({ params: { lang } }) {
+export default async function Login(props) {
+  const params = await props.params;
+
+  const {
+    lang
+  } = params;
+
   const locale = await getDict(lang);
   return (
     <>
@@ -14,7 +20,13 @@ export default async function Login({ params: { lang } }) {
   );
 }
 
-export async function generateMetadata({ params: { lang } }) {
+export async function generateMetadata(props) {
+  const params = await props.params;
+
+  const {
+    lang
+  } = params;
+
   const locale = await getDict(lang);
   return {
     title: `${locale.search} | ${locale.siteName}`,

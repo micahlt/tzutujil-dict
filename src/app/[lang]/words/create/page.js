@@ -2,7 +2,13 @@ import { getSources } from "@/lib/getSources";
 import { getDict } from "../../i18n";
 import NewClient from "./createClient";
 
-export default async function NewWord({ params: { lang } }) {
+export default async function NewWord(props) {
+  const params = await props.params;
+
+  const {
+    lang
+  } = params;
+
   const locale = await getDict(lang);
   const sourceRes = await getSources();
   const sources = JSON.parse(sourceRes);

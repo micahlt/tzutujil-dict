@@ -37,7 +37,13 @@ export const metadata = {
   },
 };
 
-export default function RootLayout({ children, params }) {
+export default async function RootLayout(props) {
+  const params = await props.params;
+
+  const {
+    children
+  } = props;
+
   return (
     <html lang={params.lang}>
       <body className={inter.className}>

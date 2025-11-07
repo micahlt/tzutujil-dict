@@ -17,9 +17,14 @@ async function getData(wordIdOrPrimaryVariant) {
   }
 }
 
-export default async function Word({
-  params: { word: wordIdOrPrimaryVariant, lang },
-}) {
+export default async function Word(props) {
+  const params = await props.params;
+
+  const {
+    word: wordIdOrPrimaryVariant,
+    lang
+  } = params;
+
   const locale = await getDict(lang);
   const wordData = await getData(wordIdOrPrimaryVariant);
   const source =
@@ -40,9 +45,14 @@ export default async function Word({
   );
 }
 
-export async function generateMetadata({
-  params: { word: wordIdOrPrimaryVariant, lang },
-}) {
+export async function generateMetadata(props) {
+  const params = await props.params;
+
+  const {
+    word: wordIdOrPrimaryVariant,
+    lang
+  } = params;
+
   const wordData = await getData(wordIdOrPrimaryVariant);
   const locale = await getDict(lang);
 

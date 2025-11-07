@@ -3,7 +3,13 @@ import styles from "./page.module.css";
 import Navbar from "@/components/Navbar";
 import { getDict } from "../i18n";
 
-export default async function Extractors({ params: { lang } }) {
+export default async function Extractors(props) {
+  const params = await props.params;
+
+  const {
+    lang
+  } = params;
+
   const locale = await getDict(lang);
   return (
     <>

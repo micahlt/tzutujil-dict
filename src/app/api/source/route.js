@@ -21,7 +21,7 @@ export async function GET(req) {
 }
 
 export async function PUT(req) {
-  const headersList = headers();
+  const headersList = await headers();
   const password = headersList.get("x-pwd");
   // Create the connection to the database
   if (password == process.env.ADMIN_PASSWORD) {
@@ -78,7 +78,7 @@ export async function PUT(req) {
 }
 
 export async function PATCH(req) {
-  const headersList = headers();
+  const headersList = await headers();
   const password = headersList.get("x-pwd");
   // Create the connection to the database
   if (password == process.env.ADMIN_PASSWORD) {
@@ -134,7 +134,7 @@ export async function PATCH(req) {
 }
 
 export async function DELETE(req) {
-  const headersList = headers();
+  const headersList = await headers();
   const password = headersList.get("x-pwd");
   // Create the connection to the database
   if (password == process.env.ADMIN_PASSWORD) {

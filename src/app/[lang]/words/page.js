@@ -4,7 +4,13 @@ import WordsClient from "./wordsClient";
 import { getDict } from "../i18n";
 import { getSources } from "@/lib/getSources";
 
-export default async function Word({ params: { lang } }) {
+export default async function Word(props) {
+  const params = await props.params;
+
+  const {
+    lang
+  } = params;
+
   const locale = await getDict(lang);
   const sources = await getSources();
   return (

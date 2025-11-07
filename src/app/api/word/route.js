@@ -88,7 +88,7 @@ export async function GET(req) {
 
 // Add a new word to the database
 export async function PUT(req) {
-  const headersList = headers();
+  const headersList = await headers();
   const password = headersList.get("x-pwd");
   if (password == process.env.ADMIN_PASSWORD) {
     /** @type {FullWord} */
@@ -258,7 +258,7 @@ export async function PUT(req) {
 
 // Update existing word
 export async function PATCH(req) {
-  const headersList = headers();
+  const headersList = await headers();
   const password = headersList.get("x-pwd");
   if (password == process.env.ADMIN_PASSWORD) {
     const json = await req.json();
@@ -420,7 +420,7 @@ export async function PATCH(req) {
 }
 
 export async function DELETE(req) {
-  const headersList = headers();
+  const headersList = await headers();
   const password = headersList.get("x-pwd");
   if (password == process.env.ADMIN_PASSWORD) {
     const json = await req.json();

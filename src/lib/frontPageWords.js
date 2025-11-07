@@ -1,4 +1,5 @@
 "use cache"
+import { unstable_cacheLife as cacheLife } from 'next/cache'
 
 /**
  * @typedef { import("@prisma/client").Words } Word
@@ -10,6 +11,7 @@ import prisma from "./prisma";
  * @returns {Word}
  */
 export async function frontPageWords() {
+    cacheLife("hours")
     let result;
     try {
         // First get all word IDs that have both EN and ES senses

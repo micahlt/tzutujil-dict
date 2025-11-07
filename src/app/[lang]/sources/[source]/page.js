@@ -16,9 +16,14 @@ async function getData(sourceId) {
     }
 }
 
-export default async function Source({
-    params: { source: sourceId, lang },
-}) {
+export default async function Source(props) {
+    const params = await props.params;
+
+    const {
+        source: sourceId,
+        lang
+    } = params;
+
     const locale = await getDict(lang);
     const sourceData = await getData(sourceId);
     return (
@@ -33,9 +38,14 @@ export default async function Source({
     );
 }
 
-export async function generateMetadata({
-    params: { source: sourceId, lang },
-}) {
+export async function generateMetadata(props) {
+    const params = await props.params;
+
+    const {
+        source: sourceId,
+        lang
+    } = params;
+
     const sourceData = await getData(sourceId);
     const locale = await getDict(lang);
 

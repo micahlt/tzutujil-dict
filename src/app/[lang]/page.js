@@ -8,7 +8,6 @@ import prisma from "@/lib/prisma";
 
 async function getData() {
   const words = await frontPageWords();
-  console.log(words);
   const count = await prisma.words.count();
 
   if (!words || !count) {
@@ -18,7 +17,13 @@ async function getData() {
   return { count, words };
 }
 
-export default async function Home({ params: { lang } }) {
+export default async function Home(props) {
+  const params = await props.params;
+
+  const {
+    lang
+  } = params;
+
   const { count, words } = await getData();
 
   const locale = await getDict(lang);
@@ -101,7 +106,13 @@ export default async function Home({ params: { lang } }) {
   );
 }
 
-export async function generateMetadata({ params: { lang } }) {
+export async function generateMetadata(props) {
+  const params = await props.params;
+
+  const {
+    lang
+  } = params;
+
   const locale = await getDict(lang);
   return {
     title: locale.siteName,
